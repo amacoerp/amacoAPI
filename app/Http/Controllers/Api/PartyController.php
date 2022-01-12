@@ -122,6 +122,7 @@ class PartyController extends Controller
             $contact = party_division::create([
                 'party_id' => $party->id,
                 'div_id' => $div['id'],
+                'division_id' => $div['div_id'],
                
                 'vendor_code' => $div['vendor_code'].'-'.sprintf('%05d', $party->id)
                 
@@ -312,10 +313,13 @@ class PartyController extends Controller
     }
 
     // Api for customer list
-    public function customer()
+    public function customer($id)
     {
-        $vendors = Party::where('party_type', '=', 'customer')->orWhere('party_type', '=', 'both')
-            ->select('id', 'firm_name', 'contact','opening_balance','credit_days','div_id')
+        $vendors = Party::join('party_divisions','party_divisions.party_id','parties.id')
+        ->where('party_divisions.division_id',$id)
+        ->where('parties.party_type','!=','Vendor')
+         ->select('parties.id', 'parties.firm_name',  'parties.party_type','parties.contact','parties.opening_balance','parties.credit_days','parties.div_id')
+            
             ->get();
             // $vendors = Party::where('party_type', '=', 'customer')->orWhere('party_type', '=', 'both')
             // ->select('id', 'firm_name', 'contact','opening_balance','credit_days')
