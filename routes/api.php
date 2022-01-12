@@ -143,7 +143,7 @@ Route::get('category/{name}', [CategoryController::class, 'search'])->name('cate
 Route::get('parties-except/{product}', [PartyController::class, 'allVendorExcept'])->name('except.vendor');
 Route::get('product-quotation-detail/{id}', [ProductQuotationDetail::class, 'show'])->name('product.quotationdetail');
 Route::get('expense-paid', [ExpenseController::class, 'paid'])->name('expense.paid');
-Route::get('customer-list', [PartyController::class, 'customer'])->name('customer.list');
+Route::get('customer-list/{id}', [PartyController::class, 'customer'])->name('customer.list');
 Route::get('sales-list', [QuotationController::class, 'salesList'])->name('sales.list');
 Route::get('purchase-invoice-list',[PurchaseInvoiceController::class, 'purchaseInvoiceList'])->name('purchase.invoice.list');
 Route::get('account-subcategories/{id}', [AccountCategoryController::class, 'subCategory'])->name('account.category.subcategory');

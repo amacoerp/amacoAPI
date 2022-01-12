@@ -2,7 +2,6 @@
 // Account statement controller
 namespace App\Http\Controllers\Api;
 
-// keep my changes onlyytyy :)
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use App\Models\Party;
