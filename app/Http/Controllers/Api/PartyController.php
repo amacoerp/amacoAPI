@@ -10,6 +10,8 @@ use App\Models\Contact;
 use App\Models\PartyBank;
 use App\Models\Division;
 use App\Models\ProductPrice;
+use App\Models\PaymentAccount;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use DB;
@@ -316,11 +318,11 @@ class PartyController extends Controller
     public function customer($id)
     {
         $vendors = Party::join('party_divisions','party_divisions.party_id','parties.id')
-        ->where('party_divisions.division_id',$id)
+        ->join('payment_accounts','payment_accounts.id','party_divisions.div_id')
+        // ->where('payment_accounts.div_id',$id)
         ->where('parties.party_type','!=','Vendor')
-         ->select('parties.id', 'parties.firm_name',  'parties.party_type','parties.contact','parties.opening_balance','parties.credit_days','parties.div_id')
-            
-            ->get();
+        ->select('parties.id', 'parties.firm_name','parties.party_type','parties.contact','parties.opening_balance','parties.credit_days','payment_accounts.div_id')
+        ->get();
             // $vendors = Party::where('party_type', '=', 'customer')->orWhere('party_type', '=', 'both')
             // ->select('id', 'firm_name', 'contact','opening_balance','credit_days')
             // ->get();
