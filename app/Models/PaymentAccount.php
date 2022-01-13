@@ -33,6 +33,10 @@ class PaymentAccount extends Model
     {
         return $this->hasOne(Investment::class,'payment_account_id','id');
     }
+    public function party_division()
+    {
+        return $this->hasMany(party_division::class,'div_id','id');
+    }
     public function investment_details()
     {
         return $this->hasOne(InvestmentsDetails::class,'payment_account_id','payment_account_id');

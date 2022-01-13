@@ -13,6 +13,10 @@ class party_division extends Model
     {
         return $this->belongsTo(party::class);
     }
+    public function payment_account()
+    {
+        return $this->belongsTo(PaymentAccount::class);
+    }
     
     
 }

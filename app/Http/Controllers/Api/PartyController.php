@@ -193,7 +193,11 @@ class PartyController extends Controller
                 'contacts' => $contacts->map(function ($contact) {
                     return $contact;
                 }),
-                'partyDivision'=>$party->partyDivision,
+                'partyDivision'=>$party->partyDivision->map(function($item){
+                    $a = PaymentAccount::where('id',$item['div_id'])->get(['div_id']);
+                    $item['division_id']= $a[0]->div_id;
+                    return $item;
+                }),
                 $json,
             ];
         return response()->json(array($data));
