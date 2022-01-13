@@ -245,6 +245,8 @@ Route::post('expenceStore', [MobileController::class, 'storeExpence']);
 Route::get('divisionbyid/{id}', [DivisionController::class, 'getDivbyId']);
 
 
+Route::get('getParties/{id}', [PartyController::class, 'getParties']);
+
 
 
 
