@@ -241,7 +241,7 @@ class QuotationController extends Controller
 
         // try {
             $datas = [
-                'party_id' => $request['party_id'],
+                'party_id' => $request['party_id']?$request['party_id']:'',
                 'rfq_id' => $request['rfq_id']?$request['rfq_id']:0,
                 'status' => 'New',
                 'parent_id' => $parentId,
@@ -344,7 +344,7 @@ class QuotationController extends Controller
                             $product=Product::create([
                                 'name'=> $quotation_detail['descriptionss'],
                                 'description'=> $quotation_detail['description'],
-                                'unit_of_measure'=> $quotation_detail['unit_of_measure'],
+                                'unit_of_measure'=> $quotation_detail['unit_of_measure']?$quotation_detail['unit_of_measure']:'',
                                 'div_id' => $request['div_id']?$request['div_id']:0,  // ? $request['ps_date'] : Carbon::now()
                                 'user_id' => $request['user_id']?$request['user_id']:0,
                                 'type' => 'Non inventory',
