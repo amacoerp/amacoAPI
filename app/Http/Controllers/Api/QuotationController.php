@@ -549,6 +549,7 @@ class QuotationController extends Controller
             'inco_terms' => $request['inco_terms'],
             'transport' => $request['transport'],
             'other' => $request['other'],
+            'status' => $request['status'],
             // 'sales_order_number' => $data['sales_order_number'],
         ]);
         $index = 0;
@@ -640,7 +641,7 @@ class QuotationController extends Controller
             }
             $index++;
         }
-       
+        return response()->json($quotation->id);
         }
         else
         {
@@ -728,8 +729,9 @@ class QuotationController extends Controller
       
         }
         
-        return response()->json($request);
+        
     }
+    
    
 }
         
