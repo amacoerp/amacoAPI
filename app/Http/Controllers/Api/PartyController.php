@@ -29,8 +29,23 @@ class PartyController extends Controller
     
     public function index()
     {
-        $parties = Party::all();
+        $parties = Party::get();
         return response()->json($parties, 200);
+    }
+
+
+    public function getParties($id){
+        $vendors = Party::join('party_divisions','party_divisions.party_id','parties.id')
+        ->join('payment_accounts','payment_accounts.id','party_divisions.div_id')
+        ->where('payment_accounts.div_id',$id)
+        ->select('parties.id', 'parties.firm_name','parties.party_type','parties.contact','parties.vat_no','parties.opening_balance','parties.credit_days','payment_accounts.div_id')
+        ->get();
+       
+        $vendors->map(function($payment){
+            return $payment->partyDivision;
+        });
+
+           return response()->json($vendors, 200);
     }
 
     /**
@@ -124,7 +139,7 @@ class PartyController extends Controller
             $contact = party_division::create([
                 'party_id' => $party->id,
                 'div_id' => $div['id'],
-                
+               
                 'vendor_code' => $div['vendor_code'].'-'.sprintf('%05d', $party->id)
                 
     
