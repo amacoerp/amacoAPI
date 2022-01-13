@@ -243,7 +243,7 @@ class QuotationController extends Controller
             $datas = [
                 'party_id' => $request['party_id']?$request['party_id']:'',
                 'rfq_id' => $request['rfq_id']?$request['rfq_id']:0,
-                'status' => 'New',
+                'status' => $request['status'],
                 'parent_id' => $parentId,
                 'total_value' => $request['total_value'],
                 'net_amount' => $request['net_amount'],
