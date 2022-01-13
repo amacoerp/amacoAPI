@@ -401,7 +401,7 @@ class QuotationController extends Controller
            
             
 
-            // return response()->json($res);
+            return response()->json($quotation_id);
         // } catch (Exception $e) {
         //     return response()->json($request, 201);
         // }
@@ -865,7 +865,7 @@ class QuotationController extends Controller
 
     public function salesList()
     {
-        $quotations = Quotation::where(['status' => 'New', 'transaction_type' => 'sale'])
+        $quotations = Quotation::where(['transaction_type' => 'sale'])
             ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from('invoices')
