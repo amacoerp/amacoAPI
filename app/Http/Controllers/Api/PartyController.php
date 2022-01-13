@@ -124,8 +124,7 @@ class PartyController extends Controller
             $contact = party_division::create([
                 'party_id' => $party->id,
                 'div_id' => $div['id'],
-                'division_id' => $div['div_id'],
-               
+                
                 'vendor_code' => $div['vendor_code'].'-'.sprintf('%05d', $party->id)
                 
     
