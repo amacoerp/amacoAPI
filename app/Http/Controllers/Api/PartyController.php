@@ -124,7 +124,7 @@ class PartyController extends Controller
             $contact = party_division::create([
                 'party_id' => $party->id,
                 'div_id' => $div['id'],
-                
+               
                 'vendor_code' => $div['vendor_code'].'-'.sprintf('%05d', $party->id)
                 
     
@@ -318,7 +318,7 @@ class PartyController extends Controller
     {
         $vendors = Party::join('party_divisions','party_divisions.party_id','parties.id')
         ->join('payment_accounts','payment_accounts.id','party_divisions.div_id')
-        // ->where('payment_accounts.div_id',$id)
+        ->where('payment_accounts.div_id',$id)
         ->where('parties.party_type','!=','Vendor')
         ->select('parties.id', 'parties.firm_name','parties.party_type','parties.contact','parties.opening_balance','parties.credit_days','payment_accounts.div_id')
         ->get();
