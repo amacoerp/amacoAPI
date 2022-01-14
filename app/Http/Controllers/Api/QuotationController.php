@@ -594,7 +594,8 @@ class QuotationController extends Controller
 
                 $res=notes::where('quotation_id',$quotation->id)->delete();
                 $note_detail = json_decode($request->notes, true);
-
+                if($note_detail)
+                {
                 foreach ($note_detail as $div) {
            
                 notes::create([
@@ -604,6 +605,7 @@ class QuotationController extends Controller
                 'user_id' => $request['user_id']?$request['user_id']:0,
                 ]); 
                 }
+             }
             } else {
                 if(!$quotation_detail['product_id'] )
                 {
