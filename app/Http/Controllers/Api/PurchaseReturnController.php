@@ -233,7 +233,7 @@ class PurchaseReturnController extends Controller
             }
         }
     }
-    
+
     public function getLastQuotationNo()
     {
         $quotation = PurchaseReturn::where('transaction_type', 'sales')

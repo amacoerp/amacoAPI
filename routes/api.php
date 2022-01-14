@@ -213,6 +213,7 @@ Route::post('purchase-return', [PurchaseReturnController::class, 'purchasereturn
 // sales Return API's
 Route::get('getSalesFormData/{id}', [SalesReturnController::class, 'index']);
 Route::get('getSalesReturnINV/{id}', [SalesReturnController::class, 'getSalesReturnINV']);
+Route::get('getSalesReturnEdit/{id}', [SalesReturnController::class, 'getSalesReturnEdit']);
 Route::get('getInvSr/{id}', [SalesReturnController::class, 'getProductsSR']);
 
 Route::get('sales-return-table', [SalesReturnController::class, 'SalesReturnTableData']);
