@@ -27,6 +27,8 @@ class PurchaseReturnDetail extends Model
         'sell_price',	
         'created_at',	
         'updated_at',	
+        'invoice_no',	
+
         'remark',	
         'file_img_url',	
         'product_description',	
