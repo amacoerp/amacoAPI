@@ -68,6 +68,7 @@ class SalesReturnController extends Controller
         join('parties','parties.id','purchase_returns.party_id')
         ->where("transaction_type",'sales')
         ->orderBy('purchase_returns.created_at', 'DESC')
+        ->select('purchase_returns.*','parties.*','purchase_returns.div_id as d_id')
         ->get();
 
 
