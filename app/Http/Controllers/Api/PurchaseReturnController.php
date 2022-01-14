@@ -115,6 +115,8 @@ class PurchaseReturnController extends Controller
                 'status' => 'New',
                 'parent_id' => $parentId,
                 'total_value' => $request['total_value'],
+                'user_id' => $request['user_id'],
+                'div_id' => $request['div_id'],
                 'net_amount' => $request['net_amount'],
                 'vat_in_value' => $request['vat_in_value'],
                 'discount_in_p' => $request['discount_in_p'],
@@ -156,6 +158,7 @@ class PurchaseReturnController extends Controller
                         'pr_id' => $quotation_id,
                         'total_amount' => $quotation_detail['total_amount'],
                         'analyse_id' => null,
+                         
                         'po_number' => $quotation_detail['po_number'],
                         'product_id' => $quotation_detail['product_id']?$quotation_detail['product_id']:null,
                         'purchase_price' => $quotation_detail['purchase_price'],

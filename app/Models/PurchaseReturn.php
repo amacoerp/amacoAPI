@@ -14,6 +14,8 @@ class PurchaseReturn extends Model
         'quotation_no',	
         'quotationr_no',	
         'party_id',	
+        'div_id',	
+        'user_id',	
         'rfq_id',	
         'pr_number',	
         'status',	
