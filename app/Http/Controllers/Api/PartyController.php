@@ -320,11 +320,14 @@ class PartyController extends Controller
     }
 
     // Api fo vendor list
-    public function vendor()
+    public function vendor($id)
     {
-        $vendors = Party::where('party_type', '=', 'Vendor')->orWhere('party_type', '=', 'both')
-            ->select('id', 'firm_name', 'contact','div_id')
-            ->get();
+        $vendors = Party::join('party_divisions','party_divisions.party_id','parties.id')
+        ->join('payment_accounts','payment_accounts.id','party_divisions.div_id')
+        ->where('payment_accounts.div_id',$id)
+        ->where('parties.party_type','!=','Customer')
+        ->select('parties.id', 'parties.firm_name','parties.party_type','parties.contact','parties.opening_balance','parties.credit_days','payment_accounts.div_id')
+        ->get();
             // ->toArray();
             $vendors->map(function($payment){
                 return $payment->partyDivision;
