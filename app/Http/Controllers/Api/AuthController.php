@@ -6,8 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\PermissionDenied;
-
-
+use App\Models\LoginLog;
 
 class AuthController extends Controller
 {
@@ -46,13 +45,27 @@ class AuthController extends Controller
 
             $type = DB::table('user_divisions')->join('divisions','divisions.id','user_divisions.div_id')->where('user_divisions.u_id',Auth::user()->id)->get(['divisions.id','divisions.name']);
            }
-        $perData = PermissionDenied::where('u_id',Auth::user()->id)->get();
+            
+           date_default_timezone_set("Asia/Calcutta");   //India time (GMT+5:30)
 
+           LoginLog::create([
+                        'u_id' => Auth::user()->id,
+                        // 'platform' => ,
+                        // 'browser' => ,
+                        // 'created_at' => ,
+                        // 'updated_at' => ,
+                        'type' => 'Login',
+                        'date_time' => date('d-m-Y @ H:i:s'),
+                        // 'status' => ,
+        ]);
+        $perData = PermissionDenied::where('u_id',Auth::user()->id)->get();
+           
         $var=Auth::user();
         $var['division']=$type;
         $var['permission']=$perData;
         $var['divs']=$divs;
         $data = [
+         
             "accessToken" => $token,
             "user" => $var,
             "role" => Auth::user()->role->name,

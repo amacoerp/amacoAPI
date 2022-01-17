@@ -53,6 +53,7 @@ use App\Http\Controllers\Api\ModuleController;
 use App\Http\Controllers\Api\MobileController;
 use App\Http\Controllers\Api\PermissionDeniedController;
 use App\Http\Controllers\Api\StockController;
+use App\Http\Controllers\Api\LoginLogController;
 
 
 /*
@@ -247,8 +248,10 @@ Route::get('divisionbyid/{id}', [DivisionController::class, 'getDivbyId']);
 
 
 Route::get('getParties/{id}', [PartyController::class, 'getParties']);
+Route::get('userActivityLogin', [LoginLogController::class, 'loginActivities']);
+Route::get('activityLogs', [LoginLogController::class, 'activityLogs']);
 
-
+Route::post('logoutLog/{id}', [LoginLogController::class, 'logoutLog']);
 
 
 
