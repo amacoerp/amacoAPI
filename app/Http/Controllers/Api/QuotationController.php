@@ -292,15 +292,15 @@ class QuotationController extends Controller
             
             if ($request->transaction_type === 'purchase') {
                 foreach ($request['quotation_details'] as $key => $quotation_detail) {
-                    if(!$quotation_detail['productId'])
-                    {
-                       $product=Product::create([
-                            'name'=> $quotation_detail['product'],
-                            'div_id' => $request['div_id']?$request['div_id']:0,  // ? $request['ps_date'] : Carbon::now()
-                            'user_id' => $request['user_id']?$request['user_id']:0,
-                            'type' => 'Non inventory',
-                        ]);
-                    }
+                    // if(!$quotation_detail['productId'])
+                    // {
+                    //    $product=Product::create([
+                    //         'name'=> $quotation_detail['product'],
+                    //         'div_id' => $request['div_id']?$request['div_id']:0,  // ? $request['ps_date'] : Carbon::now()
+                    //         'user_id' => $request['user_id']?$request['user_id']:0,
+                    //         'type' => 'Non inventory',
+                    //     ]);
+                    // }
                     QuotationDetail::create([
                         'quotation_id' => $quotation_id,
                         'total_amount' => $quotation_detail['total_amount'],
