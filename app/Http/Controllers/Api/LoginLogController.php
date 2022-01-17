@@ -53,7 +53,7 @@ class LoginLogController extends Controller
         $salesInvoice = $this -> getSalesInvoiceLog();
         $salesReturn = $this -> getSalesReturnLog();
         $purchaseReturn = $this -> getPurchaseReturnLog();
-        $expense = $this -> getExpenseLog();
+        // $expense = $this -> getExpenseLog();
         $mAllLog =  $productLog->merge($partyLog);
         $mAllLog =  $mAllLog->merge($partyContact);
         $mAllLog =  $mAllLog->merge($partyBank);
@@ -65,7 +65,7 @@ class LoginLogController extends Controller
         $mAllLog =  $mAllLog->merge($salesInvoice);
         $mAllLog =  $mAllLog->merge($salesReturn);
         $mAllLog =  $mAllLog->merge($purchaseReturn);
-        $mAllLog =  $mAllLog->merge($expense);
+        // $mAllLog =  $mAllLog->merge($expense);
         $finalLog = collect($mAllLog)->sortBy('updated_at')->reverse()->values();
         return response()->json($finalLog);
     }
