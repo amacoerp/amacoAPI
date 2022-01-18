@@ -244,7 +244,7 @@ class InvoiceController extends Controller
             // 'status' => $request->status,
             // 'quotation_id' => $request->quotation_id,
             'total_value' => $request->total_value,
-            'discount_in_percentage' => $request->discount_in_percentage,
+            'discount_in_percentage' => $request->discount_in_p,
             'vat_in_value' => $request->vat_in_value,
             'grand_total' => $request->grand_total,
             'delivery_no' => null,
