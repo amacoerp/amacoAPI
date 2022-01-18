@@ -288,24 +288,27 @@ class QuotationController extends Controller
 
 
             global $quotation_id;
+            global $product_ID;
             $quotation_id = $quotation->id;
             
             if ($request->transaction_type === 'purchase') {
                 foreach ($request['quotation_details'] as $key => $quotation_detail) {
-                    // if(!$quotation_detail['productId'])
-                    // {
-                    //    $product=Product::create([
-                    //         'name'=> $quotation_detail['product'],
-                    //         'div_id' => $request['div_id']?$request['div_id']:0,  // ? $request['ps_date'] : Carbon::now()
-                    //         'user_id' => $request['user_id']?$request['user_id']:0,
-                    //         'type' => 'Non inventory',
-                    //     ]);
-                    // }
+                    if(!$quotation_detail['productId'])
+                    {
+                       $product=Product::create([
+                            'name'=> $quotation_detail['product'],
+                            'div_id' => $request['div_id']?$request['div_id']:0,  // ? $request['ps_date'] : Carbon::now()
+                            'user_id' => $request['user_id']?$request['user_id']:0,
+                            'type' => 'Non inventory',
+                        ]);
+                        $product_ID = $product->id;
+                    }
+                    
                     QuotationDetail::create([
                         'quotation_id' => $quotation_id,
                         'total_amount' => $quotation_detail['total_amount'],
                         'analyse_id' => null,
-                        'product_id' => $quotation_detail['productId']?$quotation_detail['productId']:isset($product)?$product->id:' ',
+                        'product_id' => $quotation_detail['productId']?$quotation_detail['productId']:isset($product_ID)?$product_ID:0,
                         'purchase_price' => $quotation_detail['purchase_price'],
                         'description' => $quotation_detail['product_name']?$quotation_detail['product_name']:$quotation_detail['product'],
                         'product_description' => $quotation_detail['description'],
