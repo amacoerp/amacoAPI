@@ -94,7 +94,7 @@ class InvoiceController extends Controller
         $data['quotation_id'] = $request['quotation_id'];
         $data['po_number'] = $request['po_number'];
         $data['total_value'] = $request['total_value'];
-        $data['discount_in_percentage'] = $request['discount_in_percentage'];
+        $data['discount_in_percentage'] = $request['discount_in_p'];
         $data['vat_in_value'] = $request['vat_in_value'];
         $data['grand_total'] = $request['grand_total'];
         $invoice = Invoice::create([
