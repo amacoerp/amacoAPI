@@ -241,7 +241,7 @@ class QuotationController extends Controller
 
         // try {
             $datas = [
-                'party_id' => $request['party_id']?$request['party_id']:'',
+                'party_id' => $request['party_id']?$request['party_id']:0,
                 'rfq_id' => $request['rfq_id']?$request['rfq_id']:0,
                 'status' => $request['status'],
                 'parent_id' => $parentId,
@@ -443,9 +443,9 @@ class QuotationController extends Controller
             "sales_order_number" => $quotation->sales_order_number,
             "contact" => $quotation->contact,
             "party" => $quotation->party,
-            "partyDivision" => $quotation->party->partyDivision->map(function($payment){
+            "partyDivision" => $quotation->party && ($quotation->party->partyDivision->map(function($payment){
                 return $payment->partyDivision;
-            }),
+            })),
             "rfq" => $quotation->rfq,
             "is_revised" => $quotation->is_revised,
             "sign" => $quotation->signature,
