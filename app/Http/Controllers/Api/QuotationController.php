@@ -472,6 +472,7 @@ class QuotationController extends Controller
                     "descriptionss" => $quotation_detail->product_description,
                     "amaco_description" => $quotation_detail->amaco_description,
                     "product" => $quotation_detail->product,
+                    "product_name" => " ",
                     // "partyDivision" => $quotation_detail->partyDivision,
                     "product_price_list" => $quotation_detail->product? $quotation_detail->product->productPrice->map(function ($productP) {
                         return [
@@ -486,7 +487,7 @@ class QuotationController extends Controller
                     "quantity" => $quotation_detail->quantity,
                     "discount" => $quotation_detail->discount,
                     "margin_val"=>((((float)$quotation_detail->purchase_price)*(float)$quotation_detail->margin)/100)*(float)($quotation_detail->quantity),
-                    "discount_val"=>(((float)((float)($quotation_detail->discount) * ((float)(($quotation_detail->margin * (float)($quotation_detail->purchase_price) / 100) + (float)($quotation_detail->purchase_price))) / 100)) * (float)($quotation_detail->quantity)),
+                    "discount_val"=>(((float)((float)($quotation_detail->discount) * ((float)(((float)$quotation_detail->margin * (float)($quotation_detail->purchase_price) / 100) + (float)($quotation_detail->purchase_price))) / 100)) * (float)($quotation_detail->quantity)),
                     "cost_qty"  => (float)$quotation_detail->purchase_price*(int)$quotation_detail->quantity,
                     'unit_of_measure' => $quotation_detail->unit_of_measure,
                     // "delivered_quantity"=> $quotation_detail->quantity,
@@ -672,8 +673,8 @@ class QuotationController extends Controller
             ]);
             $index = 0;
             while ($request['quotation_details'] != null) {
-                // $quotation_detail = (array) json_encode($request['quotation_details'], true);
-                $quotation_detail = (collect($request['quotation_details'])->toArray())[0];
+                $quotation_detail = (array) json_encode($request['quotation_details'], true);
+                // $quotation_detail = (collect($request['quotation_details'])->toArray())[0];
                 // foreach ($request['quotation_details'] as $key => $quotation_detail) {
                 
                 $quotationDetail = QuotationDetail::where([
@@ -681,7 +682,7 @@ class QuotationController extends Controller
                     // 'quotation_id' => $request->id
                 ])->first();
                 
-                if ($quotationDetail) {
+                if ($quotation_detail['id']) {
                    
                     $quotationDetail->update([
                         'total_amount' => $quotation_detail['total_amount'],
@@ -725,7 +726,7 @@ class QuotationController extends Controller
       
         
                     }
-              
+                $index++;
                
                 
         
@@ -734,16 +735,16 @@ class QuotationController extends Controller
                
       
         // }
-        return response()->json("hi");
-        $index++;
+      
+       
         
         
     }
-   
-   
-        }
         
-           
+   
+    }
+        
+    return response()->json("hi");      
     
     }
 
@@ -1165,5 +1166,107 @@ class QuotationController extends Controller
                 }
                 return response("success");
     }
+
+    public function  purchaseUpdate(Request $request)
+    {
+         // return $request;
+         $quotation = Quotation::where("id", $request->id)->first();
+        $data = $request->all();
+             $quotation->update([
+                 // 'status' => $request->status,
+                 'total_value' => $request->total_value,
+                 'vat_in_value' => $request->vat_in_value,
+                 'party_id' => $request->party_id,
+                 'contact_id' => $request->contact_id,
+                 'freight_type' => $request->freight,
+                 'payment_terms' => $request->payment_terms,
+                 'currency_type' => $request->currency_type,
+                 'delivery_time' => $request->delivery_time,
+                 'inco_terms' => $request->inco_terms,
+                 'net_amount' => $request->net_amount,
+                 'transaction_type' => $request->transaction_type,
+                 'discount_in_p' => $request->discount_in_p,
+                 'ps_date'=>$request->ps_date,
+                 // 'div_id' => $request->div_id?$request->div_id:0,  // ? $request['ps_date'] : Carbon::now()
+                 // 'user_id' => $request->user_id?$request->user_id:0,
+                 
+                 // 'sales_order_number' => $data['sales_order_number'],
+             ]);
+             $index = 0;
+             while ($request['quotation_detail' . $index] != null) {
+                $quotation_detail = (array) json_decode($request['quotation_detail' . $index], true);
+                 
+                 // $quotation_detail = (collect($request['quotation_details'])->toArray())[0];
+                 // foreach ($request['quotation_details'] as $key => $quotation_detail) {
+                 
+                 $quotationDetail = QuotationDetail::where([
+                     'id' => $quotation_detail['id'],
+                     // 'quotation_id' => $request->id
+                 ])->first();
+                 
+                 if ($quotationDetail) {
+                    
+                     $quotationDetail->update([
+                         'total_amount' => $quotation_detail['total_amount'],
+                         'product_id' => $quotation_detail['product_id'],
+                         'purchase_price' => $quotation_detail['purchase_price'],
+                         'description' => $quotation_detail['product_name']?$quotation_detail['product_name']:$quotation_detail['description'],
+                         'quantity' => $quotation_detail['quantity'],
+                         'margin' => $quotation_detail['margin'],
+                         'sell_price' => $quotation_detail['sell_price'],
+                         'remark' => $quotation_detail['remark'],
+                         'product_description' => $quotation_detail['descriptionss']?$quotation_detail['descriptionss']:"",
+                         'unit_of_measure' => $quotation_detail['unit_of_measure'],
+     
+                     ]);
+                 } else {
+                     if(!$quotation_detail['product_id'])
+                     {
+                        $product_exist=Product::where('name','=',$quotation_detail['description'])->first();
+                        if(!$product_exist){
+                        $product=Product::create([
+                             'name'=> $quotation_detail['product'],
+                             'div_id' => $request['div_id']?$request['div_id']:0,  // ? $request['ps_date'] : Carbon::now()
+                 'user_id' => $request['user_id']?$request['user_id']:0,
+                 'type' => 'Non inventory',
+                         ]);
+                        }
+                     }
+                     QuotationDetail::create([
+                         'quotation_id' => $quotation->id,
+                         'total_amount' => $quotation_detail['total_amount'],
+                         // 'analyse_id' => $quotation_detail['analyse_id'],
+                         'product_id' => $quotation_detail['product_id']?$quotation_detail['product_id']:$product->id,
+                         'purchase_price' => $quotation_detail['purchase_price'],
+                         'quantity' => $quotation_detail['quantity'],
+                         'margin' => $quotation_detail['margin'],
+                         'sell_price' => $quotation_detail['sell_price'],
+                         'unit_of_measure' => $quotation_detail['unit_of_measure'],
+                         'product_description' => $quotation_detail['descriptionss']?$quotation_detail['descriptionss']:null,
+                         
+                        
+     
+                     ]);
+                    
+       
+         
+                     }
+                 $index++;
+                
+                 
+         
+                
+     
+                
+       
+                    }
+                }
+       
+        
+         
+         
+       
+     
+   
  
 }
