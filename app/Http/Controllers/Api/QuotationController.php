@@ -486,7 +486,7 @@ class QuotationController extends Controller
                     "quantity" => $quotation_detail->quantity,
                     "discount" => $quotation_detail->discount,
                     "margin_val"=>((((float)$quotation_detail->purchase_price)*(float)$quotation_detail->margin)/100)*(float)($quotation_detail->quantity),
-                    "discount_val"=>(((float)((float)($quotation_detail->discount) * ((float)(((float)$quotation_detail->margin * (float)($quotation_detail->purchase_price)/100)+(float)($quotation_detail->purchase_price)))/100))),
+                    "discount_val"=>(((float)((float)($quotation_detail->discount) * ((float)(($quotation_detail->margin * (float)($quotation_detail->purchase_price) / 100) + (float)($quotation_detail->purchase_price))) / 100)) * (float)($quotation_detail->quantity)),
                     "cost_qty"  => (float)$quotation_detail->purchase_price*(int)$quotation_detail->quantity,
                     'unit_of_measure' => $quotation_detail->unit_of_measure,
                     // "delivered_quantity"=> $quotation_detail->quantity,
@@ -672,8 +672,9 @@ class QuotationController extends Controller
             ]);
             $index = 0;
             while ($request['quotation_details'] != null) {
-                $quotation_detail = (array) json_decode(json_encode($request['quotation_details'], true));
-                foreach ($request['quotation_details'] as $key => $quotation_detail) {
+                // $quotation_detail = (array) json_encode($request['quotation_details'], true);
+                $quotation_detail = (collect($request['quotation_details'])->toArray())[0];
+                // foreach ($request['quotation_details'] as $key => $quotation_detail) {
                 
                 $quotationDetail = QuotationDetail::where([
                     'id' => $quotation_detail['id'],
@@ -686,7 +687,7 @@ class QuotationController extends Controller
                         'total_amount' => $quotation_detail['total_amount'],
                         'product_id' => $quotation_detail['product_id'],
                         'purchase_price' => $quotation_detail['purchase_price'],
-                        'description' => $quotation_detail['product']?$quotation_detail['product']['name']:$quotation_detail['description'],
+                        // 'description' => $quotation_detail['product']?$quotation_detail['product']:$quotation_detail['description'],
                         'quantity' => $quotation_detail['quantity'],
                         'margin' => $quotation_detail['margin'],
                         'sell_price' => $quotation_detail['sell_price'],
@@ -732,15 +733,17 @@ class QuotationController extends Controller
     
                
       
-        }
+        // }
+        return response()->json("hi");
         $index++;
         
         
     }
-    
    
-}
+   
+        }
         
+           
     
     }
 
