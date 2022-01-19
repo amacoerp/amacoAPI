@@ -724,7 +724,7 @@ class QuotationController extends Controller
       
         
                     }
-              
+                $index++;
                
                 
         
@@ -733,7 +733,6 @@ class QuotationController extends Controller
                
       
         }
-        $index++;
         
         
     }
