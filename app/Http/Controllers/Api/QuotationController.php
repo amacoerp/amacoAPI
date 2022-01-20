@@ -564,7 +564,10 @@ class QuotationController extends Controller
                 if ($request->hasfile('files' . $index)) {
                 $filePath = $request->file('files' . $index)->move('quotation/quotation_detail/' . $request->id);
             }else{
-                $filePath = $quotation_detail['file'];
+                if(isset($quotation_detail['file'])){
+                    $filePath = $quotation_detail['file'];
+                }
+                
             }
             
             $quotationDetail = QuotationDetail::where([
