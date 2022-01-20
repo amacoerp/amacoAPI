@@ -58,8 +58,32 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::where('parent_id', '=', null)->get();
+        $categories -> map(function ($item){
+            $item['totalProducts']  = $this -> getSubCat($item -> id);
+            return $item;
+        });
         return response()->json($categories, 200);
     }
+
+    public function getSubCat($id){
+        $sub = Category::where('parent_id', '=', $id)->get('id');
+        $sum = 0;
+        $sub -> map(function ($item) use($sum){
+            $sum  = Product::where('category_id', '=', $item -> id)->get();
+            $item['totP'] = $sum->count();
+        });
+        $sum = 0;
+
+        foreach ($sub as $key => $value) {
+           $sum = $sum + $value['totP'];
+        }
+        return $sum;
+    }
+
+    // public function getTotalProducts($id){
+    //     $totProd = 
+    //     return $totProd->count();
+    // }
 
     /**
      * Store a newly created resource in storage.
