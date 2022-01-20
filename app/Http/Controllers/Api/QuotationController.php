@@ -560,8 +560,12 @@ class QuotationController extends Controller
         while ($request['quotation_detail' . $index] != null) {
             $quotation_detail = (array) json_decode($request['quotation_detail' . $index], true);
             $filePath = null;
-            if ($request->file('file' . $index)) {
-                $filePath = $request->file('file' . $index)->move('quotation/quotation_detail/' . $request->id);
+            if($quotation_detail['file']){
+                $filePath = $quotation_detail['file'];
+                
+            }
+            if ($request->hasfile('files' . $index)) {
+                $filePath = $request->file('files' . $index)->move('quotation/quotation_detail/' . $request->id);
             }
             $quotationDetail = QuotationDetail::where([
                 'id' => $quotation_detail['id'],
