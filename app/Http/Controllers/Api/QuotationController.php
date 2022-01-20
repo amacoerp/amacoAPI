@@ -468,7 +468,7 @@ class QuotationController extends Controller
                     "total_amount" => $quotation_detail->total_amount,
                     "analyse_id" => $quotation_detail->analyse_id,
                     "product_id" => $quotation_detail->product_id,
-                    // "descriptionss" => $quotation_detail->product->description,
+                    "descriptions" => $quotation_detail->description,
                     "descriptionss" => $quotation_detail->product_description,
                     "amaco_description" => $quotation_detail->amaco_description,
                     "product" => $quotation_detail->product,
@@ -1214,7 +1214,7 @@ class QuotationController extends Controller
                          'total_amount' => $quotation_detail['total_amount'],
                          'product_id' => $quotation_detail['product_id'],
                          'purchase_price' => $quotation_detail['purchase_price'],
-                         'description' => $quotation_detail['product_name']?$quotation_detail['product_name']:$quotation_detail['description'],
+                         'description' => $quotation_detail['descriptions']?$quotation_detail['descriptions']:$quotation_detail['product_name'],
                          'quantity' => $quotation_detail['quantity'],
                          'margin' => $quotation_detail['margin'],
                          'sell_price' => $quotation_detail['sell_price'],
@@ -1226,7 +1226,7 @@ class QuotationController extends Controller
                  } else {
                      if(!$quotation_detail['product_id'])
                      {
-                        $product_exist=Product::where('name','=',$quotation_detail['description'])->first();
+                        $product_exist=Product::where('name','=',$quotation_detail['descriptions'])->first();
                         if(!$product_exist){
                         $product=Product::create([
                              'name'=> $quotation_detail['product'],
@@ -1241,6 +1241,7 @@ class QuotationController extends Controller
                          'total_amount' => $quotation_detail['total_amount'],
                          // 'analyse_id' => $quotation_detail['analyse_id'],
                          'product_id' => $quotation_detail['product_id']?$quotation_detail['product_id']:$product->id,
+                         'description' => $quotation_detail['descriptions']?$quotation_detail['descriptions']:'',
                          'purchase_price' => $quotation_detail['purchase_price'],
                          'quantity' => $quotation_detail['quantity'],
                          'margin' => $quotation_detail['margin'],
