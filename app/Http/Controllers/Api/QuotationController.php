@@ -560,13 +560,13 @@ class QuotationController extends Controller
         while ($request['quotation_detail' . $index] != null) {
             $quotation_detail = (array) json_decode($request['quotation_detail' . $index], true);
             $filePath = null;
-            if($quotation_detail['file']){
-                $filePath = $quotation_detail['file'];
-                
-            }
-            if ($request->hasfile('files' . $index)) {
+         
+                if ($request->hasfile('files' . $index)) {
                 $filePath = $request->file('files' . $index)->move('quotation/quotation_detail/' . $request->id);
+            }else{
+                $filePath = $quotation_detail['file'];
             }
+            
             $quotationDetail = QuotationDetail::where([
                 'id' => $quotation_detail['id'],
                 // 'quotation_id' => $request->id
@@ -578,10 +578,10 @@ class QuotationController extends Controller
             //     ]);
             // }
             if ($quotationDetail) {
-                if (File::exists(public_path($quotationDetail->file_img_url))) {
+                // if (File::exists(public_path($quotationDetail->file_img_url))) {
 
-                    File::delete(public_path($quotationDetail->file_img_url));
-                }
+                //     File::delete(public_path($quotationDetail->file_img_url));
+                // }
                 $quotationDetail->update([
                     'total_amount' => $quotation_detail['total_amount'],
                     'analyse_id' => $quotation_detail['analyse_id'],
