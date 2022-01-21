@@ -485,5 +485,116 @@ class InvoiceController extends Controller
             }
             
     }
+    public function PurchaseInvoiceCreate(Request $request, Invoice $invoice)
+    {
+        $apikey=  \Config::get('example.key');
+        $invoice = PurchaseInvoice::where('id',$request->id)->first();
+        
+        $invoice = PurchaseInvoice::create([
+            // 'invoice_no' => $request->invoice_no,
+            // 'po_number' => $request->po_number,
+            'issue_date' => $request->ps_date,
+            // 'status' => $request->status,
+            // 'quotation_id' => $request->quotation_id,
+            'total_value' => $request->total_value,
+            'discount_in_percentage' => $request->discount_in_p,
+            'vat_in_value' => $request->vat_in_value,
+            'grand_total' => $request->grand_total,
+            // 'delivery_no' => null,
+            'party_id' => $request->party_id,
+            'div_id' => $request->div_id?$request->div_id:0,  // ? $request->ps_date : Carbon::now()
+            'user_id' => $request->user_id?$request->user_id:0,
+            // 'contact_id' => $request->contact_id
+        ]);
+        $temp = json_decode($request['invoice_details'], true);
+        $i = 0;
+        foreach ((array) $temp as $invoice_detail) {
+           
+           
+                
+                $invoiceDetail = PurchaseInvoiceDetail::where('id', $invoice_detail['id'])->first();
+                if($invoiceDetail)
+                {
+                  
+                    if(!$invoice_detail['product_id'] && !$invoice_detail['product'])
+                    {
+                    $product_exist=Product::where('name','=',$invoice_detail['product'])->first();
+                        if(!$product_exist){
+                       $product=Product::create([
+                            'name'=> $invoice_detail['product'],
+                            'type' => 'Non inventory',
+                        ]);
+                        }
+                        else
+                        {
+                            $product=null;
+                        }  
+                    }
+                    $arDescription = json_decode(file_get_contents('https://translation.googleapis.com/language/translate/v2?key='.$apikey.'&q='.urlencode($invoice_detail['description']).'&target=ar'));
+                    $invoiceDetail->create([
+                        // 'quotation_detail_id' => $invoice_detail['id']?$invoice_detail['id']:null,
+                        'product_id' => $invoice_detail['product_id']?$invoice_detail['product_id']:($product?$product->id:null),
+                        // 'sell_price' => $invoice_detail['sell_price'],
+                        'quantity' => $invoice_detail['quantity'],
+                        'total_amount' => $invoice_detail['total_amount'],
+                        'unit_of_measure' => $invoice_detail['unit_of_measure'],
+                        // 'margin' => $invoice_detail['margin'],
+                        'description' => $invoice_detail['description']?$invoice_detail['description']:$invoice_detail['product'],
+                        'arabic_description' => $invoice_detail['arabic_description']?$invoice_detail['arabic_description']:$arDescription->data->translations[0]->translatedText,
+                        // 'invoice_id' => $_invoice_id,
+                        'purchase_price' => $invoice_detail['purchase_price']?$invoice_detail['purchase_price']:null,
+                       
+    
+                    ]);
+
+                }
+                else{
+                   
+                    
+                    if(!$invoice_detail['product_id'] && !$invoice_detail['product'])
+                    {
+                    $product_exist=Product::where('name','=',$invoice_detail['product'])->first();
+                        if(!$product_exist){
+                       $product=Product::create([
+                            'name'=> $invoice_detail['product'],
+                            'div_id' => $request['div_id']?$request['div_id']:0,  // ? $request['ps_date'] : Carbon::now()
+                            'user_id' => $request['user_id']?$request['user_id']:0,
+                            'type' => 'Non inventory',
+                        ]);
+                     }
+                        else{
+                           $product=null; 
+                        }
+                    
+                    }
+                    $arDescription = json_decode(file_get_contents('https://translation.googleapis.com/language/translate/v2?key='.$apikey.'&q='.urlencode($invoice_detail['description']).'&target=ar'));
+                    PurchaseInvoiceDetail::create([
+                       
+                            'quotation_detail_id' => $invoice['quotation_id']?$invoice['quotation_id']:null,
+                            'purchase_invoice_id' => $invoice['id']?$invoice['id']:null,
+                            'product_id' => $invoice_detail['product_id']?$invoice_detail['product_id']:(isset($product)?$product->id:null),
+                            // 'sell_price' => $invoice_detail['sell_price'],
+                            'quantity' => $invoice_detail['quantity'],
+                            // 'margin' => $invoice_detail['margin'],
+                            'total_amount' => $invoice_detail['total_amount'],
+                            'unit_of_measure' => $invoice_detail['unit_of_measure'],
+                            'description' => $invoice_detail['description']?$invoice_detail['description']:$invoice_detail['product'],
+                            'arabic_description' => $invoice_detail['arabic_description']?$invoice_detail['arabic_description']:$arDescription->data->translations[0]->translatedText,
+                            // 'invoice_id' => $request['id'],
+                            'purchase_price' => $invoice_detail['purchase_price']?$invoice_detail['purchase_price']:null,
+                           
+        
+                      
+                
+                    ]);
+                }
+
+            
+                $i++;
+               
+                
+            }
+            
+    }
     
 }

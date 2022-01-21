@@ -7,6 +7,7 @@ use App\Models\PurchaseInvoice;
 use App\Models\PurchaseInvoiceDetail;
 use App\Models\Quotation;
 use App\Models\QuotationDetail;
+use App\Models\Party;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
