@@ -92,9 +92,13 @@ class PurchaseInvoiceController extends Controller
         $data['party_id'] = $request['party_id'];
         $data['invoice_no'] = $request['invoice_no'];
         $data['ps_date'] = $request['ps_date'];
+        $data['div_id'] = $request['div_id'];
+        $data['user_id'] = $request['user_id'];
         $invoice = PurchaseInvoice::create([
             'invoice_no' => $data['invoice_no'],
             'issue_date' => $data['ps_date'],
+            'div_id' => $data['div_id'],
+            'user_id' => $data['user_id'],
             'file' => $fpath,
             'status' => $data['status'],
             'party_id' => $data['party_id'],
