@@ -209,11 +209,11 @@ class PurchaseInvoiceController extends Controller
      * @param  \App\Models\Invoice  $purchaseInvoice
      * @return \Illuminate\Http\Response
      */
-    public function destroy(PurchaseInvoice $purchaseInvoice)
+    public function destroy($id)
     {
-        $purchaseInvoice->delete();
-        PurchaseInvoiceDetail::where('purchase_invoice_id',$purchaseInvoice->id)->delete();
-        return ($purchaseInvoice);
+        // $purchaseInvoice->delete();
+        PurchaseInvoiceDetail::where('id',$id)->delete();
+        return ($id);
         // return ($purchaseInvoice->delete());
     }
 
