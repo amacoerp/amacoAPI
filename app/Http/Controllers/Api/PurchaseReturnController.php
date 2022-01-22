@@ -40,10 +40,7 @@ class PurchaseReturnController extends Controller
         ->get();
 
 
-        return response()->json([
-            'status' => 200,
-            'getPData' => $dd,
-        ]);
+        return $dd;
     }
 
 
@@ -270,6 +267,11 @@ class PurchaseReturnController extends Controller
         $returnItems = PurchaseReturnDetail::
         where('pr_id','=',$id)
         ->get();
+
+        $returnItems -> map(function ($item){
+            $item['podata'] = $this -> getProductsPR($item['po_number']);
+            return $item;
+        });
 
         return response()->json([
             'status' => 200,
