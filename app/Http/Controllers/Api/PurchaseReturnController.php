@@ -294,6 +294,114 @@ class PurchaseReturnController extends Controller
 
     }
 
+    public function purchasereturnUpdate(Request $request){
+
+        // $rfqId = $request->rfq_id ? $request->rfq_id :null;
+        // $parentId = null;
+        // if($request['parent_id']){
+        //     $parentId = $request['parent_id'];
+
+        // }
+
+
+
+        // // try {
+            $datas = [
+                'party_id' => $request['party_id'],
+                // 'rfq_id' => $request['rfq_id']?$request['rfq_id']:0,
+                // 'status' => 'New',
+                // 'parent_id' => $parentId,
+                'total_value' => $request['total_value'],
+                'user_id' => $request['user_id'],
+                'div_id' => $request['div_id'],
+                'net_amount' => $request['net_amount'],
+                'vat_in_value' => $request['vat_in_value'],
+                'discount_in_p' => $request['discount_in_p'],
+                'validity' => $request['validity'],
+                'payment_terms' => $request['payment_terms'],
+                'warranty' => $request['warranty'],
+                'currency_type' => $request['currency_type'],
+                'freight_type' => $request['freight'],
+                'delivery_time' => $request['delivery_time'],
+                
+                'inco_terms' => $request['inco_terms'],
+                // 'pr_number' => $this->getPONo(),
+                'contact_id' => $request['contact_id']?$request['contact_id']:null,
+                // 'transaction_type' => $request['transaction_type'],
+                'ps_date' => $request['ps_date'],  // ? $request['ps_date'] : Carbon::now()
+                // 'sign' => $request['sign'],  // ? $request['ps_date'] : Carbon::now()
+                // 'bank_id' => (int)$request['bank_id'],  // ? $request['ps_date'] : Carbon::now()
+                // 'subject' => $request['subject']?$request['subject']:null,  // ? $request['ps_date'] : Carbon::now()
+                // 'rfq_no' => $request['rfq_no']?$request['rfq_no']:null,  // ? $request['ps_date'] : Carbon::now()
+            ];
+ 
+ 
+            // if ($request['transaction_type'] == "sales") {
+            //         $datas['quotationr_no'] = $this->getQuotationNo();
+            // } elseif ($request['transaction_type'] == "purchase") {
+            //     $datas['pr_number'] = $this->getPONo();
+            // }
+
+            // $datas['pr_number'] = $this->getPONo();
+            $findId = PurchaseReturn::where('pr_id',$request['po_number'])->first();
+            $quotation = $findId->update([$datas]);
+           
+            global $quotation_id;
+            $quotation_id = $quotation->pr_id;
+            
+            if ($request->transaction_type === 'purchase') {
+                foreach ($request['quotation_details'] as $key => $quotation_detail) {
+                    $a = $quotation_detail['po_number'];
+                    PurchaseReturnDetail::create([
+                        'pr_id' => $quotation_id,
+                        'total_amount' => $quotation_detail['total_amount'],
+                        'analyse_id' => null,
+                         
+                        'po_number' => $quotation_detail['po_number'],
+                        'product_id' => $quotation_detail['product_id']?$quotation_detail['product_id']:null,
+                        'purchase_price' => $quotation_detail['purchase_price'],
+                        'description' => $quotation_detail['product_name']?$quotation_detail['product_name']:$quotation_detail['product'],
+                        'product_description' => $quotation_detail['description'],
+                        'quantity' => $quotation_detail['quantity'],
+                        'unit_of_measure' => $quotation_detail['unit_of_measure'],
+                        'margin' => $quotation_detail['margin'],
+                        'sell_price' => $quotation_detail['sell_price'],
+                        'remark' => $quotation_detail['remark'],
+                    ]);
+                }
+            }else{
+                 foreach ($request['quotation_details'] as $key => $quotation_detail) {
+                    // $a = $quotation_detail['po_number'];
+                    PurchaseReturnDetail::create([
+                        'pr_id' => $quotation_id,
+                        'total_amount' => $quotation_detail['total_amount'],
+                        'analyse_id' => null,
+                        'invoice_no' => $quotation_detail['invoice_no'],
+                        'product_id' => $quotation_detail['product_id']?$quotation_detail['product_id']:null,
+                        'purchase_price' => $quotation_detail['purchase_price'],
+                        'description' => $quotation_detail['product_name']?$quotation_detail['product_name']:$quotation_detail['product'],
+                        'product_description' => $quotation_detail['description'],
+                        'quantity' => $quotation_detail['quantity'],
+                        'unit_of_measure' => $quotation_detail['unit_of_measure'],
+                        'margin' => $quotation_detail['margin'],
+                        'sell_price' => $quotation_detail['sell_price'],
+                        'remark' => $quotation_detail['remark'],
+                    ]);
+                }
+                
+            }
+
+            return response()->json([
+            'status' => 200,
+            'getReturnParty' =>$request['transaction_type'],
+        ]);  
+
+    
+    
+    
+    
+    }
+
 }
 
 
