@@ -19,13 +19,14 @@ class PurchaseReturnController extends Controller
         where('transaction_type','=','purchase')
         ->where('party_id','=',$id)
         ->get();
-
-
+        $data -> map(function ($item){
+            $item['products'] = $this -> getProductsPR($item -> po_number);
+            return $item;
+        });
         return response()->json([
             'status' => 200,
             'getPurchaseReturnData' => $data,
         ]);
-
     }
 
     public function getProductsPR($po){
