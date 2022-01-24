@@ -293,22 +293,23 @@ class QuotationController extends Controller
             
             if ($request->transaction_type === 'purchase') {
                 foreach ($request['quotation_details'] as $key => $quotation_detail) {
-                    if(!$quotation_detail['productId'])
-                    {
-                       $product=Product::create([
-                            'name'=> $quotation_detail['product'],
-                            'div_id' => $request['div_id']?$request['div_id']:0,  // ? $request['ps_date'] : Carbon::now()
-                            'user_id' => $request['user_id']?$request['user_id']:0,
-                            'type' => 'Non inventory',
-                        ]);
-                        $product_ID = $product->id;
-                    }
+                    // if(!$quotation_detail['productId'])
+                    // {
+                    //    $product=Product::create([
+                    //         'name'=> $quotation_detail['product'],
+                    //         'div_id' => $request['div_id']?$request['div_id']:0,  // ? $request['ps_date'] : Carbon::now()
+                    //         'user_id' => $request['user_id']?$request['user_id']:0,
+                    //         'type' => 'Non inventory',
+                    //     ]);
+                    //     $product_ID = $product->id;
+                    // }
                     
                     QuotationDetail::create([
                         'quotation_id' => $quotation_id,
                         'total_amount' => $quotation_detail['total_amount'],
                         'analyse_id' => null,
-                        'product_id' => $quotation_detail['productId']?$quotation_detail['productId']:(isset($product_ID)?$product_ID:0),
+                        'product_id' => $quotation_detail['productId']?$quotation_detail['productId']:0,
+                        // (isset($product_ID)?$product_ID:0)
                         'purchase_price' => $quotation_detail['purchase_price'],
                         'description' => $quotation_detail['product_name']?$quotation_detail['product_name']:$quotation_detail['product'],
                         'product_description' => $quotation_detail['description'],
@@ -342,28 +343,28 @@ class QuotationController extends Controller
                     }
                     if(!$quotation_detail['product_id'])
                     {
-                        $product_exist=Product::where('name','=',$quotation_detail['descriptionss']?$quotation_detail['descriptionss']:" ")->first();
-                        if(!$product_exist){
-                            $product=Product::create([
-                                'name'=> $quotation_detail['descriptionss'],
-                                'description'=> $quotation_detail['description'],
-                                'unit_of_measure'=> $quotation_detail['unit_of_measure']?$quotation_detail['unit_of_measure']:'',
-                                'div_id' => $request['div_id']?$request['div_id']:0,  // ? $request['ps_date'] : Carbon::now()
-                                'user_id' => $request['user_id']?$request['user_id']:0,
-                                'type' => 'Non inventory',
-                            ]);
-                        }
-                        else
-                        {
-                            $product=$product_exist;
-                        }  
+                        // $product_exist=Product::where('name','=',$quotation_detail['descriptionss']?$quotation_detail['descriptionss']:" ")->first();
+                        // if(!$product_exist){
+                        //     $product=Product::create([
+                        //         'name'=> $quotation_detail['descriptionss'],
+                        //         'description'=> $quotation_detail['description'],
+                        //         'unit_of_measure'=> $quotation_detail['unit_of_measure']?$quotation_detail['unit_of_measure']:'',
+                        //         'div_id' => $request['div_id']?$request['div_id']:0,  // ? $request['ps_date'] : Carbon::now()
+                        //         'user_id' => $request['user_id']?$request['user_id']:0,
+                        //         'type' => 'Non inventory',
+                        //     ]);
+                        // }
+                        // else
+                        // {
+                        //     // $product=$product_exist;
+                        // }  
                       
                     }
                     QuotationDetail::create([
                         'quotation_id' => $quotation_id,
                         'total_amount' => $quotation_detail['total_amount'],
                         'analyse_id' => null,
-                        'product_id' => $quotation_detail['product_id']?$quotation_detail['product_id']:$product->id,
+                        'product_id' => $quotation_detail['product_id']?$quotation_detail['product_id']:0,
                         'purchase_price' => $quotation_detail['purchase_price'],
                         'description' => $quotation_detail['description'],
                         'unit_of_measure' => $quotation_detail['unit_of_measure']?$quotation_detail['unit_of_measure']:"",
@@ -620,19 +621,19 @@ class QuotationController extends Controller
             } else {
                 if(!$quotation_detail['product_id'] )
                 {
-                    $product_exist=Product::where('name','=',$quotation_detail['description'])->first();
-                    if(!$product_exist){
-                        $product=Product::create([
-                            'name'=> $quotation_detail['description'],
-                            'div_id' => $request['div_id']?$request['div_id']:0,  // ? $request['ps_date'] : Carbon::now()
-                            'user_id' => $request['user_id']?$request['user_id']:0,
-                            'type' => 'Non inventory',
-                        ]);
-                    }
-                    else
-                    {
-                        $product=null;
-                    }  
+                    // $product_exist=Product::where('name','=',$quotation_detail['description'])->first();
+                    // if(!$product_exist){
+                    //     $product=Product::create([
+                    //         'name'=> $quotation_detail['description'],
+                    //         'div_id' => $request['div_id']?$request['div_id']:0,  // ? $request['ps_date'] : Carbon::now()
+                    //         'user_id' => $request['user_id']?$request['user_id']:0,
+                    //         'type' => 'Non inventory',
+                    //     ]);
+                    // }
+                    // else
+                    // {
+                    //     // $product=null;
+                    // }  
                    
                 }
                 QuotationDetail::create([
@@ -1143,6 +1144,18 @@ class QuotationController extends Controller
             $quotation->update([
                 'status' => $request->status,
             ]);
+            // if($request->status=="accept")
+            // {
+            // $str = $request->po_number;
+            // $visitors = Quotation::orderBy('created_at', 'desc')->where('quotation_no', 'like', '%'. $str .'%')->get();
+            // $visitors->map(function($item){
+                
+            //     $item->update(['is_revised'=>2]);
+
+            // });
+            
+           
+        // }
         }
 
 
