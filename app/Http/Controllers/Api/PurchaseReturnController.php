@@ -392,8 +392,8 @@ class PurchaseReturnController extends Controller
             // }
 
             // $datas['pr_number'] = $this->getPONo();
-            $findId = PurchaseReturn::where('pr_id',$request['po_number'])->first();
-            $quotation = $findId->update([$datas]);
+            $quotation = PurchaseReturn::where('pr_id',$request['po_number'])->first();
+            // $quotation = $findId->update([$datas]);
            
             global $quotation_id;
             $quotation_id = $quotation->pr_id;
@@ -401,6 +401,27 @@ class PurchaseReturnController extends Controller
             if ($request->transaction_type === 'purchase') {
                 foreach ($request['quotation_details'] as $key => $quotation_detail) {
                     $a = $quotation_detail['po_number'];
+                    $datas=PurchaseReturnDetail::where('prd_id',$quotation_detail['prd_id'])->first();
+                    if($datas)
+                    {
+                        $datas->update([
+                            'pr_id' => $quotation_id,
+                            'total_amount' => $quotation_detail['total_amount'],
+                            'analyse_id' => null,
+                             
+                            'po_number' => $quotation_detail['po_number'],
+                            'product_id' => $quotation_detail['product_id']?$quotation_detail['product_id']:null,
+                            'purchase_price' => $quotation_detail['purchase_price'],
+                            'description' => $quotation_detail['description']?$quotation_detail['description']:$quotation_detail['description'],
+                            'product_description' => $quotation_detail['product_description'],
+                            'quantity' => $quotation_detail['quantity'],
+                            'unit_of_measure' => $quotation_detail['unit_of_measure'],
+                            'margin' => $quotation_detail['margin'],
+                            'sell_price' => $quotation_detail['sell_price'],
+                            'remark' => $quotation_detail['remark'],
+                        ]);
+                    }
+                    else{
                     PurchaseReturnDetail::create([
                         'pr_id' => $quotation_id,
                         'total_amount' => $quotation_detail['total_amount'],
@@ -409,7 +430,7 @@ class PurchaseReturnController extends Controller
                         'po_number' => $quotation_detail['po_number'],
                         'product_id' => $quotation_detail['product_id']?$quotation_detail['product_id']:null,
                         'purchase_price' => $quotation_detail['purchase_price'],
-                        'description' => $quotation_detail['product_name']?$quotation_detail['product_name']:$quotation_detail['product'],
+                        'description' => $quotation_detail['name']?$quotation_detail['name']:$quotation_detail['product'],
                         'product_description' => $quotation_detail['description'],
                         'quantity' => $quotation_detail['quantity'],
                         'unit_of_measure' => $quotation_detail['unit_of_measure'],
@@ -417,26 +438,27 @@ class PurchaseReturnController extends Controller
                         'sell_price' => $quotation_detail['sell_price'],
                         'remark' => $quotation_detail['remark'],
                     ]);
+                    }
                 }
             }else{
-                 foreach ($request['quotation_details'] as $key => $quotation_detail) {
-                    // $a = $quotation_detail['po_number'];
-                    PurchaseReturnDetail::create([
-                        'pr_id' => $quotation_id,
-                        'total_amount' => $quotation_detail['total_amount'],
-                        'analyse_id' => null,
-                        'invoice_no' => $quotation_detail['invoice_no'],
-                        'product_id' => $quotation_detail['product_id']?$quotation_detail['product_id']:null,
-                        'purchase_price' => $quotation_detail['purchase_price'],
-                        'description' => $quotation_detail['product_name']?$quotation_detail['product_name']:$quotation_detail['product'],
-                        'product_description' => $quotation_detail['description'],
-                        'quantity' => $quotation_detail['quantity'],
-                        'unit_of_measure' => $quotation_detail['unit_of_measure'],
-                        'margin' => $quotation_detail['margin'],
-                        'sell_price' => $quotation_detail['sell_price'],
-                        'remark' => $quotation_detail['remark'],
-                    ]);
-                }
+                //  foreach ($request['quotation_details'] as $key => $quotation_detail) {
+                //     // $a = $quotation_detail['po_number'];
+                //     PurchaseReturnDetail::create([
+                //         'pr_id' => $quotation_id,
+                //         'total_amount' => $quotation_detail['total_amount'],
+                //         'analyse_id' => null,
+                //         'invoice_no' => $quotation_detail['invoice_no'],
+                //         'product_id' => $quotation_detail['product_id']?$quotation_detail['product_id']:null,
+                //         'purchase_price' => $quotation_detail['purchase_price'],
+                //         'description' => $quotation_detail['product_name']?$quotation_detail['product_name']:$quotation_detail['product'],
+                //         'product_description' => $quotation_detail['description'],
+                //         'quantity' => $quotation_detail['quantity'],
+                //         'unit_of_measure' => $quotation_detail['unit_of_measure'],
+                //         'margin' => $quotation_detail['margin'],
+                //         'sell_price' => $quotation_detail['sell_price'],
+                //         'remark' => $quotation_detail['remark'],
+                //     ]);
+                // }
                 
             }
 

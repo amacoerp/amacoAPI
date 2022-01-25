@@ -11,7 +11,8 @@ class PurchaseReturnDetail extends Model
     use HasFactory;
 
      protected $table = "purchase_returns_details";
-
+     protected $primaryKey = "prd_id";
+   
     protected $fillable = [
         'prd_id',	
         'pr_id',	
