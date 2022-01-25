@@ -392,11 +392,32 @@ class PurchaseReturnController extends Controller
             // }
 
             // $datas['pr_number'] = $this->getPONo();
-            $quotation = PurchaseReturn::where('pr_id',$request['po_number'])->first();
-            // $quotation = $findId->update([$datas]);
+            $findId = PurchaseReturn::where('pr_id',$request['rfq_id'])->first();
+            $quotation = $findId->update(['party_id' => $request['party_id'],
+            
+            'total_value' => $request['total_value'],
+            'user_id' => $request['user_id'],
+            'div_id' => $request['div_id'],
+            'net_amount' => $request['net_amount'],
+            'vat_in_value' => $request['vat_in_value'],
+            'discount_in_p' => $request['discount_in_p'],
+            'validity' => $request['validity'],
+            'payment_terms' => $request['payment_terms'],
+            'warranty' => $request['warranty'],
+            'currency_type' => $request['currency_type'],
+            'freight_type' => $request['freight'],
+            'delivery_time' => $request['delivery_time'],
+            
+            'inco_terms' => $request['inco_terms'],
+    
+            'contact_id' => $request['contact_id']?$request['contact_id']:null,
+          
+            'ps_date' => $request['ps_date'],  // ? $request['ps_date'] : Carbon::now()
+            
+            ]);
            
             global $quotation_id;
-            $quotation_id = $quotation->pr_id;
+            // $quotation_id = $quotation->pr_id;
             
             if ($request->transaction_type === 'purchase') {
                 foreach ($request['quotation_details'] as $key => $quotation_detail) {
@@ -405,7 +426,7 @@ class PurchaseReturnController extends Controller
                     if($datas)
                     {
                         $datas->update([
-                            'pr_id' => $quotation_id,
+                            // 'pr_id' => $quotation_id,
                             'total_amount' => $quotation_detail['total_amount'],
                             'analyse_id' => null,
                              
@@ -413,7 +434,7 @@ class PurchaseReturnController extends Controller
                             'product_id' => $quotation_detail['product_id']?$quotation_detail['product_id']:null,
                             'purchase_price' => $quotation_detail['purchase_price'],
                             'description' => $quotation_detail['description']?$quotation_detail['description']:$quotation_detail['description'],
-                            'product_description' => $quotation_detail['product_description'],
+                            'product_description' => $quotation_detail['name'],
                             'quantity' => $quotation_detail['quantity'],
                             'unit_of_measure' => $quotation_detail['unit_of_measure'],
                             'margin' => $quotation_detail['margin'],
@@ -423,15 +444,15 @@ class PurchaseReturnController extends Controller
                     }
                     else{
                     PurchaseReturnDetail::create([
-                        'pr_id' => $quotation_id,
+                        'pr_id' => $request['rfq_id'],
                         'total_amount' => $quotation_detail['total_amount'],
                         'analyse_id' => null,
                          
                         'po_number' => $quotation_detail['po_number'],
                         'product_id' => $quotation_detail['product_id']?$quotation_detail['product_id']:null,
                         'purchase_price' => $quotation_detail['purchase_price'],
-                        'description' => $quotation_detail['name']?$quotation_detail['name']:$quotation_detail['product'],
-                        'product_description' => $quotation_detail['description'],
+                        'description' => $quotation_detail['description']?$quotation_detail['description']:$quotation_detail['description'],
+                        'product_description' => $quotation_detail['product'],
                         'quantity' => $quotation_detail['quantity'],
                         'unit_of_measure' => $quotation_detail['unit_of_measure'],
                         'margin' => $quotation_detail['margin'],

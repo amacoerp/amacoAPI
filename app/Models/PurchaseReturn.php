@@ -9,6 +9,7 @@ class PurchaseReturn extends Model
 {
     use HasFactory;
     protected $table = "purchase_returns";
+    protected $primaryKey = "pr_id";
     protected $fillable = [
         'pr_id',	
         'quotation_no',	

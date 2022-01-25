@@ -112,7 +112,7 @@ class SalesReturnController extends Controller
 
         
 
-         $purchaseReturn->map(function ($item) use($id,) {
+         $purchaseReturn->map(function ($item) use($id) {
             $item['details'] = $this -> newFun($id);
             return $item;
         });
