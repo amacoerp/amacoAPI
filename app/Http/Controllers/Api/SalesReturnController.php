@@ -46,6 +46,61 @@ class SalesReturnController extends Controller
             'getReturnItems' => $returnItems
         ]);    
     }  
+
+
+    public function salesData($id){
+  
+        $data = Invoice::
+        where('party_id','=',$id)
+        ->get();
+         $data -> map(function ($item){
+            $item['products'] = $this -> getProductsPR($item -> invoice_no);
+            return $item;
+        });
+
+        return response()->json([
+            'status' => 200,
+            'getPurchaseReturnData' => $data,
+        ]);
+    }
+
+     public function getProductsPR($po){
+          $dd = PurchaseReturnDetail::
+          join('products','products.id','purchase_returns_details.product_id')
+        //   ->join('purchase_returns','purchase_returns.id','purchase_returns_details.pr_id')
+        ->where('purchase_returns_details.invoice_no','=',$po)
+        ->get();
+            return $dd;
+    }
+    
+    public function getsReturnEditData($id){
+        $data = PurchaseReturn::
+        where('purchase_returns.transaction_type','sales')
+        ->where('purchase_returns.pr_id','=',$id)
+        ->orderBy('purchase_returns.created_at', 'DESC')
+        ->get(); 
+         $datas = PurchaseReturnDetail::
+        join('products','products.id','purchase_returns_details.product_id')
+        ->where('pr_id','=',$id)
+        ->select('products.*','purchase_returns_details.unit_of_measure as unit_of_measure','purchase_returns_details.*')
+        ->get();
+        // $data[0]->party_id
+
+        $Odata = Invoice::
+        join('invoice_details','invoice_details.invoice_id','invoices.id')
+        ->where('invoices.party_id','=',$data[0]->party_id)
+        ->orderBy('invoices.created_at', 'DESC')
+        ->get(); 
+
+        // $odata = 
+
+        return response()->json([
+            'status' => 200,
+            'data' => $data,
+            'datas' => $datas,
+            'Odata' => $Odata,
+        ]);
+    }
     
     public function getSalesReturnEdit($id){
         $purchaseReturn = PurchaseReturn::
@@ -91,7 +146,8 @@ class SalesReturnController extends Controller
     public function newFun($id){
         
         $returnItems = PurchaseReturnDetail::
-        where('pr_id','=',$id)
+        join('products','products.id','purchase_returns_details.product_id')
+        ->where('pr_id','=',$id)
         ->get();
         return $returnItems;
     }

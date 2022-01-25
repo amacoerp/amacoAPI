@@ -218,9 +218,11 @@ Route::post('purchase-return-update', [PurchaseReturnController::class, 'purchas
 
 
 // sales Return API's
+Route::get('sales-return-data/{id}', [SalesReturnController::class, 'salesData']);
+
 Route::get('getSalesFormData/{id}', [SalesReturnController::class, 'index']);
 Route::get('getSalesReturnINV/{id}', [SalesReturnController::class, 'getSalesReturnINV']);
-Route::get('getSalesReturnEdit/{id}', [SalesReturnController::class, 'getSalesReturnEdit']);
+Route::get('getSalesReturnEdit/{id}', [SalesReturnController::class, 'getsReturnEditData']);
 Route::get('getInvSr/{id}', [SalesReturnController::class, 'getProductsSR']);
 
 Route::get('sales-return-table', [SalesReturnController::class, 'SalesReturnTableData']);
