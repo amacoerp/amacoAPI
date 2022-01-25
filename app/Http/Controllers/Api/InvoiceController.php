@@ -241,7 +241,7 @@ class InvoiceController extends Controller
        
         $invoice->update([
             // 'invoice_no' => $request->invoice_no,
-            'po_number' => $request->po_number,
+            'po_number' => isset($request->po_number)? $request->po_number : null,
             'issue_date' => $request->ps_date,
             // 'status' => $request->status,
             // 'quotation_id' => $request->quotation_id,
