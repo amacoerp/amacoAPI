@@ -207,10 +207,13 @@ Route::post('invoce_note', [DeliveryNoteController::class, 'invoce_note']);
 
 Route::delete('purchase-return-delete/{id}', [PurchaseReturnController::class, 'deletepurchasereturn']);
 Route::get('getPurchaseReturnINV/{id}', [PurchaseReturnController::class, 'getPurchaseReturnINV']);
+Route::get('getPurchaseReturnDetails/{id}', [PurchaseReturnController::class, 'getReturnInv']);
 Route::get('purchase-return-data/{id}', [PurchaseReturnController::class, 'index']);
 Route::get('getProductsPR/{id}', [PurchaseReturnController::class, 'getProductsPR']);
+Route::get('getPurchaseReturnEditData/{id}', [PurchaseReturnController::class, 'getPurchaseReturnEditData']);
 Route::get('purchase-return-table', [PurchaseReturnController::class, 'purchaseReturnTableData']);
 Route::post('purchase-return', [PurchaseReturnController::class, 'purchasereturn']);
+Route::post('purchase-return-update', [PurchaseReturnController::class, 'purchasereturnupdate']);
 
 
 
@@ -253,6 +256,8 @@ Route::get('divisionbyid/{id}', [DivisionController::class, 'getDivbyId']);
 Route::get('getParties/{id}', [PartyController::class, 'getParties']);
 Route::get('userActivityLogin', [LoginLogController::class, 'loginActivities']);
 Route::get('activityLogs', [LoginLogController::class, 'activityLogs']);
+
+Route::get('newparties/{id}', [PartyController::class, 'getPartyDet']);
 
 Route::post('logoutLog/{id}', [LoginLogController::class, 'logoutLog']);
 

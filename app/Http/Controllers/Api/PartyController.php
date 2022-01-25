@@ -12,6 +12,10 @@ use App\Models\Division;
 use App\Models\ProductPrice;
 use App\Models\PaymentAccount;
 
+
+use App\Models\PurchaseInvoice;
+use App\Models\PurchaseInvoiceDetail;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use DB;
@@ -201,6 +205,39 @@ class PartyController extends Controller
                 $json,
             ];
         return response()->json(array($data));
+    }  
+    
+    public function getPartyDet($id)
+    {
+        // $path = storage_path() . "/json/jsondata.json"; // ie: /var/www/laravel/app/storage/json/filename.json
+
+        // $json = json_decode(file_get_contents($path), true);
+        $json =  \Config::get('example.key');
+        $data = Party::where('id', '=', $id)->get();
+        $cont = Contact::where('party_id', $id)->get();
+        $data -> map(function ($item){
+            $item['inv'] =  $this -> getInv($item -> id);
+            return $item;
+        });
+              
+        return response()->json([
+            'data' => $data,
+            'contacts' => $cont,
+        ]);
+    }
+
+    public function getInv($id){
+        $inv = PurchaseInvoice::where('party_id',$id)->get();
+        $inv -> map(function ($item){
+            $item['details'] = $this -> getInvDet($item -> id);
+            return $item;
+        });  
+        return $inv;
+    }
+
+    public function getInvDet($id){
+        $invd = PurchaseInvoiceDetail::where('purchase_invoice_id',$id)->get();
+        return $invd;
     }
 
     /**

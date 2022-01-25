@@ -380,7 +380,7 @@ class InvoiceController extends Controller
         
        
         $invoice->update([
-            // 'invoice_no' => $request->invoice_no,
+            'invoice_no' => $request->invoice_no,
             // 'po_number' => $request->po_number,
             'issue_date' => $request->ps_date,
             // 'status' => $request->status,
@@ -492,7 +492,7 @@ class InvoiceController extends Controller
         
         $invoice = PurchaseInvoice::create([
             // 'invoice_no' => $request->invoice_no,
-            // 'po_number' => $request->po_number,
+            'invoice_no' => $request->invoice_no,
             'issue_date' => $request->ps_date,
             // 'status' => $request->status,
             // 'quotation_id' => $request->quotation_id,

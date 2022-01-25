@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Quotation;
 use App\Models\QuotationDetail;
 use App\Models\PurchaseReturn;
+use App\Models\PurchaseInvoice;
+use App\Models\PurchaseInvoiceDetail;
 use App\Models\PurchaseReturnDetail;
 use DB;
 
@@ -15,29 +17,77 @@ class PurchaseReturnController extends Controller
 {
     public function index($id){
         
-        $data = Quotation::
-        where('transaction_type','=','purchase')
-        ->where('party_id','=',$id)
+        $data = PurchaseInvoice::
+        where('party_id','=',$id)
         ->get();
-        $data -> map(function ($item){
-            $item['products'] = $this -> getProductsPR($item -> po_number);
+         $data -> map(function ($item){
+            $item['products'] = $this -> getProductsPR($item -> invoice_no);
             return $item;
         });
+
         return response()->json([
             'status' => 200,
             'getPurchaseReturnData' => $data,
         ]);
     }
 
+
+
+    public function getPurchaseReturnEditData($id){
+        $data = PurchaseReturn::
+        where('purchase_returns.transaction_type','purchase')
+        ->where('purchase_returns.pr_id','=',$id)
+        ->orderBy('purchase_returns.created_at', 'DESC')
+        ->get(); 
+         $datas = PurchaseReturnDetail::
+        join('products','products.id','purchase_returns_details.product_id')
+        ->where('pr_id','=',$id)
+        ->select('products.*','purchase_returns_details.unit_of_measure as unit_of_measure','purchase_returns_details.*')
+        ->get();
+        // $data[0]->party_id
+
+        $Odata = PurchaseInvoice::
+        join('purchase_invoice_details','purchase_invoice_details.purchase_invoice_id','purchase_invoices.id')
+        ->where('purchase_invoices.party_id','=',$data[0]->party_id)
+        ->orderBy('purchase_invoices.created_at', 'DESC')
+        ->get(); 
+
+        // $odata = 
+
+        return response()->json([
+            'status' => 200,
+            'data' => $data,
+            'datas' => $datas,
+            'Odata' => $Odata,
+        ]);
+    }
+
+
+    public function getReturnInv($id){
+        $purchaseReturn = PurchaseReturn::
+        join('parties','parties.id','purchase_returns.party_id')
+        ->where('purchase_returns.transaction_type','purchase')
+        ->where('purchase_returns.pr_id','=',$id)
+        ->orderBy('purchase_returns.created_at', 'DESC')
+        ->get();
+
+         $returnItems = PurchaseReturnDetail::
+        where('pr_id','=',$id)
+        ->get()->values();
+        return response()->json([
+            'status' => 200,
+            'getReturnParty' => $purchaseReturn,
+            'getReturnItems' => $returnItems,
+        ]);    
+    }
+
     public function getProductsPR($po){
 
-        $data = Quotation::
-        where('transaction_type','=','purchase')
-        ->where('po_number','=',$po)
-        ->get('id');
-
-          $dd = QuotationDetail::
-        where('quotation_id','=',$data[0]->id)
+       
+          $dd = PurchaseReturnDetail::
+          join('products','products.id','purchase_returns_details.product_id')
+        //   ->join('purchase_returns','purchase_returns.id','purchase_returns_details.pr_id')
+        ->where('purchase_returns_details.po_number','=',$po)
         ->get();
 
 
@@ -94,14 +144,10 @@ class PurchaseReturnController extends Controller
 
     public function purchasereturn(Request $request){
 
-
-        
-        // $rfqId = null;
         $rfqId = $request->rfq_id ? $request->rfq_id :null;
         $parentId = null;
         if($request['parent_id']){
             $parentId = $request['parent_id'];
-
         }
 
 
@@ -160,7 +206,7 @@ class PurchaseReturnController extends Controller
                         'po_number' => $quotation_detail['po_number'],
                         'product_id' => $quotation_detail['product_id']?$quotation_detail['product_id']:null,
                         'purchase_price' => $quotation_detail['purchase_price'],
-                        'description' => $quotation_detail['product_name']?$quotation_detail['product_name']:$quotation_detail['product'],
+                        'description' => $quotation_detail['description']?$quotation_detail['description']:'',
                         'product_description' => $quotation_detail['description'],
                         'quantity' => $quotation_detail['quantity'],
                         'unit_of_measure' => $quotation_detail['unit_of_measure'],
@@ -249,7 +295,7 @@ class PurchaseReturnController extends Controller
     public function purchaseReturnTableData(){
         $quotations = PurchaseReturn::
         join('parties','parties.id','purchase_returns.party_id')
-        ->where("transaction_type",'purchase')
+        ->where("purchase_returns.transaction_type",'purchase')
         ->orderBy('purchase_returns.created_at', 'DESC')
         ->get();
 
@@ -263,21 +309,23 @@ class PurchaseReturnController extends Controller
         ->where('purchase_returns.transaction_type','purchase')
         ->where('purchase_returns.pr_id','=',$id)
         ->orderBy('purchase_returns.created_at', 'DESC')
-        ->get();
+        ->get()->values();
 
         $returnItems = PurchaseReturnDetail::
         where('pr_id','=',$id)
-        ->get();
+        ->get()->values();
 
-        $returnItems -> map(function ($item){
-            $item['podata'] = $this -> getProductsPR($item['po_number']);
-            return $item;
+        $temp = $returnItems -> map(function ($item){
+            $item['podata'] = $item -> po_number;
+            // $item['podata'] = $this -> getProductsPR($item -> po_number);
+            return $item['podata'];
         });
 
         return response()->json([
             'status' => 200,
             'getReturnParty' => $purchaseReturn,
-            'getReturnItems' => $returnItems
+            'getReturnItems' => $returnItems,
+            'podatas' => $temp,
         ]);    
     }
 
@@ -398,6 +446,8 @@ class PurchaseReturnController extends Controller
         ]);  
 
     
+
+        
     
     
     

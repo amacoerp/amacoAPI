@@ -91,11 +91,13 @@ class PurchaseInvoiceController extends Controller
         $data['grand_total'] = $request['grand_total'];
         $data['bill_no'] = $request['bill_no'];
         $data['party_id'] = $request['party_id'];
-        $data['invoice_no'] = $request['invoice_no'];
+        $data['po_number'] = $request['po_number'];
         $data['ps_date'] = $request['ps_date'];
         $data['div_id'] = $request['div_id'];
+        $data['invoice_no'] = $request['invoice_no'];
         $data['user_id'] = $request['user_id'];
         $invoice = PurchaseInvoice::create([
+            'po_number' => $data['po_number'],
             'invoice_no' => $data['invoice_no'],
             'issue_date' => $data['ps_date'],
             'div_id' => $data['div_id'],
@@ -151,7 +153,7 @@ class PurchaseInvoiceController extends Controller
     {
         return [
             $purchaseInvoice,
-            $purchaseInvoice->quotation->party,
+            $purchaseInvoice->party,
             // $purchaseInvoice->quotation->quotationDetail,
             $purchaseInvoice->purchaseInvoiceDetail->map(function ($purchaseInvoice_detail){
                 return [
