@@ -426,10 +426,39 @@ class PartyController extends Controller
         //         ->whereRaw('product_prices.product_id='.$this->product);
         // })
         // ->get();
-        $results = DB::select(DB::raw("select * from parties where id not in (select party_id from product_prices where product_id= " . $product . ") and party_type='Both' or party_type='vendor'
+        $results = DB::select(DB::raw("select * from parties where id not in (select party_id from product_prices where product_id= " . $product . ") and party_type !='Customer'
 "));
 
-        return response()->json($results);
+            $data = Product::where('id', $product)->get();
+            $data -> map(function ($item){
+                $item['data'] = $this -> getVData($item -> id,$item -> div_id);
+                $item['ids'] = $pdata = ProductPrice::where('product_id',$item -> id)->get();
+
+            });
+
+            $temp = $data[0]->ids -> map(function ($item){
+                return $item -> party_id;
+            });
+        return response()->json([
+            'data' => $data[0]->data,
+            'ids' => $temp,
+        ]);
+    }
+
+    public function getVData($product_id,$div_id){
+
+        $data = Party::join('party_divisions','party_divisions.party_id','parties.id')
+        ->join('payment_accounts','payment_accounts.id','party_divisions.div_id')
+        ->where('payment_accounts.div_id',$div_id)
+        ->where('parties.party_type','!=','Customer')
+        // ->where('parties.id','!=',$temp[0])
+        ->select('parties.id', 'parties.firm_name','parties.party_type','parties.contact','parties.vat_no','parties.opening_balance','parties.credit_days','payment_accounts.div_id')
+        ->get();
+
+
+        return $data;
+
+
     }
     public function partyDelete_all(Request $request)
     {

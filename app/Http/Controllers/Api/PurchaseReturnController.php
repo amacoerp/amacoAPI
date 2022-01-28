@@ -193,7 +193,7 @@ class PurchaseReturnController extends Controller
             $quotation = PurchaseReturn::create($datas);
            
             global $quotation_id;
-            $quotation_id = $quotation->id;
+            $quotation_id = $quotation->pr_id;
             
             if ($request->transaction_type === 'purchase') {
                 foreach ($request['quotation_details'] as $key => $quotation_detail) {
