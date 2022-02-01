@@ -317,7 +317,7 @@ class PartyController extends Controller
             'city_ar' => $cityar->data->translations[0]->translatedText,
             'country_ar' => $cityar->data->translations[0]->translatedText,
             'proviance_ar' => $proviancear->data->translations[0]->translatedText,
-            'zip_code_ar' => $request->zip_code_ar,
+            'zip_code_ar' =>$request->zip_code_ar,
             'street_ar' => $streetar->data->translations[0]->translatedText,
             'div_id' => $request->div_id?$request->div_id:1,
             'user_id' => $request->user_id?$request->user_id:0,
