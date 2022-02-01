@@ -36,7 +36,6 @@ class DivisionController extends Controller
             'opening_bal' => (string) $request->opening_balance,
         
             
-            
         ]);
         PaymentAccount::create([
             'div_id'=> $party->id,

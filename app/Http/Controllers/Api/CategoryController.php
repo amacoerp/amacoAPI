@@ -240,9 +240,15 @@ class CategoryController extends Controller
 
     public function subCategory($id)
     {
-
         $sub_categories = Category::where('parent_id', '=', $id)->get();
+        $sub_categories->map(function($item){
+            $item['product'] = $this -> getProductQty($item -> id);
+        });
         return response()->json($sub_categories);
+    }
+    public function getProductQty($id){
+        $product = Product::where('category_id',$id)->get();
+        return $product -> count();
     }
 
     public function unCategorized_products()
