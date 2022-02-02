@@ -101,7 +101,7 @@ class InvoiceController extends Controller
         $data['grand_total'] = $request['grand_total'];
         $invoice = Invoice::create([
             'invoice_no' => $data['invoice_no'],
-            'po_number' => $data['po_number']?$data['po_number']:'',
+            'po_number' => isset($request->po_number)?$data['po_number']:null,
             'issue_date' => $data['issue_date'],
             'status' => $data['status'],
             'quotation_id' => $data['quotation_id'],

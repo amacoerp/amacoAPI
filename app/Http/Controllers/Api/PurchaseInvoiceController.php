@@ -220,7 +220,8 @@ class PurchaseInvoiceController extends Controller
     public function destroy($id)
     {
         // $purchaseInvoice->delete();
-        PurchaseInvoiceDetail::where('id',$id)->delete();
+        $data=PurchaseInvoice::where('id',$id)->delete();
+        PurchaseInvoiceDetail::where('purchase_invoice_id',$id)->delete();
         return ($id);
         // return ($purchaseInvoice->delete());
     }
