@@ -98,7 +98,7 @@ class PurchaseInvoiceController extends Controller
         $data['user_id'] = $request['user_id'];
         $invoice = PurchaseInvoice::create([
             'po_number' => $data['po_number'],
-            'invoice_no' => $data['invoice_no'],
+            'invoice_no' => isset($request['invoice_no'])?$data['invoice_no']:null,
             'issue_date' => $data['ps_date'],
             'div_id' => $data['div_id'],
             'user_id' => $data['user_id'],
@@ -111,6 +111,7 @@ class PurchaseInvoiceController extends Controller
             'vat_in_value' => $data['vat_in_value'],
             'grand_total' => $data['grand_total'],
             'bill_no' => $data['bill_no'],
+            'currency_type' => $data['currency_type'],
         ]);
 
         //   return response()->json(gettype($a));

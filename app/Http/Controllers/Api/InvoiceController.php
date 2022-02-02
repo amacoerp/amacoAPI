@@ -380,7 +380,7 @@ class InvoiceController extends Controller
         
        
         $invoice->update([
-            'invoice_no' => $request->invoice_no,
+            'invoice_no' => isset($request->invoice_no)?$request->invoice_no:null,
             // 'po_number' => $request->po_number,
             'issue_date' => $request->ps_date,
             // 'status' => $request->status,
@@ -393,7 +393,7 @@ class InvoiceController extends Controller
             'party_id' => $request->party_id,
             'div_id' => $request->div_id?$request->div_id:0,  // ? $request->ps_date : Carbon::now()
             'user_id' => $request->user_id?$request->user_id:0,
-            // 'contact_id' => $request->contact_id
+            'currency_type' => $request->currency_type
         ]);
         $temp = json_decode($request['invoice_details'], true);
         $i = 0;
