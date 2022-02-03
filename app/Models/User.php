@@ -94,5 +94,9 @@ protected $guarded = [];
     {
         return $this->belongsTo(userDivisions::class);
     }
+    public function designation()
+    {
+        return $this->hasMany(Designation::class);
+    }
 
 }

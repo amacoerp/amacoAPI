@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\PaymentAccount;
 use App\Models\UserDivision;
+use App\Models\Designation;
 use App\Models\Division;
 use App\Models\Role;
 use App\Models\PermissionDenied;
@@ -142,11 +143,24 @@ class UserController extends Controller
                 }
             
             }
+            $designation = json_decode($request['designationList'], true);
+            foreach ($designation as $div) {
+
+                
+                 Designation::create([
+                    'user_id' => $user->id,
+                    'name' => $div['name'],
+                    'designation' => $div['designation'],
+                ]);
+                // return response()->json($div['check']);
+                }
             
+            
+                return response()->json($designation);
 
         }
        
-     return response()->json('success');
+    
     }
 
     /**
