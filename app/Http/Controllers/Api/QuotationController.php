@@ -1359,7 +1359,7 @@ public function show_quotation($id)
                 return [
                    
                         // -> as it return std object
-                    'index1'.$quotation_detail->index1= $quotation_detail
+                    // 'index1'.$quotation_detail->index1= $quotation_detail
                     
                     // "id" => $quotation_detail->id,
                     // "index1" => $quotation_detail->index1,
@@ -1404,9 +1404,20 @@ public function show_quotation($id)
                          // });
             ) 
         ];
-
-        return response()->json([
+        $qData = QuotationDetail::where('quotation_id', $id)->orderBy('index1','asc')->get();
+        foreach ($qData as $key => $value) {
+            $ind[] = $value -> index1;
+        }
+        $result = array_unique($ind); 
+         $result = array_unique($ind); 
+        foreach ($result as $key => $value) {
+            $a[$value] = QuotationDetail::where('quotation_id', $id)
+            ->where('index1',$value)
+            ->get();
+        }
+        $data['quotationDetail'] = $a;
+        return response()->json(
             $data
-        ]);
+        );
     }
 }
