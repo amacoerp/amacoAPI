@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Models\DeliveryNote;
 use App\Models\DeliveryNoteDetail;
 use App\Models\CompanyBank;
+use Illuminate\Database\Eloquent\Collection;
+
 use App\Models\Product;
 
 use App\Models\notes;
@@ -375,6 +377,7 @@ class QuotationController extends Controller
                         'margin' => $quotation_detail['margin'],
                         'sell_price' => $quotation_detail['sell_price'],
                         'remark' => $quotation_detail['remark'],
+                        'index1' => $quotation_detail['index1'],
                         // "amaco_description" => $quotation_detail['descriptionss'],
                         'file_img_url' => $filePath,
                     ]);
@@ -467,6 +470,7 @@ class QuotationController extends Controller
                 $urlPath = $filePath ? url($filePath) : null;
                 return [
                     "id" => $quotation_detail->id,
+                    "index1" => $quotation_detail->index1,
                     "total_amount" => $quotation_detail->total_amount,
                     "analyse_id" => $quotation_detail->analyse_id,
                     "product_id" => $quotation_detail->product_id,
@@ -601,6 +605,7 @@ class QuotationController extends Controller
                     'unit_of_measure' => $quotation_detail['unit_of_measure'],
                     'product_description' => $quotation_detail['descriptionss']?$quotation_detail['descriptionss']:"",
                     'remark' => $quotation_detail['remark'],
+                    'index1' => $quotation_detail['index1'],
                     'file_img_url' => $filePath,
 
                 ]);
@@ -653,6 +658,7 @@ class QuotationController extends Controller
                     'product_description' => $quotation_detail['descriptionss']?$quotation_detail['descriptionss']:"",
                     'unit_of_measure' => $quotation_detail['unit_of_measure'],
                     'remark' => $quotation_detail['remark'],
+                    'index1' => $quotation_detail['index1'],
                     'file_img_url' => $filePath,
 
                 ]);
@@ -1294,4 +1300,113 @@ class QuotationController extends Controller
      
    
  
+
+
+public function show_quotation($id)
+    {
+        $quotation = Quotation::where('id', $id)->first();
+        $temp =  new Collection();
+
+        $data = [
+            "id" => $quotation->id,
+            'quotation_no' => $quotation->quotation_no,
+            "party_id" => $quotation->party_id,
+            "file" => $quotation->file,
+            "rfq_id" => $quotation->rfq_id || null,
+            "status" => $quotation->status,
+            "total_value" => $quotation->total_value,
+            "discount_in_p" => $quotation->discount_in_p,
+            "vat_in_value" => $quotation->vat_in_value,
+            "net_amount" => $quotation->net_amount,
+            "created_at" => $quotation->created_at,
+            "updated_at" => $quotation->updated_at,
+            "validity" => $quotation->validity,
+            "payment_terms" => $quotation->payment_terms,
+            "warranty" => $quotation->warranty,
+            "delivery_time" => $quotation->delivery_time,
+            "inco_terms" => $quotation->inco_terms,
+            "po_number" => $quotation->po_number,
+            "transaction_type" => $quotation->transaction_type,
+            "ps_date" => $quotation->ps_date,
+            "sales_order_number" => $quotation->sales_order_number,
+            "contact" => $quotation->contact,
+            "party" => $quotation->party,
+            "partyDivision" => $quotation->party && ($quotation->party->partyDivision->map(function($payment){
+                return $payment->partyDivision;
+            })),
+            "rfq" => $quotation->rfq,
+            "is_revised" => $quotation->is_revised,
+            "sign" => $quotation->signature,
+            "notes" => $quotation->notes,
+            "bank" => $quotation->bank,
+            "currency_type" => $quotation->currency_type,
+            "freight_type" => $quotation->freight_type,
+            "subject" => $quotation->subject,
+            "rfq_no" => $quotation->rfq_no,
+            "transport" => $quotation->transport,
+            "other" => $quotation->other,
+            "div_id" => $quotation->div_id,
+            "user_id" => $quotation->user_id,
+
+            $quotation->quotationDetail->map(function ($quotation_detail) {
+                $filePath = $quotation_detail->file_img_url ? $quotation_detail->file_img_url : '';
+                $urlPath = $filePath ? url($filePath) : null;
+            
+                    // -> as it return std object
+                // $temp->filter(function ($item) {  
+                // if($item->index1==$quotation_detail->index1)
+                
+                return [
+                   
+                        // -> as it return std object
+                    'index1'.$quotation_detail->index1= $quotation_detail
+                    
+                    // "id" => $quotation_detail->id,
+                    // "index1" => $quotation_detail->index1,
+                    // "total_amount" => $quotation_detail->total_amount,
+                    // "analyse_id" => $quotation_detail->analyse_id,
+                    // "product_id" => $quotation_detail->product_id,
+                    // "descriptions" => $quotation_detail->description,
+                    // "descriptionss" => $quotation_detail->product_description,
+                    // "amaco_description" => $quotation_detail->amaco_description,
+                    // "product" => $quotation_detail->product,
+                    // "product_name" => " ",
+                    // // "partyDivision" => $quotation_detail->partyDivision,
+                    // "product_price_list" => $quotation_detail->product? $quotation_detail->product->productPrice->map(function ($productP) {
+                    //     return [
+                    //         'price' => $productP->price,
+                    //         'firm_name' => $productP->party->firm_name
+                    //     ];
+                    // }):null,
+                    
+                    // // "product_price_list" => $quotation_detail->product->productPrice,
+                    // "purchase_price" => $quotation_detail->purchase_price?$quotation_detail->purchase_price:'',
+                    // "description" => $quotation_detail->description,
+                    // "quantity" => $quotation_detail->quantity,
+                    // "discount" => $quotation_detail->discount,
+                    // "margin_val"=>$quotation_detail->purchase_price ? ((((float)$quotation_detail->purchase_price)*(float)$quotation_detail->margin)/100)*(float)($quotation_detail->quantity):((float)($quotation_detail->quantity)*(float)($quotation_detail->sell_price))+$quotation_detail->discount_val,
+                    // "discount_val"=>$quotation_detail->purchase_price?(((float)((float)($quotation_detail->discount) * ((float)(((float)$quotation_detail->margin * (float)($quotation_detail->purchase_price) / 100) + (float)($quotation_detail->purchase_price))) / 100)) * (float)($quotation_detail->quantity)):(float)$quotation_detail->discount_val,
+                    // "cost_qty"  => (float)$quotation_detail->purchase_price*(int)$quotation_detail->quantity,
+                    // 'unit_of_measure' => $quotation_detail->unit_of_measure,
+                    // // "delivered_quantity"=> $quotation_detail->quantity,
+                    // "delivered_quantity" => $quotation_detail->getDeliveredQuantity($quotation_detail),
+                    // "balance" => (int)$quotation_detail->quantity - (int)$quotation_detail->getDeliveredQuantity($quotation_detail),
+                    // "margin" => $quotation_detail->margin? $quotation_detail->margin:'',
+                    // "sell_price" => $quotation_detail->sell_price,
+                    // "remark" => $quotation_detail->remark,
+                    // "file" => $urlPath,
+                    // "created_at" => $quotation_detail->created_at,
+                    // "updated_at" => $quotation_detail->updated_at,
+                   
+                  
+                ];
+            }
+                         // });
+            ) 
+        ];
+
+        return response()->json([
+            $data
+        ]);
+    }
 }

@@ -263,6 +263,9 @@ Route::get('newparties/{id}', [PartyController::class, 'getPartyDet']);
 
 Route::post('logoutLog/{id}', [LoginLogController::class, 'logoutLog']);
 
+// index wise quote view
+
+Route::get('show_quotation/{id}', [QuotationController::class, 'show_quotation']);
 
 
 
