@@ -1411,13 +1411,13 @@ public function show_quotation($id)
         $result = array_unique($ind); 
          $result = array_unique($ind); 
         foreach ($result as $key => $value) {
-            $a[$value] = QuotationDetail::where('quotation_id', $id)
+            $a[$value]= QuotationDetail::where('quotation_id', $id)
             ->where('index1',$value)
             ->get();
         }
-        $data['quotationDetail'] = $a;
+        $data['quotation_details'] = [$a];
         return response()->json(
-            $data
+           [$data]
         );
     }
 }
