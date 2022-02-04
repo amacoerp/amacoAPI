@@ -10,6 +10,7 @@ class Designation extends Model
     protected  $table="designations";
     protected $fillable = [
         'name',
+        'user_id',
         'designation',
        
     ];

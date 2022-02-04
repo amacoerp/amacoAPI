@@ -19,11 +19,11 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
 protected $guarded = [];
-  protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+//   protected $fillable = [
+//         'name',
+//         'email',
+//         'password',
+//     ];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -96,7 +96,8 @@ protected $guarded = [];
     }
     public function designation()
     {
-        return $this->hasMany(Designation::class);
+        return $this->hasMany(Designation::class,'user_id','id');
     }
+   
 
 }

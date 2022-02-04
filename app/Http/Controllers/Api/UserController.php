@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\File;
 // use App\Http\Controllers\Api\Hash;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use DB;
 
 
 class UserController extends Controller
@@ -156,11 +157,11 @@ class UserController extends Controller
                 }
             
             
-                return response()->json($designation);
+               
 
         }
        
-    
+        return response()->json($request->role_id);
     }
 
     /**
@@ -177,7 +178,7 @@ class UserController extends Controller
 
         $user['img']=$user->userProfile();
         $user['investments']=Investment::where('payment_account_id',$user->PaymentAccount->id)->get();
-        // $user['investments']=$user->PaymentAccount->id;
+        $user['designationList']=Designation::where('user_id',$user->id)->get();
         $user['divisions']=UserDivision::where('u_id',$user->id)->get();
         
 
@@ -252,6 +253,24 @@ class UserController extends Controller
                 }
             
             }
+
+            $designation = $request['designationList'];
+            foreach ($designation as $div) {
+                if(isset($div['id']))
+                {
+                $res=DB::table('designations')->where('id',$div['id'])->update([
+                    'name' => $div['name'],
+                    'designation' => $div['designation'],
+                ]);
+                }
+                else {
+                    Designation::create([
+                        'user_id' => $user->id,
+                        'name' => $div['name'],
+                    'designation' => $div['designation'],
+                    ]);# code...
+                }
+            }
         }
             $user->update([
             "name"=> $request->name,
@@ -260,14 +279,14 @@ class UserController extends Controller
             "contact"=> $request->contact,
             "role_id"=> $request->role_id,
             'remember_token' => Str::random(10),
-            'designation' => $request->designation,
+            // 'designation' => $request->designation,
             'prefix' => $request->prefix,
         ]);
        
        
  
 
-     return response()->json("success");
+     return response()->json($request['designationList']);
     }
 
     /**

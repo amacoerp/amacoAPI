@@ -54,6 +54,7 @@ use App\Http\Controllers\Api\MobileController;
 use App\Http\Controllers\Api\PermissionDeniedController;
 use App\Http\Controllers\Api\StockController;
 use App\Http\Controllers\Api\LoginLogController;
+use App\Http\Controllers\Api\DesignationController;
 
 
 /*
@@ -127,6 +128,7 @@ Route::apiResource('company-bank', CompanyBankController::class);
 Route::apiResource('demo', demo::class);
 Route::apiResource('division', DivisionController::class);
 Route::apiResource('stock', StockController::class);
+Route::apiResource('designation', DesignationController::class);
 // restful api links
 Route::post('company_edit',[CompanyController::class,'company_edit']);
 Route::post('rfq-history', [RFQController::class, 'history'])->name('rfq.history');

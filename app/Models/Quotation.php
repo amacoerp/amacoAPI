@@ -72,4 +72,8 @@ class Quotation extends Model
         return "No file Uploaded";
 
     }
+    public function designation()
+    {
+        return $this->hasOne(Designation::class, 'id','sign');
+    }
 }

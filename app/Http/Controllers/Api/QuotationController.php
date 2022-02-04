@@ -7,6 +7,7 @@ use App\Models\Quotation;
 use App\Models\QuotationDetail;
 use Illuminate\Http\Request;
 use App\Models\DeliveryNote;
+use App\Models\Designation;
 use App\Models\DeliveryNoteDetail;
 use App\Models\CompanyBank;
 use Illuminate\Database\Eloquent\Collection;
@@ -453,7 +454,8 @@ class QuotationController extends Controller
             })),
             "rfq" => $quotation->rfq,
             "is_revised" => $quotation->is_revised,
-            "sign" => $quotation->signature,
+            // "sign" => $quotation->signature,
+            "sign" => Designation::where('id',$quotation->sign)->get(),
             "notes" => $quotation->notes,
             "bank" => $quotation->bank,
             "currency_type" => $quotation->currency_type,
@@ -1336,7 +1338,8 @@ public function show_quotation($id)
             })),
             "rfq" => $quotation->rfq,
             "is_revised" => $quotation->is_revised,
-            "sign" => $quotation->signature,
+            // "sign" => $quotation->signature,
+            "sign" => Designation::join('users','users.id','designations.user_id')->select('users.id as uid','email','designations.name','designations.designation','users.contact')->where('designations.id',$quotation->sign)->get(),
             "notes" => $quotation->notes,
             "bank" => $quotation->bank,
             "currency_type" => $quotation->currency_type,
