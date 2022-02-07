@@ -238,7 +238,8 @@ Route::get('getAllCat', [CategoryController::class, 'getAllCat']);
 
 //userPermission
 Route::post('add-permission', [PermissionDeniedController::class, 'store']);
-Route::get('get-modules-per/{id}/{i}', [PermissionDeniedController::class, 'index']);Route::get('userPermission/{id}', [PermissionDeniedController::class, 'userPermission']);
+Route::get('get-modules-per/{id}/{i}', [PermissionDeniedController::class, 'index']);
+Route::get('userPermission/{id}', [PermissionDeniedController::class, 'userPermission']);
 
 //Module API's
 Route::post('add-module', [ModuleController::class, 'store']);
