@@ -64,9 +64,10 @@ class DeliveryNoteDetail extends Model
         }
         else
         {
+            
         $quotationDetail = QuotationDetail::where([
             'quotation_id' => $delivery_notes_detail->deliveryNote->quotation_id,
-            // 'product_id' => $delivery_notes_detail->product_id,
+            'id' => (int)$delivery_notes_detail->quote_detail_id,
             // 'description' => $delivery_notes_detail->product_descriptions,
         ])->firstOrFail();
         
