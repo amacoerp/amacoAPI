@@ -320,15 +320,15 @@ class UserController extends Controller
         if(!$user){
             return response()->json(['msg'=>"No user by the given id"]);
         }
-        if( Hash::check($request->password, $user->password  ) )
+        if(Hash::check($request->password, $user->password))
         {
-             response()->json(['msg'=>true]);
+             return response()->json(['msg'=>true]);
         }
         // else {
-        $this->changePassword($request->id,$request->newpassword);
-            
+        // $this->changePassword($request->id,$request->newpassword);
+        // return response()->json(['msg'=>false]); 
         // }
-        return response()->json(['msg'=>false]);
+        
     }
     public function oldPasswordNew(Request $request)
     {

@@ -89,12 +89,26 @@ class DeliveryNoteController extends Controller
     
     public function store(Request $request)
     {
+        if($request->quotation_id)
+        {
         $quotation = Quotation::where('id', $request->quotation_id)->first();
+       
+
 
         $lastDeliveryNote = DeliveryNote::where([
             'quotation_id' => $request->quotation_id,
         ])->latest('created_at')->first();
 
+        }
+        else{
+            $quotation = Invoice::where('id', $request->invoice_id)->first();
+       
+
+
+            $lastDeliveryNote = DeliveryNote::where([
+                'invoice_id' => $request->invoice_id,
+            ])->latest('created_at')->first();
+        }
         $deliveryNo = null;
         if($request->is_partial){
             if($lastDeliveryNote){
@@ -113,6 +127,7 @@ class DeliveryNoteController extends Controller
 
         $data = [
             'quotation_id' => $request->quotation_id,
+            'invoice_id' => $request->invoice_id,
             'delivery_number' => $deliveryNo ,
             'po_number' => $quotation->po_number,
             'delivery_date' => $request->delivery_date,
@@ -129,6 +144,9 @@ class DeliveryNoteController extends Controller
                     'product_id' => $deliveryNoteDetail['product_id'],
                     'delivered_quantity' => $deliveryNoteDetail['delivering_quantity'],
                     'total_qty' => $deliveryNoteDetail['quantity'],
+                    'product_descriptions' => $deliveryNoteDetail['description'],
+                    'unit_of_measure' => $deliveryNoteDetail['unit_of_measure'],
+                    'quote_detail_id' => $deliveryNoteDetail['id'],
                     // 'delivering_qty' => $deliveryNoteDetail['balance'],
                 ];
                 $deliveryNoteDetails = DeliveryNoteDetail::create($deliveryNoteDetailData);
@@ -196,18 +214,32 @@ class DeliveryNoteController extends Controller
      * @param  \App\Models\DeliveryNote  $deliveryNote
      * @return \Illuminate\Http\Response
      */
-    public function show(DeliveryNote $deliveryNote)
+    public function show($id,$s)
     {
+        
+        $deliveryNote = DeliveryNote::where('id',$id)->orderBy('created_at', 'DESC')->get();
+        
+
+        $delivery=$deliveryNote->map(function ($deliveryNote) {
+            return [
+                $deliveryNote,
+                $deliveryNote->deliveryNoteDetail,
+                
+            ];
+        });
+      
         $data = [
-            $deliveryNote->deliveryNoteDetail->map(function ($deliveryNoteDetailItem) {
-                return $deliveryNoteDetailItem->showDeliveredNoteDetail($deliveryNoteDetailItem->id,$deliveryNoteDetailItem->product_id);
+            $deliveryNote[0]->deliveryNoteDetail->map(function ($deliveryNoteDetailItem)use($s) {
+                return $deliveryNoteDetailItem->showDeliveredNoteDetail($deliveryNoteDetailItem['id'],$deliveryNoteDetailItem['product_id'],$s);
             }),
-            $deliveryNote,
-            $deliveryNote->quotation?$deliveryNote->quotation:null,
-            $deliveryNote->invoice?$deliveryNote->invoice:null,
-            // $deliveryNote->quotation->contact,
-            $deliveryNote->quotation?$deliveryNote->quotation->party:$deliveryNote->invoice->party,
-            $deliveryNote->quotation?$deliveryNote->quotation->quotationDetail:$deliveryNote->invoice->invoiceDetail,
+            $deliveryNote[0],
+            $s=="invoice"?$deliveryNote[0]->invoice:$deliveryNote[0]->quotation,
+            $deliveryNote[0]->invoice?$deliveryNote[0]->invoice:null,
+            $s=="invoice"?$deliveryNote[0]->invoice->contact:$deliveryNote[0]->quotation->contact,
+           
+            $s=="invoice"?$deliveryNote[0]->invoice->party:$deliveryNote[0]->quotation->party,
+            $s=="invoice"?$deliveryNote[0]->invoice:$deliveryNote[0]->quotation->quotationDetail,
+            $deliveryNote[0]->quotation?$deliveryNote[0]->quotation->quotationDetail:$deliveryNote[0]->invoice->invoiceDetail,
             
 
         ];

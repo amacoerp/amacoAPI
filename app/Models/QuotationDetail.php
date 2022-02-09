@@ -35,10 +35,11 @@ class QuotationDetail extends Model
     }
     public function getDeliveredQuantity(QuotationDetail $quotation_detail)
     {
+        
         $deliveryNoteDetails = DB::table('delivery_notes')
         ->leftJoin('delivery_note_details', 'delivery_note_details.delivery_note_id','=', 'delivery_notes.id')
         ->where('delivery_notes.quotation_id',$quotation_detail->quotation_id)
-        ->where('delivery_note_details.product_id', $quotation_detail->product_id)
+        ->where('delivery_note_details.quote_detail_id', $quotation_detail->id)
         ->get();
 
         if($deliveryNoteDetails) {
@@ -50,4 +51,5 @@ class QuotationDetail extends Model
         }
         return 0;
     }
+    
 }
