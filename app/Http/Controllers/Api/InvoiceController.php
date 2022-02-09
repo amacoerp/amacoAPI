@@ -126,6 +126,7 @@ class InvoiceController extends Controller
             {
                $product=Product::create([
                     'name'=> $invoice_detail['product'],
+                    'unit_of_measure'=> $invoice_detail['unit_of_measure'],
                     'div_id' => $request['div_id']?$request['div_id']:0,  // ? $request['ps_date'] : Carbon::now()
                 'user_id' => $request['user_id']?$request['user_id']:0,
                 'type' => 'Non inventory',
@@ -271,6 +272,7 @@ class InvoiceController extends Controller
                         if(!$product_exist){
                        $product=Product::create([
                             'name'=> $invoice_detail['product'],
+                            'unit_of_measure'=> $invoice_detail['unit_of_measure'],
                             'type' => 'Non inventory',
                         ]);
                         }
@@ -306,6 +308,7 @@ class InvoiceController extends Controller
                         if(!$product_exist){
                        $product=Product::create([
                             'name'=> $invoice_detail['product'],
+                            'unit_of_measure'=> $invoice_detail['unit_of_measure'],
                             'div_id' => $request['div_id']?$request['div_id']:0,  // ? $request['ps_date'] : Carbon::now()
                             'user_id' => $request['user_id']?$request['user_id']:0,
                             'type' => 'Non inventory',
