@@ -330,6 +330,18 @@ class UserController extends Controller
         // }
         return response()->json(['msg'=>false]);
     }
+    public function oldPasswordNew(Request $request)
+    {
+        
+        $user = User::where('id',$request->id)->first();
+        if(Hash::check($request->password, $user->password)){
+                // chenge pAss
+                $this->changePassword($request->id,$request->newpassword);
+                return response()->json(['msg'=>true]);
+        }else{
+                return response()->json(['msg'=>false]);
+        }
+    }
     public function Userstatus($id)
     {
         $user = User::where('id',$id)->first();
@@ -365,14 +377,8 @@ class UserController extends Controller
     }
     public function changePassword($id,$password)
     {
-        $user = User::where('id',$id)->first();
-        $user->update([
+        $user = User::where('id',$id)->update([
             'password' => bcrypt($password)
-
-        ]);
-
-        
+        ]);;
     }
-
-
 }

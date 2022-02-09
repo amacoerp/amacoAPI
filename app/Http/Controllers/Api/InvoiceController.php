@@ -506,7 +506,7 @@ class InvoiceController extends Controller
             'user_id' => $request->user_id?$request->user_id:0,
             // 'contact_id' => $request->contact_id
         ]);
-        $temp = json_decode($request['invoice_details'], true);
+            $temp = json_decode($request['invoice_details'], true);
         $i = 0;
         foreach ((array) $temp as $invoice_detail) {
            
