@@ -76,8 +76,41 @@ class DeliveryNoteController extends Controller
             ];
         });
 
+        $deliveryNotes -> map(function ($item){
+            if($item -> invoice_id){
+                $item['party'] = $this -> getPartyDetails($item -> invoice_id,'inv');
+            }else{
+                $item['party'] = $this -> getPartyDetails($item -> quotation_id,'qt');
+            }
+            // else{
+            //     $item['party'] = $item -> invoice_id;
+            // }
+            
+            
+        });
 
         return response()->json($deliveryNotes);
+    }
+
+    public function getPartyDetails($id,$from){
+        if($from === 'inv'){
+            $data = Invoice::
+            join('parties','parties.id','invoices.party_id')
+            ->select('parties.firm_name')
+            ->where('invoices.id',$id)->get();
+             return $data;
+        }else{
+            $data = Quotation::
+            join('parties','parties.id','quotations.party_id')
+            ->select('parties.firm_name')
+            ->where('quotations.id',$id)->get();
+             return $data;
+        }
+        // else{
+        //     // $data = Quotation::where('id',$id)->get();
+        //    return $data = null;
+        // }
+      
     }
 
     /**
