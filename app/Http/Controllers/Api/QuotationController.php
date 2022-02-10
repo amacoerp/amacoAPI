@@ -485,7 +485,7 @@ class QuotationController extends Controller
                     "product_price_list" => $quotation_detail->product? $quotation_detail->product->productPrice->map(function ($productP) {
                         return [
                             'price' => $productP->price?$productP->price:"",
-                            'firm_name' =>$productP->price
+                            'firm_name' =>isset($productP->price)?"nee":"dee"
                             // $productP->party->firm_name: " "
                         ];
                     }):null,
