@@ -551,7 +551,7 @@ class QuotationController extends Controller
             'ps_date' => $request->ps_date,
             'sign' => $request->sign,
             'rfq_no' => $request->rfq_no,
-            'subject' => $request->subject,
+            'subject' => isset($request->subject)?$request->subject:null,
             'bank_id'=> (int)$request->bank_id,
             'validity' => $request['validity'],
             'payment_terms' => $request['payment_terms'],
