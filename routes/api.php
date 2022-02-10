@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\AdvancePaymentStatementController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductQuotationDetail;
+use App\Http\Controllers\Api\PHPMailerController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\PartyController;
@@ -130,6 +131,7 @@ Route::apiResource('division', DivisionController::class);
 Route::apiResource('stock', StockController::class);
 Route::apiResource('designation', DesignationController::class);
 // restful api links
+Route::get('getAllEmails',[UserController::class,'getAllEmails']);
 Route::post('company_edit',[CompanyController::class,'company_edit']);
 Route::post('rfq-history', [RFQController::class, 'history'])->name('rfq.history');
 Route::post('invoice-history', [InvoiceController::class, 'history'])->name('invoice.history');
@@ -266,6 +268,9 @@ Route::get('activityLogs', [LoginLogController::class, 'activityLogs']);
 Route::get('newparties/{id}', [PartyController::class, 'getPartyDet']);
 
 Route::post('logoutLog/{id}', [LoginLogController::class, 'logoutLog']);
+
+Route::post('sendOtp', [PHPMailerController::class, 'sendOtp']);
+Route::post('change-password', [UserController::class, 'changePasswordF']);
 
 // index wise quote view
 

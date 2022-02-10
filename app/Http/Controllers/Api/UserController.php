@@ -381,4 +381,21 @@ class UserController extends Controller
             'password' => bcrypt($password)
         ]);;
     }
+    public function changePasswordNew($email,$password)
+    {
+        $user = User::where('email',$email)->update([
+            'password' => bcrypt($password)
+        ]);;
+    }
+
+    public function changePasswordF(Request $request){
+        
+        $this->changePasswordNew($request->email,$request->newpassword);
+        return response()->json(['msg'=>true]);
+    }
+
+    public function getAllEmails(){
+        $data = User::select('email')->get();
+        return response()->json($data);
+    }
 }
