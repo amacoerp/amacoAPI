@@ -194,8 +194,12 @@ class SalesReturnController extends Controller
             'status' => 200,
             'getCust' => $getCust
         ]);
+    }
+    public function deleteReturnDetail($id){
+        PurchaseReturnDetail::where('prd_id',$id)->delete();
 
-
-
+        return response()->json([
+            'status' => 200,
+        ]);
     }
 }
