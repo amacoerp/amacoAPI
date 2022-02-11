@@ -455,7 +455,7 @@ class QuotationController extends Controller
             "rfq" => $quotation->rfq,
             "is_revised" => $quotation->is_revised,
             // "sign" => $quotation->signature,
-            "sign" => Designation::select('users.*')->join('users','users.id','designations.user_id')->where('designations.id',$quotation->sign)->get(),
+            "sign" => Designation::select('users.email','users.contact','designations.*')->join('users','users.id','designations.user_id')->where('designations.id',$quotation->sign)->get(),
             "notes" => $quotation->notes,
             "bank" => $quotation->bank,
             "currency_type" => $quotation->currency_type,
@@ -1304,7 +1304,8 @@ class QuotationController extends Controller
  
 
 
-public function show_quotation($id)
+public function 
+w_quotation($id)
     {
         $quotation = Quotation::where('id', $id)->first();
         $temp =  new Collection();
@@ -1339,7 +1340,7 @@ public function show_quotation($id)
             "rfq" => $quotation->rfq,
             "is_revised" => $quotation->is_revised,
             // "sign" => $quotation->signature,
-            "sign" => Designation::select('users.*')->join('users','users.id','designations.user_id')->where('designations.id',$quotation->sign)->get(),
+            "sign" => Designation::select('designations.*','users.email','users.contact')->join('users','users.id','designations.user_id')->where('designations.id',$quotation->sign)->get(),
             "notes" => $quotation->notes,
             "bank" => $quotation->bank,
             "currency_type" => $quotation->currency_type,
