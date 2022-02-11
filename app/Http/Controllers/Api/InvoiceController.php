@@ -505,6 +505,7 @@ class InvoiceController extends Controller
             'grand_total' => $request->grand_total,
             // 'delivery_no' => null,
             'party_id' => $request->party_id,
+            'currency_type' => $request->currency_type,
             'div_id' => $request->div_id?$request->div_id:0,  // ? $request->ps_date : Carbon::now()
             'user_id' => $request->user_id?$request->user_id:0,
             // 'contact_id' => $request->contact_id
