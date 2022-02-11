@@ -170,6 +170,7 @@ Route::post('rfq-update',[RFQController::class, 'update']);
 Route::post('sale-quotation-update',[QuotationController::class, 'update']);
 Route::post('purchaseUpdate',[QuotationController::class, 'purchaseUpdate']);
 Route::delete('delete-quotation-detail/{quotation_detail}', [QuotationController::class, 'deleteFile']);
+Route::delete('delete-sales-return-detail/{id}', [SalesReturnController::class, 'deleteReturnDetail']);
 Route::post('sale-tax', [TaxController::class, 'saleTax']);
 Route::post('purchase-tax', [TaxController::class, 'purchaseTax']);
 Route::get('all-categories',[CategoryController::class, 'categories']);
