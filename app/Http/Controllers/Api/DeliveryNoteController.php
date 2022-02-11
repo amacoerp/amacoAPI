@@ -180,6 +180,7 @@ class DeliveryNoteController extends Controller
                     'product_descriptions' => $deliveryNoteDetail['description'],
                     'unit_of_measure' => $deliveryNoteDetail['unit_of_measure'],
                     'quote_detail_id' => $deliveryNoteDetail['id'],
+                    
                     // 'delivering_qty' => $deliveryNoteDetail['balance'],
                 ];
                 $deliveryNoteDetails = DeliveryNoteDetail::create($deliveryNoteDetailData);
@@ -231,6 +232,9 @@ class DeliveryNoteController extends Controller
                     'product_id' => $deliveryNoteDetail['product_id'],
                     'delivered_quantity' => $deliveryNoteDetail['delivering_quantity'],
                     'total_qty' => $deliveryNoteDetail['quantity'],
+                    'invoice_detail_id' => $deliveryNoteDetail['id'],
+                    // 'product_descriptions' => $deliveryNoteDetail['description'],
+                    'unit_of_measure' => $deliveryNoteDetail['unit_of_measure'],
                     // 'delivering_qty' => $deliveryNoteDetail['balance'],
                 ];
                 $deliveryNoteDetails = DeliveryNoteDetail::create($deliveryNoteDetailData);
