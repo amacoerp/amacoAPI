@@ -573,7 +573,7 @@ class QuotationController extends Controller
                 $filePath = $request->file('files' . $index)->move('quotation/quotation_detail/' . $request->id);
             }else{
                 if(isset($quotation_detail['file'])){
-                    $filePath = $quotation_detail['file'];
+                    $filePath = explode("public/",$quotation_detail['file'])[1];
                 }
                 
             }
