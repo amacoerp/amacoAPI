@@ -1304,8 +1304,7 @@ class QuotationController extends Controller
  
 
 
-public function 
-w_quotation($id)
+public function show_quotation($id)
     {
         $quotation = Quotation::where('id', $id)->first();
         $temp =  new Collection();
@@ -1423,5 +1422,60 @@ w_quotation($id)
         return response()->json(
            [$data]
         );
+    }
+    public function quoteHistory(){
+        $quotations = Quotation::where(['status' => 'accept', 'transaction_type' => 'sale'])
+        ->whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('invoices')
+                ->whereRaw('invoices.quotation_id = quotations.id');
+        })->orderBy('created_at', 'DESC')
+        ->get();
+    // $quotations = Quotation::where('status','=','New')->orderBy('created_at','DESC')->get();
+    $quotations_data = [
+        $quotations->map(
+            function ($quotation) {
+                return [
+                    'id' => $quotation->id,
+                    'quotation_no' => $quotation->quotation_no,
+                    'created_at' => $quotation->created_at,
+                    'updated_at' => $quotation->updated_at,
+                    'status' => $quotation->status,
+                    'total_value' => $quotation->total_value,
+                    'party_id' => $quotation->party_id,
+                    "contact_id" => $quotation->contact_id,
+                    "contact" => $quotation->contact,
+                    "party" => $quotation->party,
+                    "vat_in_value" => $quotation->vat_in_value,
+                    "net_amount" => $quotation->net_amount,
+                    "transaction_type" => $quotation->transaction_type,
+                    'discount_in_p' => $quotation['discount_in_p'],
+                    'div_id' => $quotation->div_id,
+                    'quotation_details' => $quotation->quotationDetail->map(function ($quotation_detail) {
+                        $quotation_detail = QuotationDetail::where('id', '=', $quotation_detail->id)->first();
+                        // $isDelivered = $this->checkDeliveredProductQuantity($quotation_detail);
+                        // dd($isDelivered);
+                        return [
+                            "id" => $quotation_detail['id'],
+                            "created_at" => $quotation_detail->created_at,
+                            "updated_at" => $quotation_detail->updated_at,
+                            "product_id" => $quotation_detail->product_id,
+                            "product" => array($quotation_detail->product),
+                            "description" => $quotation_detail->description,
+                            "amaco_description" => $quotation_detail->descriptionss,
+                            "quantity" => $quotation_detail->quantity,
+                            "total_amount" => $quotation_detail->total_amount,
+                            "analyse_id" => $quotation_detail->analyse_id,
+                            "purchase_price" => $quotation_detail->purchase_price,
+                            "margin" => $quotation_detail->margin,
+                            "sell_price" => $quotation_detail->sell_price,
+                            "remark" => $quotation_detail->remark,
+                        ];
+                    }),
+                ];
+            }
+        ),
+    ];
+    return response()->json($quotations_data[0], 200);  
     }
 }

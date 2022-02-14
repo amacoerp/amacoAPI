@@ -276,6 +276,7 @@ Route::post('change-password', [UserController::class, 'changePasswordF']);
 // index wise quote view
 
 Route::get('show_quotation/{id}', [QuotationController::class, 'show_quotation']);
+Route::get('quoteHistory', [QuotationController::class, 'quoteHistory']);
 Route::get('invoice_delivery_note/{id}/{s}', [DeliveryNoteController::class, 'show']);
 
 
