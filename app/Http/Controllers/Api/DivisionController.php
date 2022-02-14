@@ -10,6 +10,7 @@ use App\Models\PaymentAccount;
 use App\Models\AdvancePayment;
 use Illuminate\Http\Request;
 use DB;
+use Config;
 
 class DivisionController extends Controller
 {
@@ -31,9 +32,23 @@ class DivisionController extends Controller
     {
        
         $data = $request->json()->all();
+        $apikey=  \Config::get('example.key');
+        if($request->company_name)
+        {
+        $arbic = json_decode(file_get_contents('https://translation.googleapis.com/language/translate/v2?key='.$apikey.'&q='.urlencode($request->city).'&target=ar'));
+        }
+        else
+        {
+            $arbic="";
+        }
         $party = Division::create([
             'name' => $request->name,
             'opening_bal' => (string) $request->opening_balance,
+            'company_name' => (string) $request->company_name,
+            'company_arabic' =>isset($request->company_arabic)?$request->company_arabic:$arbic->data->translations[0]->translatedText ,
+            'cr_no' => $request->cr_no,
+            'vat_no' => $request->vat_no,
+            
         
             
         ]);
@@ -51,10 +66,24 @@ class DivisionController extends Controller
 
     public function update(Request $request, Division $div)
     {
+       
+        $apikey=  \Config::get('example.key');
+        if($request->company_name)
+        {
+        $arbic = json_decode(file_get_contents('https://translation.googleapis.com/language/translate/v2?key='.$apikey.'&q='.urlencode($request->city).'&target=ar'));
+        }
+        else
+        {
+            $arbic="";
+        }
         $division = Division::findOrFail($request->id);
         $division->update([
             'name' => $request->name,
             'opening_bal' => $request->opening_bal,
+            'company_name' => (string) $request->company_name,
+            'company_arabic' =>isset($request->company_arabic)?$request->company_arabic:$arbic->data->translations[0]->translatedText ,
+            'cr_no' => $request->cr_no,
+            'vat_no' => $request->vat_no,
             // 'contact_id' => $request->contact_id,
         ]);
         $res=PaymentAccount::where('div_id',$request->id)->update([
