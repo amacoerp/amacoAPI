@@ -364,6 +364,7 @@ class PartyController extends Controller
         ->where('payment_accounts.div_id',$id)
         ->where('parties.party_type','!=','Customer')
         ->select('parties.id', 'parties.firm_name','parties.party_type','parties.contact','parties.opening_balance','parties.credit_days','payment_accounts.div_id')
+        ->orderBy('parties.firm_name', 'ASC')
         ->get();
             // ->toArray();
             $vendors->map(function($payment){
