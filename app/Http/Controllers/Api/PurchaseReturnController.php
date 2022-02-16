@@ -9,6 +9,8 @@ use App\Models\QuotationDetail;
 use App\Models\PurchaseReturn;
 use App\Models\PurchaseInvoice;
 use App\Models\PurchaseInvoiceDetail;
+use App\Models\Party;
+use App\Models\Contact;
 use App\Models\PurchaseReturnDetail;
 use DB;
 
@@ -46,6 +48,9 @@ class PurchaseReturnController extends Controller
         ->get();
         // $data[0]->party_id
 
+        $party = Party::where('id',$data[0]->party_id)->get();
+        $cont  = Contact::where('party_id',$data[0]->party_id)->get();
+
         $Odata = PurchaseInvoice::
         join('purchase_invoice_details','purchase_invoice_details.purchase_invoice_id','purchase_invoices.id')
         ->where('purchase_invoices.party_id','=',$data[0]->party_id)
@@ -57,6 +62,8 @@ class PurchaseReturnController extends Controller
         return response()->json([
             'status' => 200,
             'data' => $data,
+            'party' => $party,
+            'cont' => $cont,
             'datas' => $datas,
             'Odata' => $Odata,
         ]);
