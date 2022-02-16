@@ -8,6 +8,7 @@ use App\Models\Quotation;
 use App\Models\PurchaseReturn;
 use App\Models\party_division;
 use App\Models\Contact;
+use App\Models\Party;
 use App\Models\Invoice;
 use App\Models\InvoiceDetail;
 use App\Models\PurchaseReturnDetail;
@@ -79,6 +80,11 @@ class SalesReturnController extends Controller
         ->where('purchase_returns.pr_id','=',$id)
         ->orderBy('purchase_returns.created_at', 'DESC')
         ->get(); 
+
+        $party=Party::where('id',$data[0]->party_id)->get();
+        $contact=Contact::where('party_id',$data[0]->party_id)->get();
+
+
          $datas = PurchaseReturnDetail::
         join('products','products.id','purchase_returns_details.product_id')
         ->where('pr_id','=',$id)
@@ -97,6 +103,8 @@ class SalesReturnController extends Controller
         return response()->json([
             'status' => 200,
             'data' => $data,
+            'party' => $party,
+            'contact' => $contact,
             'datas' => $datas,
             'Odata' => $Odata,
         ]);
