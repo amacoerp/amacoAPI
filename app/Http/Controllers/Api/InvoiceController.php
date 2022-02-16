@@ -163,6 +163,7 @@ class InvoiceController extends Controller
         return [
             $invoice,
             $invoice->party,
+            // $invoice->contact,
             $invoice->quotation,
             //$invoice->quotation->quotationDetail,
             $invoice->invoiceDetail->map(function ($invoice_detail){
