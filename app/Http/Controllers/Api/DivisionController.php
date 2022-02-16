@@ -100,7 +100,11 @@ class DivisionController extends Controller
        
         
         $division = Division::where('id',$id)->get();
-        return response()->json($division);
+        $divs = Division::get();
+        return response()->json([
+            'div' => $division,
+            'divs' => $divs
+        ]);
     }
     public function paidDivision()
     {
