@@ -326,15 +326,17 @@ class QuotationController extends Controller
             } else {
                 $note_detail = json_decode($request->notes, true);
                 foreach ($note_detail as $div) {
-                   
-                notes::create([
+                   try {
+                      notes::create([
                     'quotation_id' => $quotation_id,
-                    'notes' => $div['note'], 
+                    'notes' => $div['note'] , 
                     'div_id' => $request['div_id']?$request['div_id']:0,  // ? $request['ps_date'] : Carbon::now()
                     'user_id' => $request['user_id']?$request['user_id']:0, 
-                    
-        
                 ]); 
+                   } catch (\Throwable $th) {
+                       //throw $th;
+                   }
+                
             }
                 $index = 0;
                 while ($request['quotation_detail' . $index] != null) {
