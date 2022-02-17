@@ -197,7 +197,7 @@ class RFQController extends Controller
             'updated_at' => $rfq->updated_at,
             'files' => $rfq->file ? $rfq->file : null,
             "party" => $rfq->party,
-            "contact" => $rfq->contacts,
+            "contact" => $rfq->party->contacts,
             'user_id' => $rfq->user_id,
             'div_id' => $rfq->div_id,
             'rfq_details' => $rfq->rfq_details->map(function ($rfq_detail) {
