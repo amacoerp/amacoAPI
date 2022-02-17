@@ -492,7 +492,7 @@ class QuotationController extends Controller
                     // "product_price_list" => $quotation_detail->product->productPrice,
                     "purchase_price" => isset($quotation_detail->purchase_price)?$quotation_detail->purchase_price:0,
                     "description" => $quotation_detail->description,
-                    "quantity" => $quotation_detail->quantity,
+                    "quantity" => isset($quotation_detail->quantity)?$quotation_detail->quantity:0,
                     "discount" => $quotation_detail->discount,
                     "margin_val"=>$quotation_detail->purchase_price ? ((((float)$quotation_detail->purchase_price)*(float)$quotation_detail->margin)/100)*(float)($quotation_detail->quantity):((float)($quotation_detail->quantity)*(float)($quotation_detail->sell_price))+$quotation_detail->discount_val,
                     "discount_val"=>$quotation_detail->purchase_price?(((float)((float)($quotation_detail->discount) * ((float)(((float)$quotation_detail->margin * (float)($quotation_detail->purchase_price) / 100) + (float)($quotation_detail->purchase_price))) / 100)) * (float)($quotation_detail->quantity)):(float)$quotation_detail->discount_val,
