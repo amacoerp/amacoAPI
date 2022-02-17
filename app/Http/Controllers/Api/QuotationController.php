@@ -490,7 +490,7 @@ class QuotationController extends Controller
                     }):null,
                     
                     // "product_price_list" => $quotation_detail->product->productPrice,
-                    "purchase_price" => $quotation_detail->purchase_price?$quotation_detail->purchase_price:'',
+                    "purchase_price" => isset($quotation_detail->purchase_price)?$quotation_detail->purchase_price:0,
                     "description" => $quotation_detail->description,
                     "quantity" => $quotation_detail->quantity,
                     "discount" => $quotation_detail->discount,
