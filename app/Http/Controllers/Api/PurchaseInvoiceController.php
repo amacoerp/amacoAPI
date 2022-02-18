@@ -226,6 +226,12 @@ class PurchaseInvoiceController extends Controller
         // return ($purchaseInvoice->delete());
     }
 
+    public function deleteInv($id){
+                PurchaseInvoiceDetail::where('id',$id)->delete();
+        return ($id);
+
+    }
+
     // public function history()
     // {
     //     $invoices = PurchaseInvoice::where('status', '=', 'Delivered')
