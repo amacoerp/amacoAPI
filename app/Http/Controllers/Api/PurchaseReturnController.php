@@ -8,6 +8,8 @@ use App\Models\Quotation;
 use App\Models\QuotationDetail;
 use App\Models\PurchaseReturn;
 use App\Models\PurchaseInvoice;
+use App\Models\PaymentAccount;
+use App\Models\Expense;
 use App\Models\PurchaseInvoiceDetail;
 use App\Models\Party;
 use App\Models\Contact;
@@ -194,37 +196,28 @@ class PurchaseReturnController extends Controller
             }
             else{
                 $payment_account_id=PaymentAccount::where('div_id', $request['div_id'])->first();
-                Expense::create([
-                    // 'created_by' => $request->created_by,
-                    // 'paid_date' => $request->paid_date,
-                    // 'paid_to' => $request->paid_to?$request->paid_to:'',
+                $res=Expense::create([
+                   
                     'amount' =>  $request['total_value'],
                     'payment_type' => "cash",
-                    // 'check_no' => $request->cheque_no,
-                    // 'transaction_id' => $request->transaction_id,
+                    'paid_date' => $request['ps_date'],
                     'payment_account_id' =>$payment_account_id->id,
-                    'description' => $request->description?$request->description:'',
-                    // 'referrence_bill_no' => $request->referrence_bill_no,
-                    // 'tax' => $request->tax,
-                    // 'status' => $request->status,
-                    // 'paid_by' => $lastInsertedId,
-                    // 'bank_ref_no' => $request->bank_ref_no,
-                    // 'bank_id' => $request->bank_id?$request->bank_id:null,
-                    // 'bank_slip' => $request->file('bank_slip') ? $bank_slip_path : null,
-                    // // 'bank_slip' =>  $path ,
-                    "account_category_id" => $request->account_category_id,
-                    // "company_name" => $request->company_name ? $request->company_name : " ",
-                    // "file_path" => $request->file('file_path')?$filePath:null,
+                    'description' => "Debit Note",
+                   
+                    "account_category_id" => 33,
+                    "status" =>"new",
+                   
                     "div_id" => $request['div_id']? $request['div_id']:0,
                     "user_id" => $request['user_id'],
-                    // "company" => $request->company?$request->company:" ",
-                    // "vatno" => $request->vatno?$request->vatno:" ",
-                    // "inv_no" => $request->inv_no?$request->inv_no:" ",
-                    "utilize_div_id"=>$request->utilize_div_id?$request->utilize_div_id:" ",
-                    "vendor_id"=>$request->vendor_id?$request->vendor_id:0,
-                    "employee_id"=>$request->employee_id?$request->employee_id:0
+                   
+                    "utilize_div_id"=> $payment_account_id->id? $payment_account_id->id:0,
+                    "vendor_id"=>$request['party_id'],
+                   
         
                 ]);
+                if ($res->id) {
+                    $res->update(['voucher_no' => 'AMC-'.'TR-'.'EV-'.date('y').'-' . sprintf('%05d', $res->id)]);
+                    }
             }
  
             if ($request['transaction_type'] == "sales") {
