@@ -22,7 +22,7 @@ class StockController extends Controller
     public function index()
     {
 
-        $category=Category::get();
+        $category=Category::orderBy('name','asc')->get();
         $data=$category->map(function($category){
          return
          [  
@@ -40,13 +40,30 @@ class StockController extends Controller
                 });
             })];
         });
-        return $category;
+
+        $other=Product::where('category_id',null)->get();
+        $other -> map(function ($item){
+                    $item["purchase"] =  $this->purchase($item->id);
+                    $item["purchaseQuantity"] =  $this->purchaseQuantity($item->id);
+                    $item["sales"] = $this -> sale($item->id);
+                    $item["salesQuantity"] = $this -> salesQuantity($item->id);
+                    $item["purchaseReturn"] = $this -> purchaseReturn($item->id);
+                    $item["purchaseReturnQuantity"] = $this -> purchaseReturnQuantity($item->id);
+                    $item["salesReturn"] = $this -> salesReturn($item->id);
+                    $item["salesReturnQuantity"] = $this -> salesReturnQuantity($item->id);
+                    $item["latestPrice"] = $this -> latestPrice($item->id);        });
+         return response()->json([
+            'status' => 200,
+            'category' => $category,
+            'other' => $other
+        ]);
+       
         
     }
 
     public function latestPrice($id){
         $data = PurchaseInvoiceDetail::where('product_id',$id)->orderBy('id','DESC')->limit(1)->get('purchase_price');
-        return $data;
+        return $data->count() > 0 ? $data : 0;
     }
     public function purchase($id){
         $data = PurchaseInvoiceDetail::where('product_id',$id)->get();
