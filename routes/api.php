@@ -132,6 +132,7 @@ Route::apiResource('stock', StockController::class);
 Route::apiResource('designation', DesignationController::class);
 // restful api links
 Route::get('getAllEmails',[UserController::class,'getAllEmails']);
+Route::delete('purchaseinvoiceitem/{id}',[PurchaseInvoiceController::class,'deleteInv']);
 Route::post('company_edit',[CompanyController::class,'company_edit']);
 Route::post('rfq-history', [RFQController::class, 'history'])->name('rfq.history');
 Route::post('invoice-history', [InvoiceController::class, 'history'])->name('invoice.history');
