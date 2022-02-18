@@ -8,6 +8,7 @@ use App\Models\PurchaseInvoiceDetail;
 use App\Models\Quotation;
 use App\Models\QuotationDetail;
 use App\Models\Party;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -120,6 +121,22 @@ class PurchaseInvoiceController extends Controller
         $index = 0;
          while ($request['invoice_details' . $index] != null) {
                     $invoice_detail = (array) json_decode($request['invoice_details' . $index], true);
+                    if(!$invoice_detail['product_id'])
+                    {
+                    $product_exist=Product::where('name','=',$invoice_detail['product'])->exists();
+                        if(!$product_exist){
+                       $product=Product::create([
+                        'name'=> $invoice_detail['product'],
+                        'div_id' => $request['div_id']?$request['div_id']:0,  // ? $request['ps_date'] : Carbon::now()
+                        'user_id' => $request['user_id']?$request['user_id']:0,
+                        'type' => 'Non inventory',
+                        ]);
+                        }
+                        else
+                        {
+                            $product=null;
+                        }  
+                    }
                     $_invoice_detail = PurchaseInvoiceDetail::create([
                 'quotation_detail_id' => $invoice_detail['id'],
                 'product_id' => $invoice_detail['productId'],

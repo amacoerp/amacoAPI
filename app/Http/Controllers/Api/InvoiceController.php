@@ -528,8 +528,10 @@ class InvoiceController extends Controller
                     $product_exist=Product::where('name','=',$invoice_detail['product'])->exists();
                         if(!$product_exist){
                        $product=Product::create([
-                            'name'=> $invoice_detail['product'],
-                            'type' => 'Non inventory',
+                        'name'=> $invoice_detail['product'],
+                        'div_id' => $request['div_id']?$request['div_id']:0,  // ? $request['ps_date'] : Carbon::now()
+                        'user_id' => $request['user_id']?$request['user_id']:0,
+                        'type' => 'Non inventory',
                         ]);
                         }
                         else
