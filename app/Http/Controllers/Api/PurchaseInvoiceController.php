@@ -139,7 +139,7 @@ class PurchaseInvoiceController extends Controller
                     }
                     $_invoice_detail = PurchaseInvoiceDetail::create([
                 'quotation_detail_id' => $invoice_detail['id'],
-                'product_id' => $invoice_detail['productId'],
+                'product_id' => $invoice_detail['productId']?$invoice_detail['productId']:($product?$product->id:0),
                 'purchase_price' => $invoice_detail['purchase_price'],
                 'quantity' => $invoice_detail['quantity'],
                 
