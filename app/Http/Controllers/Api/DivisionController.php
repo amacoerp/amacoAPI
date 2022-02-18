@@ -70,7 +70,7 @@ class DivisionController extends Controller
         $apikey=  \Config::get('example.key');
         if($request->company_name)
         {
-        $arbic = json_decode(file_get_contents('https://translation.googleapis.com/language/translate/v2?key='.$apikey.'&q='.urlencode($request->city).'&target=ar'));
+        $arbic = json_decode(file_get_contents('https://translation.googleapis.com/language/translate/v2?key='.$apikey.'&q='.urlencode($request->company_name).'&target=ar'));
         }
         else
         {
