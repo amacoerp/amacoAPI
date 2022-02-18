@@ -378,6 +378,7 @@ class InvoiceController extends Controller
 
     public function PurchaseInvoiceupdate(Request $request, Invoice $invoice)
     {
+        
         $apikey=  \Config::get('example.key');
         $invoice = PurchaseInvoice::where('id',$request->id)->first();
         
