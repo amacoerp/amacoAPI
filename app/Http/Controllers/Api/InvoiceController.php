@@ -409,7 +409,7 @@ class InvoiceController extends Controller
                 if($invoiceDetail)
                 {
                   
-                    if(!$invoice_detail['product_id'] && !$invoice_detail['product'])
+                    if(!$invoice_detail['product_id'])
                     {
                     $product_exist=Product::where('name','=',$invoice_detail['product'])->first();
                         if(!$product_exist){
