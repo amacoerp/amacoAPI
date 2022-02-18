@@ -380,7 +380,7 @@ class PartyController extends Controller
         ->join('payment_accounts','payment_accounts.id','party_divisions.div_id')
         ->where('payment_accounts.div_id',$id)
         ->where('parties.party_type','!=','Vendor')
-        ->select('parties.id', 'parties.firm_name','parties.party_type','parties.contact','parties.opening_balance','parties.credit_days','payment_accounts.div_id')
+        ->select('parties.id', 'parties.firm_name','parties.party_type','parties.contact','parties.opening_balance','parties.credit_days','payment_accounts.div_id')->orderBy('parties.firm_name', 'ASC')
         ->get();
             // $vendors = Party::where('party_type', '=', 'customer')->orWhere('party_type', '=', 'both')
             // ->select('id', 'firm_name', 'contact','opening_balance','credit_days')

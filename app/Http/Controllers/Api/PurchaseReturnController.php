@@ -8,6 +8,8 @@ use App\Models\Quotation;
 use App\Models\QuotationDetail;
 use App\Models\PurchaseReturn;
 use App\Models\PurchaseInvoice;
+use App\Models\PaymentAccount;
+use App\Models\Expense;
 use App\Models\PurchaseInvoiceDetail;
 use App\Models\Party;
 use App\Models\Contact;
@@ -188,7 +190,35 @@ class PurchaseReturnController extends Controller
                 'subject' => $request['subject']?$request['subject']:null,  // ? $request['ps_date'] : Carbon::now()
                 'rfq_no' => $request['rfq_no']?$request['rfq_no']:null,  // ? $request['ps_date'] : Carbon::now()
             ];
- 
+            if ($request['transaction_type'] == "sales") {
+
+
+            }
+            else{
+                $payment_account_id=PaymentAccount::where('div_id', $request['div_id'])->first();
+                $res=Expense::create([
+                   
+                    'amount' =>  $request['total_value'],
+                    'payment_type' => "cash",
+                    'paid_date' => $request['ps_date'],
+                    'payment_account_id' =>$payment_account_id->id,
+                    'description' => "Debit Note",
+                   
+                    "account_category_id" => 33,
+                    "status" =>"new",
+                   
+                    "div_id" => $request['div_id']? $request['div_id']:0,
+                    "user_id" => $request['user_id'],
+                   
+                    "utilize_div_id"=> $payment_account_id->id? $payment_account_id->id:0,
+                    "vendor_id"=>$request['party_id'],
+                   
+        
+                ]);
+                if ($res->id) {
+                    $res->update(['voucher_no' => 'AMC-'.'TR-'.'EV-'.date('y').'-' . sprintf('%05d', $res->id)]);
+                    }
+            }
  
             if ($request['transaction_type'] == "sales") {
                     $datas['quotationr_no'] = $this->getQuotationNo();
