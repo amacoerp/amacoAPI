@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\FileUpload;
 use App\Models\Party;
+use App\Models\Contact;
 use App\Models\RFQ;
 use App\Models\RFQDetails;
 use App\Models\RFQFile;
@@ -197,7 +198,7 @@ class RFQController extends Controller
             'updated_at' => $rfq->updated_at,
             'files' => $rfq->file ? $rfq->file : null,
             "party" => $rfq->party,
-            "contact" => $rfq->party->contact,
+            "contact" => Contact::where('party_id',$rfq->party_id)->first(),
             'user_id' => $rfq->user_id,
             'div_id' => $rfq->div_id,
             'rfq_details' => $rfq->rfq_details->map(function ($rfq_detail) {
