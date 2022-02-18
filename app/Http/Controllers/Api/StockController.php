@@ -45,7 +45,7 @@ class StockController extends Controller
     }
 
     public function latestPrice($id){
-        $data = PurchaseInvoiceDetail::where('product_id',$id)->orderBy('id','DESC')->get('purchase_price');
+        $data = PurchaseInvoiceDetail::where('product_id',$id)->orderBy('id','DESC')->limit(1)->get('purchase_price');
         return $data;
     }
     public function purchase($id){
@@ -72,7 +72,7 @@ class StockController extends Controller
     public function purchaseReturnQuantity($id){
         $data = PurchaseReturnDetail::where('product_id',$id)->whereNotNull('po_number')->sum('quantity');
         return $data;
-    }
+    }   
     public function salesReturn($id){
         $data = PurchaseReturnDetail::where('product_id',$id)->whereNull('po_number')->get();
         return $data;
