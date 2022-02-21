@@ -482,6 +482,7 @@ class QuotationController extends Controller
                     "descriptionss" => $quotation_detail->product_description,
                     "amaco_description" => $quotation_detail->amaco_description,
                     "product" => $quotation_detail->product,
+                    "name" => $quotation_detail->product->name,
                     "product_name" => " ",
                     // "partyDivision" => $quotation_detail->partyDivision,
                     "product_price_list" => $quotation_detail->product? $quotation_detail->product->productPrice->map(function ($productP) {
