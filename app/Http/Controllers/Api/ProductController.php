@@ -26,7 +26,6 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'category_id' => 'required',
             'division_id' => 'required',
             'name' => 'required|max:255',
             // 'description' => 'required|max:500',
