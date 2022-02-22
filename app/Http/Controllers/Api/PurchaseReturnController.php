@@ -208,8 +208,8 @@ class PurchaseReturnController extends Controller
     if ($receipt->id) {
         $receipt->update(['voucher_no' => 'AMC-'.'TR-'.'RV-'.date('y').'-' . sprintf('%05d', $receipt->id)]);
     }
-    if($request->payment_mode=="cash")
-    {
+    // if($request->payment_mode=="cash")
+    // {
         $res=AdvancePayment::create([
             'payment_account_id' => $payment_account_id->id,
             'received_by' =>$request->receiver,
@@ -217,7 +217,7 @@ class PurchaseReturnController extends Controller
             'amount' => $request->paid_amount,
             "received_date" => $request->paid_date,
         ]);
-    }
+    // }
 
             }
             else{
