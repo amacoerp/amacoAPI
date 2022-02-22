@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Employees;
+use App\Models\EmployeeDivision;
 
 
 class EmployeesController extends Controller
@@ -14,19 +15,27 @@ class EmployeesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
          $data = Employees::
-        join('divisions','divisions.id','employee.div_id')
+        join('employee_division','employee_division.e_id','employee.emp_id')
+        ->where('employee_division.div_id',$id)
          ->orderby('emp_id','DESC')
-         ->select('employee.name as e_name','divisions.name as div_name','divisions.*','employee.*')
+         ->select('employee.name as e_name','employee.*')
          ->get();
+
+      
 
           
         return response()->json([
-                            'status' => 200,
-                            'getData' => $data,
-                    ]);
+           'status' => 200,
+           'getData' => $data,
+          ]);
+    }
+
+    public function getDivision($id){
+        $data = EmployeeDivision::where('e_id',$id)->get();
+        return $data;
     }
 
     /**
@@ -47,6 +56,10 @@ class EmployeesController extends Controller
      */
     public function store(Request $request)
     {
+
+
+
+
         $data = new Employees;
          $data -> name = $request->input('prefix') . " " . $request->input('name');
          $data -> contact_number = $request->input('contact_number');
@@ -73,6 +86,22 @@ class EmployeesController extends Controller
          $data -> date_of_join = $request->input('date_of_join');
          $data -> status = "Working";
          if($data -> save()){
+           
+            if($request->divisions)
+            
+                {
+                      $divisions = json_decode($request->divisions, true);
+                    
+                foreach ($divisions as $div) {
+                 if($div['check']==true)
+                {
+                    $d = EmployeeDivision::create([
+                        'e_id' => $data->id,
+                        'div_id' => $div['id'],
+                    ]); 
+                    }
+                }
+                }
                 return response()->json([
                     'status' => 200,
                     'message' => "Employee Saved Successfully.",
