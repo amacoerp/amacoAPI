@@ -191,7 +191,33 @@ class PurchaseReturnController extends Controller
                 'rfq_no' => $request['rfq_no']?$request['rfq_no']:null,  // ? $request['ps_date'] : Carbon::now()
             ];
             if ($request['transaction_type'] == "sales") {
+                
+        $payment_account_id=PaymentAccount::where('div_id', $request['div_id'])->first();
+        $receipt = Receipt::create(["party_id" => $request->party_id,
+        "payment_mode" => "cash",
+        "narration" => "Credit Note",
+        "paid_amount" => $request['total_value'],
+        "paid_date" => $request['ps_date'],
+        "div_id" => $payment_account_id->id,
+        "user_id" => $request['user_id'],
+        "division_id" => $request['div_id'],
+        "sender" => $request['party_id'],
+        "receiver" => $request['div_id'],
+    ]);
 
+    if ($receipt->id) {
+        $receipt->update(['voucher_no' => 'AMC-'.'TR-'.'RV-'.date('y').'-' . sprintf('%05d', $receipt->id)]);
+    }
+    if($request->payment_mode=="cash")
+    {
+        $res=AdvancePayment::create([
+            'payment_account_id' => $payment_account_id->id,
+            'received_by' =>$request->receiver,
+            'payment_mode' => $request->payment_mode,
+            'amount' => $request->paid_amount,
+            "received_date" => $request->paid_date,
+        ]);
+    }
 
             }
             else{
