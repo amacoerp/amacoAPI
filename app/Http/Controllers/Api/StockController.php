@@ -27,7 +27,7 @@ class StockController extends Controller
          return
          [  
                     $data=$category->product_category->map(function($category){
-                    $category->product->map(function($arr){
+                    $category->productInv->map(function($arr){
                     $arr["purchase"] =  $this->purchase($arr->id);
                     $arr["purchaseQuantity"] =  $this->purchaseQuantity($arr->id);
                     $arr["sales"] = $this -> sale($arr->id);
@@ -41,7 +41,7 @@ class StockController extends Controller
             })];
         });
 
-        $other=Product::where('category_id',null)->get();
+        $other=Product::where('type','Inventory')->where('category_id',null)->get();
         $other -> map(function ($item){
                     $item["purchase"] =  $this->purchase($item->id);
                     $item["purchaseQuantity"] =  $this->purchaseQuantity($item->id);
@@ -51,7 +51,8 @@ class StockController extends Controller
                     $item["purchaseReturnQuantity"] = $this -> purchaseReturnQuantity($item->id);
                     $item["salesReturn"] = $this -> salesReturn($item->id);
                     $item["salesReturnQuantity"] = $this -> salesReturnQuantity($item->id);
-                    $item["latestPrice"] = $this -> latestPrice($item->id);        });
+                    $item["latestPrice"] = $this -> latestPrice($item->id); 
+               });
          return response()->json([
             'status' => 200,
             'category' => $category,

@@ -14,6 +14,10 @@ class Category extends Model
     {
         return $this->hasMany('App\Models\Product');
     }
+    public function productInv()
+    {
+        return $this->hasMany('App\Models\Product')->where('type','Inventory');
+    }
     public function product_category()
     {
         return $this->hasMany(Category::class, 'parent_id','id');
@@ -21,6 +25,5 @@ class Category extends Model
     public function product_sub()
     {
         return $this->hasMany(Category::class, 'id','parent_id');
-        // return $this->belongsToMany(Category::class, 'id','category_id');
     }
 }
