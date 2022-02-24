@@ -16,7 +16,8 @@ class Category extends Model
     }
     public function productInv()
     {
-        return $this->hasMany('App\Models\Product')->where('type','Inventory');
+        // return $this->hasMany('App\Models\Product')->where('type','=','Inventory');
+        return $this->hasMany(Product::class, 'category_id','parent_id')->where('type','=','Inventory');
     }
     public function product_category()
     {

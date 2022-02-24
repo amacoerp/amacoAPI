@@ -22,12 +22,20 @@ class StockController extends Controller
     public function index()
     {
 
-        $category=Category::orderBy('name','asc')->get();
+        // $category=Category::join('products','products.category_id','categories.id')->Select('categories.*')->get();
+     
+        $category=Category::where('parent_id',null)->orderBy('name','asc')->get();
+       
         $data=$category->map(function($category){
+            
          return
          [  
+                  
                     $data=$category->product_category->map(function($category){
-                    $category->productInv->map(function($arr){
+                        
+                    $category->product->map(function($arr){
+                    // if($arr->type=="Inventory")
+                    // {
                     $arr["purchase"] =  $this->purchase($arr->id);
                     $arr["purchaseQuantity"] =  $this->purchaseQuantity($arr->id);
                     $arr["sales"] = $this -> sale($arr->id);
@@ -37,6 +45,7 @@ class StockController extends Controller
                     $arr["salesReturn"] = $this -> salesReturn($arr->id);
                     $arr["salesReturnQuantity"] = $this -> salesReturnQuantity($arr->id);
                     $arr["latestPrice"] = $this -> latestPrice($arr->id);
+                    // }
                 });
             })];
         });
