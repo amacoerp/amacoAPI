@@ -264,7 +264,7 @@ class AccountStatementController extends Controller
   {
       $invoiceCollection = new Collection();
      
-          $invoiceCollection = PurchaseInvoice::join('parties','purchase_invoice.party_id','parties.id')->where('transaction_type','purchase')->select('parties.credit_days','purchase_invoice.*')->get();
+          $invoiceCollection = PurchaseInvoice::join('parties','purchase_invoices.party_id','parties.id')->where('transaction_type','purchase')->select('parties.credit_days','purchase_invoices.*')->get();
         //   $invoiceCollection = Quotation::join('parties','quotations.party_id','parties.id')->where('transaction_type','purchase')->select('parties.credit_days','quotations.*')->get();
      
 
