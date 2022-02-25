@@ -136,7 +136,7 @@ class AccountStatementController extends Controller
                 $item['description'] = "Sale"."/".(isset($item->party)?$item->party->firm_name:" ");
                 $item['debit'] = floatval(str_replace(",","",$item->total_value));
                 $item['po_number'] = $item->po_number;
-                $item['credit'] = null;
+                $item['credit'] = 0;
                 $item['credit_days'] = floatval(isset($item->party)?($item->party->credit_days):0);
                 return [$item];
             }
@@ -147,7 +147,7 @@ class AccountStatementController extends Controller
                 $item['description'] = "Receipt"."/".$item->party->firm_name;
                 $item['credit'] = floatval(str_replace(",","",$item->paid_amount));
                 $item['po_number'] = $item->po_number;
-                $item['debit'] = null;
+                $item['debit'] = 0;
                 $item['credit_days'] = floatval($item->party->credit_days);
                 return [$item];
             }
