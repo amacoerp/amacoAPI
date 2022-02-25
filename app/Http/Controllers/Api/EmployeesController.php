@@ -32,6 +32,23 @@ class EmployeesController extends Controller
            'getData' => $data,
           ]);
     }
+    public function getE()
+    {
+         $data = Employees::
+        join('employee_division','employee_division.e_id','employee.emp_id')
+        // ->where('employee_division.div_id',$id)
+         ->orderby('emp_id','DESC')
+         ->select('employee.name as e_name','employee.*')
+         ->get();
+
+      
+
+          
+        return response()->json([
+           'status' => 200,
+           'getData' => $data,
+          ]);
+    }
 
     public function getDivision($id){
         $data = EmployeeDivision::where('e_id',$id)->get();

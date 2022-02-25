@@ -264,7 +264,7 @@ class AccountStatementController extends Controller
   {
       $invoiceCollection = new Collection();
      
-          $invoiceCollection = PurchaseInvoice::join('parties','purchase_invoices.party_id','parties.id')->select('parties.credit_day','purchase_invoices.*')->get();
+          $invoiceCollection = PurchaseInvoice::join('parties','purchase_invoices.party_id','parties.id')->select('parties.credit_days','purchase_invoices.*')->get();
         //   $invoiceCollection = Quotation::join('parties','quotations.party_id','parties.id')->where('transaction_type','purchase')->select('parties.credit_days','quotations.*')->get();
      
 
@@ -277,14 +277,14 @@ class AccountStatementController extends Controller
       $data = $data->sortBy('created_at');
 
       $data && ($datas['data'] = $data->map(function ($item) {
-          if ($item->invoice_no) {
+          if ($item->invoice_no==null || $item->invoice_no) {
               $item['date'] = $item->created_at;
               $item['code_no'] = $item->invoice_no;
-              $item['description'] = "Purchase"."/".$item->party->firm_name;
+            $item['description'] = "Purchase"."/".(isset($item->party)?$item->party->firm_name:" ");
               $item['debit'] = null;
               $item['credit'] = floatval(str_replace(",","",$item->total_value));
               //   $item['po_number'] = $item->po_number;
-              $item['credit_days'] = floatval($item->party->credit_days);
+              $item['credit_days'] = floatval(isset($item->party)?$item->party->credit_days:" ");
               return [$item];
           }
 
