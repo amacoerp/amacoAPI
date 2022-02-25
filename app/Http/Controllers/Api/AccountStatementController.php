@@ -9,6 +9,7 @@ use App\Models\Receipt;
 use App\Models\Expense;
 use App\Models\PaymentAccount;
 use App\Models\AdvancePayment;
+use App\Models\PurchaseInvoice;
 use App\Models\Quotation;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -263,7 +264,8 @@ class AccountStatementController extends Controller
   {
       $invoiceCollection = new Collection();
      
-          $invoiceCollection = Quotation::join('parties','quotations.party_id','parties.id')->where('transaction_type','purchase')->select('parties.credit_days','quotations.*')->get();
+          $invoiceCollection = PurchaseInvoice::join('parties','purchase_invoice.party_id','parties.id')->where('transaction_type','purchase')->select('parties.credit_days','purchase_invoice.*')->get();
+        //   $invoiceCollection = Quotation::join('parties','quotations.party_id','parties.id')->where('transaction_type','purchase')->select('parties.credit_days','quotations.*')->get();
      
 
       $receiptCollection = new Collection();
