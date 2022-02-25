@@ -23,10 +23,16 @@ class EmployeesController extends Controller
          ->orderby('emp_id','DESC')
          ->select('employee.name as e_name','employee.*')
          ->get();
-
-      
-
-          
+        return response()->json([
+           'status' => 200,
+           'getData' => $data,
+          ]);
+    }
+     public function getEmp()
+    {
+         $data = Employees::orderby('emp_id','DESC')
+         ->select('employee.name as e_name','employee.*')
+         ->get();
         return response()->json([
            'status' => 200,
            'getData' => $data,
