@@ -127,13 +127,13 @@ class RFQController extends Controller
                     }
          
                 RFQDetails::create([
-                    'product_id' => isset($rfq_detail['id'])?$rfq_detail['id']:null,
-                    'description' => ucwords(trans($rfq_detail['descriptionss'])),
+                    'product_id' => isset($rfq_detail['id'])?(int)$rfq_detail['id']:null,
+                    'description' => ucwords(trans($rfq_detail['description'])),
                     'quantity' => $rfq_detail['quantity'],
                     'unit_of_measure' => $rfq_detail['unit_of_measure'],
                     'rfq_id' => $_rfq_id,
                     'file' => $filePath?$filePath:NULL,
-                    'product_name' => $rfq_detail['name'],
+                    'product_name' => $rfq_detail['product_name'],
                 ]);
                 $index++;
             }
@@ -218,10 +218,10 @@ class RFQController extends Controller
                     "product_name" => $rfq_detail->product_name,
                     "src" => $urlPath,
                     "product" => $rfq_detail->product?array($rfq_detail->product):null,
-                    "prices" => isset($rfq_detail->product_id)?$rfq_detail->product->productPrice:[],
-                    "party" =>  isset($rfq_detail->product_id)?$rfq_detail->product->productPrice->map(function ($price) {
-                        return ($price->party);
-                    }):null,
+                    // "prices" => isset($rfq_detail->product_id) ?$rfq_detail->product->productPrice:[],
+                    // "party" =>  isset($rfq_detail->product_id) ?$rfq_detail->product->map(function ($price) {
+                    //     return ($price->party);
+                    // }):null,
                 ];
             }),
         ];
