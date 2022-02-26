@@ -165,7 +165,7 @@ class MasterAccountController extends Controller
                 $item['div_id']=$item->divid;
                 $item['date'] = $item->created_at;
                 $item['code_no'] = $item->invoice_no;
-                $item['description'] = $item->description;
+                $item['description'] = isset($item->description)?$item->description:"--";
                 $item['paid_to'] = $item->paid_to;
                 $item['cat_name'] = $item->cat_name;
                 $item['credit'] = floatval(str_replace(",","",$item->amount));
@@ -181,7 +181,7 @@ class MasterAccountController extends Controller
                 $item['date'] = $item->created_at;
                 $item['code_no'] = $item->receipt_no;
                 $item['paid_to'] = $item->paid_to;
-                $item['description'] = $item->narration;
+                $item['description'] = isset($item->narration)?$item->narration:"--";
                 $item['cat_name'] = 'Received';
                 $item['debit'] = floatval(str_replace(",","",$item->paid_amount));
                 $item['po_number'] = $item->po_number;
@@ -198,7 +198,7 @@ class MasterAccountController extends Controller
                     $item['date'] = $item->created_at;
                     $item['code_no'] = " ";
                     $item['paid_to'] = $item->receivedBy->name;
-                    $item['description'] = $item->narration;
+                    $item['description'] = isset($item->narration)?$item->narration:"--";
                     $item['cat_name'] = 'Division';
                     $item['credit'] = floatval(str_replace(",","",$item->amount));
                     $item['po_number'] = " ";
@@ -215,7 +215,7 @@ class MasterAccountController extends Controller
                     $item['date'] = $item->created_at;
                     $item['code_no'] = " ";
                     $item['paid_to'] = $item->paymentAccount->name;
-                    $item['description'] = $item->narration;
+                    $item['description'] = isset($item->narration)?$item->narration:"--";
                     $item['cat_name'] = 'Division';
                     $item['debit'] = floatval(str_replace(",","",$item->amount));
                     $item['po_number'] = " ";

@@ -268,18 +268,18 @@ class AccountStatementController extends Controller
         //   $invoiceCollection = Quotation::join('parties','quotations.party_id','parties.id')->where('transaction_type','purchase')->select('parties.credit_days','quotations.*')->get();
      
 
-      $receiptCollection = new Collection();
+        $receiptCollection = new Collection();
      
           $receiptCollection = Expense::join('parties','expenses.vendor_id','parties.id')->get();
      
 
-      $data = $invoiceCollection->concat($receiptCollection);
+      $data = $invoiceCollection->merge($receiptCollection);
       $data = $data->sortBy('created_at');
 
       $data && ($datas['data'] = $data->map(function ($item) {
-          if ($item->invoice_no==null || $item->invoice_no) {
-              $item['date'] = $item->created_at;
-              $item['code_no'] = $item->invoice_no;
+          if (isset($item->invoice_no)) {
+            $item['date'] = $item->created_at;
+            $item['code_no'] = $item->invoice_no;
             $item['description'] = "Purchase"."/".(isset($item->party)?$item->party->firm_name:" ");
               $item['debit'] = null;
               $item['credit'] = floatval(str_replace(",","",$item->total_value));
@@ -287,12 +287,13 @@ class AccountStatementController extends Controller
               $item['credit_days'] = floatval(isset($item->party)?$item->party->credit_days:" ");
               return [$item];
           }
-
-          if ($item->voucher_no) {
+         
+          if($item->voucher_no) {
               $item['date'] = $item->created_at;
               $item['code_no'] = $item->voucher_no;
               $item['description'] = "Matrial Purchase";
-              $item['debit'] = floatval(str_replace(",","",$item->amount));
+              $item['debit'] = floatval($item->amount);
+              $item['ddd'] = floatval($item->amount);
             //   $item['po_number'] = $item->voucher_no;
               $item['credit'] = null;
               $item['credit_days'] = floatval($item->credit_days);
