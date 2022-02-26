@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\LoginLog;
+use App\Models\PaymentAccount;
 use DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
@@ -53,7 +54,9 @@ class LoginLogController extends Controller
         $salesInvoice = $this -> getSalesInvoiceLog();
         $salesReturn = $this -> getSalesReturnLog();
         $purchaseReturn = $this -> getPurchaseReturnLog();
-        // $expense = $this -> getExpenseLog();
+        $expense = $this -> getExpenseLog();
+        $receipts = $this -> getReceiptsLog();
+        $payments = $this -> getPaymentsLog();
         $mAllLog =  $productLog->merge($partyLog);
         $mAllLog =  $mAllLog->merge($partyContact);
         $mAllLog =  $mAllLog->merge($partyBank);
@@ -65,24 +68,76 @@ class LoginLogController extends Controller
         $mAllLog =  $mAllLog->merge($salesInvoice);
         $mAllLog =  $mAllLog->merge($salesReturn);
         $mAllLog =  $mAllLog->merge($purchaseReturn);
+        $mAllLog =  $mAllLog->merge($expense);
+        $mAllLog =  $mAllLog->merge($receipts);
+        $mAllLog =  $mAllLog->merge($payments);
         // $mAllLog =  $mAllLog->merge($expense);
         $finalLog = collect($mAllLog)->sortBy('updated_at')->reverse()->values();
         return response()->json($finalLog);
     }
 
 
+    public function getPaymentsLog(){
+        $data = DB::table('advance_payments')
+        ->join('users','users.id','advance_payments.user_id')
+        ->join('payment_accounts','payment_accounts.id','advance_payments.received_by')
+        ->select('users.name as uname','users.id as id','payment_accounts.name as received_by','advance_payments.payment_account_id as payment_account_id','advance_payments.amount as amount','advance_payments.created_at as created_at','advance_payments.updated_at as updated_at')
+        ->get();
+          $data -> map(function ($item){
+             if($item -> created_at >= $item -> updated_at){
+                $item->log = "A Payment Details (".$item-> amount."/- ,Received By ". $item ->received_by." ,Paid By ".$this->getPaidBy($item -> payment_account_id)." ) has Been Created By " .$item->uname . " @ ". date("D-d-M-Y", strtotime($item -> created_at));
+            }else{
+                $item->log = "A Payment Details (".$item-> amount."/- ,Received By ". $item ->received_by." ,Paid By ".$this->getPaidBy($item -> payment_account_id)." ) has Been Updated By " .$item->uname . " @ ". date("D-d-M-Y", strtotime($item -> updated_at));
+            }
+            return $item;
+        });
+        return $data;
+    }
+
+    public function getPaidBy($id){
+        $data = PaymentAccount::where('id',$id)->select('name')->get();
+        $cleanName = $this -> clean($data);
+        $cleanName = str_replace('name','',$cleanName);
+        return($cleanName);
+    }
+
+    public function clean($name){
+        $string = str_replace(' ', '-', $name); // Replaces all spaces with hyphens.
+
+        return preg_replace('/[^A-Za-z0-9\-]/', '', $name);
+    }
+    public function getReceiptsLog(){
+        $data = DB::table('receipts')
+        ->join('users','users.id','receipts.user_id')
+        ->join('parties','parties.id','receipts.party_id')
+        ->select('users.name as uname','users.id as id','parties.firm_name as firm_name','receipts.voucher_no as voucher_no','receipts.paid_amount as paid_amount','receipts.created_at as created_at','receipts.updated_at as updated_at')
+        ->get();
+          $data -> map(function ($item){
+             if($item -> created_at >= $item -> updated_at){
+                $item->log = "A Receipt Details (" . $item-> firm_name."-".$item->voucher_no."(".$item-> paid_amount."/-)) has Been Created By " .$item->uname . " @ ". date("D-d-M-Y", strtotime($item -> created_at));
+            }else{
+                $item->log = "A Receipt Details (" . $item-> firm_name."-".$item->voucher_no."(".$item-> paid_amount."/-)) has Been Updated By " .$item->uname . " @ ". date("D-d-M-Y", strtotime($item -> updated_at));
+            }
+            return $item;
+        });
+        return $data;
+    }
+
+
         public function getExpenseLog(){
         $data = DB::table('expenses')
         ->join('users','users.id','expenses.user_id')
-        ->join('parties','parties.id','expenses.party_id')
-        ->select('users.name as uname','users.id as id','parties.firm_name as firm_name','expenses.pr_number as pr_number','expenses.created_at as created_at','expenses.updated_at as updated_at')
+        ->join('payment_accounts','payment_accounts.id','expenses.utilize_div_id')
+        ->join('account_categories','account_categories.id','expenses.account_category_id')
+        ->select('users.name as uname','users.id as id','account_categories.name as catname','expenses.voucher_no as voucher_no','expenses.amount as amount','payment_accounts.name as utilized_div','expenses.created_at as created_at','expenses.updated_at as updated_at')
         ->orderBy('expenses.id','DESC')
         ->get();
         $data -> map(function ($item){
-             if($item -> created_at >= $item -> updated_at){
-                $item->log = "Purchase Return details (" . $item-> firm_name."-".$item->pr_number.") has Been Created By " .$item->uname . " @ ". date("D-d-M-Y", strtotime($item -> created_at));
+             if($item -> updated_at  >= $item -> created_at){
+                 $item -> log = 'crea';
+                $item->log = "Expense Details "."Utilized Division is ".$item-> utilized_div. " And Expense Category ".$item-> catname." (". $item-> voucher_no." :- ".$item->amount.") has Been Created By " .$item->uname . " @ ". date("D-d-M-Y", strtotime($item -> created_at));
             }else{
-                $item->log = "Purchase Return details (" . $item-> firm_name."-".$item->pr_number.") has Been Updated By " .$item->uname . " @ ". date("D-d-M-Y", strtotime($item -> updated_at));
+                $item->log = "Expense Details "."Utilized Division is ".$item-> utilized_div. " And Expense Category ".$item-> catname." (". $item-> voucher_no." :- ".$item->amount.") has Been Updated By " .$item->uname . " @ ". date("D-d-M-Y", strtotime($item -> created_at));
             }
             return $item;
         });
