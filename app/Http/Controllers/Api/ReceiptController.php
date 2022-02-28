@@ -72,6 +72,11 @@ class ReceiptController extends Controller
             'payment_mode' => $request->payment_mode,
             'amount' => $request->paid_amount,
             "received_date" => $request->paid_date,
+            "div_id" => $request->division_id?$request->division_id:0,
+            "user_id" => $request->user_id?$request->user_id:0,
+            "narration" => $request->narration?$request->narration:null,
+            "ref_id"=>$receipt->id
+            
         ]);
     }
 
@@ -122,7 +127,20 @@ class ReceiptController extends Controller
             
             // 'contact_id' => $request->contact_id,
         ]);
-        return response()->json($receipt);
+
+        $findRef=AdvancePayment::where('ref_id',$receipt->id)->update([
+            'payment_account_id' => $request->div_id,
+            'received_by' =>$request->receiver,
+            'payment_mode' => $request->payment_mode,
+            'amount' => $request->paid_amount,
+            "received_date" => $request->paid_date,
+            "div_id" => $request->division_id?$request->division_id:0,
+            "user_id" => $request->user_id?$request->user_id:0,
+            "narration" => $request->narration?$request->narration:null,
+        ]);
+       
+
+        return response()->json($request->amount);
     }
 
     /**
@@ -192,6 +210,16 @@ class ReceiptController extends Controller
         
             
             // 'contact_id' => $request->contact_id,
+        ]);
+        $findRef=AdvancePayment::where('ref_id',$receipt->id)->update([
+            'payment_account_id' => $request->div_id,
+            'received_by' =>$request->receiver,
+            'payment_mode' => $request->payment_mode,
+            'amount' => $request->paid_amount,
+            "received_date" => $request->paid_date,
+            "div_id" => $request->division_id?$request->division_id:0,
+            "user_id" => $request->user_id?$request->user_id:0,
+            "narration" => $request->narration?$request->narration:null,
         ]);
         return response()->json(['referrenceImgUrl' => $receipt->referrenceImg()]);
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\AdvancePayment;
+use App\Models\Receipt;
 use App\Models\Party;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -113,6 +114,24 @@ class AdvancePaymentController extends Controller
             
             // 'contact_id' => $request->contact_id,
         ]);
+
+        $findRef=AdvancePayment::where('id',$advancePayment->id)->first();
+        if($findRef->ref_id)
+        {
+            Receipt::Where('id',$findRef->ref_id)->update([
+                'party_id' => $request->party_id,
+                "payment_mode" => $request->payment_mode,
+                "narration" => $request->narration,
+                'paid_amount' => $request->paid_amount,
+                'div_id' => $request->div_id,
+                'narration' => $request->narration,
+                'check_no' => $request->check_no,
+                'bank_id' => $request->bank_id,
+                "sender" => $request->sender,
+                "receiver" => $request->receiver==" "?0:$request->receiver,
+                "paid_date" => $request->paid_date,
+        ]);
+        }
         return response()->json([$advancePayment]);
     }
 
