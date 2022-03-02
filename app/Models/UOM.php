@@ -9,7 +9,7 @@ class UOM extends Model
 {
     use HasFactory;
 
-    protected $table = 'unit_of_measure';
+    protected $table = 'unit_of_measures';
     protected $fillable = [
         	'id',
         	'value',
