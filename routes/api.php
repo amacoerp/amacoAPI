@@ -46,6 +46,7 @@ use App\Http\Controllers\Api\DivisionController;
 use App\Http\Controllers\Api\MasterAccountController;
 use App\Http\Controllers\Api\InvestmentsDetailsController;
 use App\Http\Controllers\Api\ProfitLossController;
+use App\Http\Controllers\Api\UOMController;
 
 use App\Http\Controllers\Api\PurchaseReturnController;
 use App\Http\Controllers\Api\SalesReturnController;
@@ -130,6 +131,7 @@ Route::apiResource('demo', demo::class);
 Route::apiResource('division', DivisionController::class);
 Route::apiResource('stock', StockController::class);
 Route::apiResource('designation', DesignationController::class);
+Route::apiResource('uom', UOMController::class);
 // restful api links
 Route::get('getAllEmails',[UserController::class,'getAllEmails']);
 Route::delete('purchaseinvoiceitem/{id}',[PurchaseInvoiceController::class,'deleteInv']);
