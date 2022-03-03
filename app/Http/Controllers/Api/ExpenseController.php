@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ColumnData;
 use App\Models\Expense;
 use App\Models\payment_account;
+use App\Models\Party;
 use App\Models\PaymentAccount;
 use App\Models\AccountCategory;
 
@@ -52,8 +53,19 @@ $expenses = Expense::join('account_categories','expenses.account_category_id','a
 $expenses->map(function ($expense) {
     return $expense->payment_account;
 });
+$expenses -> map(function ($item){
+    if($item['vendor_id'] !== '0'){
+        $item['paid_to'] = $this -> getPartyName($item['vendor_id']);
+    }
+});
 return response()->json($expenses);
 
+    }
+
+
+    public function getPartyName($id){
+        $data = Party::where('id',$id)->get();
+        return $data[0]->firm_name;
     }
 
     // to get all paid expenses
