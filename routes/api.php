@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductQuotationDetail;
 use App\Http\Controllers\Api\PHPMailerController;
+use App\Http\Controllers\Api\EncController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\PartyController;
@@ -282,6 +283,7 @@ Route::post('change-password', [UserController::class, 'changePasswordF']);
 Route::get('show_quotation/{id}', [QuotationController::class, 'show_quotation']);
 Route::get('quoteHistory', [QuotationController::class, 'quoteHistory']);
 Route::get('invoice_delivery_note/{id}/{s}', [DeliveryNoteController::class, 'show']);
+Route::get('enc', [EncController::class, 'index']);
 
 
 
