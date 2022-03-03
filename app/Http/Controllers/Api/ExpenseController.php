@@ -7,6 +7,7 @@ use App\Models\ColumnData;
 use App\Models\Expense;
 use App\Models\payment_account;
 use App\Models\PaymentAccount;
+use App\Models\Party;
 use App\Models\AccountCategory;
 
 use App\Models\AdvancePayment;
@@ -267,6 +268,7 @@ return response()->json($expenses);
         return response()->json([
             $expense,
             $expense->payment_account,
+            $expense->vendor_id,
             $expense->column_data->map(function ($item) {
                 if (File::exists(public_path($item->value))) {
                     $item['file'] = url($item->value);
@@ -274,7 +276,9 @@ return response()->json($expenses);
                 return $item->column;
             }),
             'mapdata'=>$map,
+            
             'account'=>$res,
+           
             'img' => $expense->img(),
             'referrenceImgUrl' => $expense->referrenceImg(),
         ]);

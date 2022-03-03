@@ -162,7 +162,7 @@ class MasterAccountController extends Controller
             if ($item->expense_type) {
                 $item['div_name']=$item->div_name;
                 $item['user_name']=$item->nick_name;
-                $item['div_id']=$item->divid;
+                $item['div_id']=$item->received_by;
                 $item['date'] = $item->created_at;
                 $item['code_no'] = $item->invoice_no;
                 $item['description'] = isset($item->description)?$item->description:"--";
@@ -171,6 +171,7 @@ class MasterAccountController extends Controller
                 $item['credit'] = floatval(str_replace(",","",$item->amount));
                 $item['po_number'] = $item->po_number;
                 $item['debit'] = null;
+                $item['divisionId'] = "heloo";
                 // $item['credit_days'] = floatval($item->credit_days);
                 return [$item];
             }
@@ -186,6 +187,7 @@ class MasterAccountController extends Controller
                 $item['debit'] = floatval(str_replace(",","",$item->paid_amount));
                 $item['po_number'] = $item->po_number;
                 $item['credit'] = null;
+                $item['divisionId'] = $item->div_id;
                 // $item['credit_days'] = floatval($item->credit_days);
                 return [$item];
             }
@@ -203,6 +205,7 @@ class MasterAccountController extends Controller
                     $item['credit'] = floatval(str_replace(",","",$item->amount));
                     $item['po_number'] = " ";
                     $item['debit'] = null;
+                    $item['divisionId'] = $item->receivedBy->id;
                     // $item['credit_days'] = floatval($item->credit_days);
                     return [$item];
 
@@ -220,6 +223,7 @@ class MasterAccountController extends Controller
                     $item['debit'] = floatval(str_replace(",","",$item->amount));
                     $item['po_number'] = " ";
                     $item['credit'] = null;
+                    $item['divisionId'] = $item->receivedBy->id;
                     return [$item];
                 
 

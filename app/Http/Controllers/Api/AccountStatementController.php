@@ -270,10 +270,11 @@ class AccountStatementController extends Controller
 
         $receiptCollection = new Collection();
      
-          $receiptCollection = Expense::join('parties','expenses.vendor_id','parties.id')->get();
+          $receiptCollection = Expense::where('vendor_id','!=',0)->get();
+        //   $receiptCollection = Expense::join('parties','expenses.vendor_id','parties.id')->get();
      
 
-      $data = $invoiceCollection->merge($receiptCollection);
+      $data = $invoiceCollection->concat($receiptCollection);
       $data = $data->sortBy('created_at');
 
       $data && ($datas['data'] = $data->map(function ($item) {
@@ -293,7 +294,7 @@ class AccountStatementController extends Controller
               $item['code_no'] = $item->voucher_no;
               $item['description'] = "Matrial Purchase";
               $item['debit'] = floatval($item->amount);
-              $item['ddd'] = floatval($item->amount);
+              $item['party_id'] = floatval($item->vendor_id);
             //   $item['po_number'] = $item->voucher_no;
               $item['credit'] = null;
               $item['credit_days'] = floatval($item->credit_days);
