@@ -67,6 +67,7 @@ return response()->json($expenses);
     public function getPartyName($id){
         $data = Party::where('id',$id)->get();
         return $data[0]->firm_name;
+        // return "vbsdbcbs";
     }
 
     // to get all paid expenses
@@ -83,6 +84,11 @@ return response()->json($expenses);
              $expense['debit']=$expense->amount;
              $expense->payment_account;
             return $expense->account_categories;
+        });
+        $expenses -> map(function ($item){
+            if($item['vendor_id'] !== '0'){
+                $item['paid_to'] = $this -> getPartyName($item['vendor_id']);
+            }
         });
         return response()->json($expenses);
     }
