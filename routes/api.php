@@ -285,6 +285,7 @@ Route::get('quoteHistory', [QuotationController::class, 'quoteHistory']);
 Route::get('invoice_delivery_note/{id}/{s}', [DeliveryNoteController::class, 'show']);
 Route::get('enc', [EncController::class, 'index']);
 
+// Multi Response
 
 
 

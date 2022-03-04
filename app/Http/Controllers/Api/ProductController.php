@@ -125,4 +125,5 @@ class ProductController extends Controller
             return (['msg'=>$product->name.' is successfully deleted']);
         }
     }
+    
 }
