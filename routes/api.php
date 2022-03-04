@@ -287,4 +287,10 @@ Route::get('enc', [EncController::class, 'index']);
 
 
 
+//multi Json responce API's
+
+Route::get('mjrQuoteEdit/{did}/{id}', [QuotationController::class, 'mjrQuoteEdit']);
+
+
+
 

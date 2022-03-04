@@ -9,7 +9,7 @@ use App\Models\Designation;
 class DesignationController extends Controller
 {
     //
-    public function index()
+    public static function index()
     {
         $users = Designation::all();
         return (
