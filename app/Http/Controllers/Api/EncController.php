@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Crypt;
 use App\Models\User;
-use phpseclib\Crypt\RSA;
  
 
 
@@ -18,12 +17,13 @@ class EncController extends Controller
 
         $data = User::get();
 
+        $data = response()->json($data);
+
         $encrypted = Crypt::encrypt($data);
 
-            $decrypted = Crypt::decrypt($encrypted);
+        $decrypted = Crypt::decrypt($encrypted);
         
-$rsa = new RSA();
-
         return $encrypted;
+
     }
 }

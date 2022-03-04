@@ -45,6 +45,17 @@ class QuotationController extends Controller
     }
 
 
+    public function mjrQuoteInc($did){
+        return response()->json([
+            'customer' => PartyController::customer($did),
+            'users' => DesignationController::index(),
+            'banks' => CompanyBankController::banks(),
+            'products' => ProductController::index(),
+            'uom' => UOMController::uom(),
+        ]);
+    }
+
+
 
 
     /**
