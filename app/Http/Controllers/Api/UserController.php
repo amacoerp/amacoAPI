@@ -26,7 +26,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public static function index()
     {
         $users = User::all();
         // $div=$users->UserDivision;

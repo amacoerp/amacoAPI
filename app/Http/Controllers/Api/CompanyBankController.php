@@ -20,6 +20,12 @@ class CompanyBankController extends Controller
        
         return response()->json($bank);
     }
+    public function banks()
+    {
+        $bank = CompanyBank::all();
+       
+        return $bank;
+    }
 
     /**
      * Store a newly created resource in storage.
