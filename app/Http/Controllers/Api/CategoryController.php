@@ -12,6 +12,18 @@ use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
+
+
+    public function mjrCategory(){
+        $unCategorized = $this -> unCategorized_products();
+        $cat = $this -> index();
+        return response()->json([
+            'unCategorized' => $unCategorized->original,
+            'products' => ProductController::index(),
+            'category' => $cat->original,
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      *
