@@ -14,6 +14,17 @@ use Illuminate\Support\Facades\DB;
 
 class PurchaseInvoiceController extends Controller
 {
+
+
+    public function mjrPurchaseEdit($did,$id){
+        return response()->json([
+            'vendor' => PartyController::vendor($did),
+            'products' => ProductController::index(),
+            'uom' => UOMController::uom(),
+            'inv' => $this -> shows($id) ,
+            'productPrice' => ProductPriceController::productPrice(),
+        ]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -167,6 +178,21 @@ class PurchaseInvoiceController extends Controller
      * @param  \App\Models\Invoice  $invoice
      * @return \Illuminate\Http\Response
      */
+    public function shows($id)
+    {
+        $d = PurchaseInvoice::where('id',$id)->get();
+        return [
+            $purchaseInvoice = $d[0],
+            $purchaseInvoice->party,
+            // $purchaseInvoice->quotation->quotationDetail,
+            $purchaseInvoice->purchaseInvoiceDetail->map(function ($purchaseInvoice_detail){
+                return [
+                    $purchaseInvoice_detail->quotationDetail,
+                    $purchaseInvoice_detail->product,
+                ];
+            }),
+        ];
+    }
     public function show(PurchaseInvoice $purchaseInvoice)
     {
         return [
