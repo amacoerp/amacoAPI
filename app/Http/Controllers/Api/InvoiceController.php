@@ -65,7 +65,7 @@ class InvoiceController extends Controller
             // }
         // }
     }
-    public function index()
+    public static function index()
     {
         $invoices = Invoice::where('status','!=','Delivered')
         ->orderBy('created_at','DESC')->get();
@@ -366,7 +366,17 @@ class InvoiceController extends Controller
         ->orderBy('created_at', 'DESC')->get();
         return response()->json($invoices);
     }
-    public function salesTax(Invoice $invoice)
+    public static function salesTax(Invoice $invoice)
+    {
+        $invoices = Invoice::get();
+        $invoices->map(function($val){
+            
+            return $val->party;
+        });
+        return $invoices;
+    }
+
+    public static function salesTax2()
     {
         $invoices = Invoice::get();
         $invoices->map(function($val){

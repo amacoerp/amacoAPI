@@ -293,6 +293,9 @@ Route::get('enc', [EncController::class, 'index']);
 Route::get('mjrQuoteEdit/{did}/{id}', [QuotationController::class, 'mjrQuoteEdit']);
 Route::get('mjrQuoteInc/{did}', [QuotationController::class, 'mjrQuoteInc']);
 Route::get('mjrProductAdd/{did}/{cid}', [ProductController::class, 'mjrProductAdd']);
+Route::get('mjrProductUpdate/{pid}', [ProductController::class, 'mjrProductUpdate']);
+Route::get('mjrPurchaseInvoice/{poid}',[QuotationController::class, 'mjrPurchaseInvoice']);
+Route::get('mjrExpense',[AccountStatementController::class, 'mjrExpense']);
 
 
 

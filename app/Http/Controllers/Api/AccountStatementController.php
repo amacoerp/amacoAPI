@@ -10,6 +10,9 @@ use App\Models\Expense;
 use App\Models\PaymentAccount;
 use App\Models\AdvancePayment;
 use App\Models\PurchaseInvoice;
+use App\Http\Controllers\Api\DivisionController;
+use App\Http\Controllers\Api\InvoiceController;
+use App\Http\Controllers\Api\AccountCategoryController;
 use App\Models\Quotation;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -308,5 +311,34 @@ class AccountStatementController extends Controller
 
       return response()->json([$datas]);
   }
+
+  //Balance Sheet Data
+  public function mjrExpense(){
+    $paid_div=DivisionController::paidDivision();
+    $response_data=$this->responseData();
+    $res=InvoiceController::salesTax2();
+    $salesExpense=AccountCategoryController::salesExpenseReport();
+    $invoices = Invoice::where('status','!=','Delivered')
+    ->orderBy('created_at','DESC')->get();
+    // $result=$invoices->party;
+    $invoices->map(function ($invoice) {
+           
+        // $invoice->payment_account;
+       return $invoice->party;
+   });
+    return response()->json([
+       
+        'paidDivision' => $paid_div->original,
+        'responseData' => $response_data->original,
+        'salesTax'=>$res,
+        'salesExpenseReport'=>$salesExpense->original,
+        'invoice'=>$invoices
+        
+        
+
+       
+    ]);
+  }
+  
     
 }

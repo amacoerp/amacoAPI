@@ -106,7 +106,7 @@ class DivisionController extends Controller
             'divs' => $divs
         ]);
     }
-    public function paidDivision()
+    public static function paidDivision()
     {
        
         $divEopenbalance=Expense::where('is_paid',1)->sum('amount');
@@ -144,6 +144,46 @@ class DivisionController extends Controller
         
     });
     return response()->json($datas);
+    }
+//  Multiple Division
+    public static function paidDivision2()
+    {
+       
+        $divEopenbalance=Expense::where('is_paid',1)->sum('amount');
+        $divRopenbalance=Receipt::sum('paid_amount');
+        
+        $division = PaymentAccount::get();
+        $datas=$division->map(function ($item) {
+            if($item['div_id'])
+            {
+                $divEopenbalance=Expense::where('is_paid',1)->where('utilize_div_id',$item['id'])->sum('amount'); 
+                $accountSum=PaymentAccount::where('id',$item['id'])->sum('balance');
+                $recievedby=AdvancePayment::where('received_by',$item['id'])->sum('amount');
+                $paidby=AdvancePayment::where('payment_account_id',$item['id'])->sum('amount');
+                $divRopenbalance=Receipt::where('div_id',$item['id'])->sum('paid_amount');
+                $item['name']=$item->name;
+                $item['id']=$item->id;
+                $item['balance'] = ($accountSum+$divRopenbalance+$recievedby)-($paidby+$divEopenbalance);
+                
+                return $item;
+            }
+            
+           else
+           {
+            $accountSum=PaymentAccount::where('id',$item['id'])->sum('balance');
+            $recievedby=AdvancePayment::where('received_by',$item['id'])->sum('amount');
+            $paidby=AdvancePayment::where('payment_account_id',$item['id'])->sum('amount');
+            $paid_date=AdvancePayment::where('received_by',$item['id'])->orderBy('received_date','DESC')->first('received_date');
+            $item['date']=!empty($paid_date->received_date)?$paid_date->received_date:$item->created_at;
+            $item['name']=$item->name;
+            $item['id']=$item->id;
+            $item['balance'] =$accountSum+$recievedby-$paidby;
+            return $item;
+
+           }
+        
+    });
+    return $datas;
     }
     public function getDivbyId($id){
 

@@ -39,7 +39,7 @@ class AccountCategoryController extends Controller
         }
         return $this->subCategory($id);
     }
-    public function checkParentcategories($a_id)
+    public static function checkParentcategories($a_id)
     {
        
         $groupedCategories = AccountCategory::where([['id','=',$a_id],['delete_status','=',0]])->first();
@@ -60,7 +60,7 @@ class AccountCategoryController extends Controller
             
             }
             else{
-                return $this->checkParentcategories($groupedCategories->parent_id);
+                return self::checkParentcategories($groupedCategories->parent_id);
 
             }
            
@@ -198,7 +198,7 @@ class AccountCategoryController extends Controller
         return response()->json($category);
     }
    
-    public function salesExpenseReport()
+    public static function salesExpenseReport()
     {
             $res = new Collection();
             $res=Expense::join('account_categories','expenses.account_category_id','account_categories.id')->where('status','verified')->get();
@@ -207,7 +207,7 @@ class AccountCategoryController extends Controller
                 $res->map(function($accountCategory){
                 return [
                     'category' => $accountCategory,
-                    'sub_categories' => $this->checkParentcategories($accountCategory->account_category_id),
+                    'sub_categories' => self::checkParentcategories($accountCategory->account_category_id),
                     // 'sub_categories' => $this->subCategory($accountCategory->id),
                 ];
             }),

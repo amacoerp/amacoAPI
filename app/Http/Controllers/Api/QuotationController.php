@@ -459,7 +459,7 @@ class QuotationController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function shows($id)
+    public  function shows($id)
     {
         $quotation = Quotation::where('id', $id)->first();
         $data = [
@@ -1610,5 +1610,18 @@ public function show_quotation($id)
         ),
     ];
     return response()->json($quotations_data[0], 200);  
+    }
+
+
+    //multiple response data for purchase Invoice generate from purchase order
+    public function mjrPurchaseInvoice($poid)
+    {
+        return response()->json([
+            // 'vendor' => PartyController::vendor($did),
+            'sales_quotation' => $this->shows($poid),
+            'product' => ProductController::index(),
+            
+           
+        ]);
     }
 }

@@ -15,7 +15,7 @@ use App\Http\Controllers\Api\PartyController;
 class ProductController extends Controller
 {
 
-    public function index()
+    public static function index()
     {
         // $products = Product::all();
         // return ($products);
@@ -131,6 +131,33 @@ class ProductController extends Controller
     }
     
 
+    //show the Single product Info
+    public function productShow($product)
+    {
+        $productPrice = Product::where('id','=',$product)->first();
+        $prices = $productPrice->productPrice->map(function ($productdetail){
+                return [
+                    'id'=> $productdetail->id,
+                    'party_id'=> $productdetail->party_id,
+                    'product_id'=> $productdetail->product_id,
+                    'price'=> $productdetail->price,
+                    'firm_name' => $productdetail->party->firm_name,
+                ];
+            });
+        $product = DB::table('products')
+            ->leftJoin('categories', 'categories.id', '=', 'products.category_id')
+            ->leftJoin('divisions', 'divisions.id', '=', 'products.division_id')
+            ->leftJoin('manufacturers','manufacturers.id', '=', 'products.manufacturer_id')
+            ->select('products.*', 'categories.name as category_name', 'divisions.name as division_name', 'manufacturers.name as manufacturer_name')
+            ->where('products.id','=',$product)
+            ->get();
+
+        $data = ['product' => $product,'prices' => $prices];
+        return $data;
+
+    }
+
+
     public function mjrProductAdd($did,$cid){
         return response()->json([
             'vendor' => PartyController::vendor($did),
@@ -141,6 +168,19 @@ class ProductController extends Controller
             // 'products' => ProductController::index(),
             // 'sales' => $this -> shows($id),
             // 'uom' => UOMController::uom(),
+        ]);
+    }
+
+    //json response to get single product info,price 
+    public function mjrProductUpdate($pid){
+        return response()->json([
+            // 'vendor' => PartyController::vendor($did),
+            'product' => $this->productShow($pid)['product'],
+            'price' => $this->productShow($pid)['prices'],
+            'product_in_category' => CategoryController::products_in_category2(),
+            'manufacture' => Manufacturer::get(),
+            'getAllCat'=>Category::get(),
+           
         ]);
     }
 }
