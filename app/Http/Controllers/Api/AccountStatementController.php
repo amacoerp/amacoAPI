@@ -313,7 +313,7 @@ class AccountStatementController extends Controller
   }
 
   //Balance Sheet Data
-  public function mjrExpense(){
+  public function mjrBalanceSheet(){
     $paid_div=DivisionController::paidDivision();
     $response_data=$this->responseData();
     $res=InvoiceController::salesTax2();

@@ -28,7 +28,7 @@ class EmployeesController extends Controller
            'getData' => $data,
           ]);
     }
-     public function getEmp()
+     public static function getEmp()
     {
          $data = Employees::orderby('emp_id','DESC')
          ->select('employee.name as e_name','employee.*')

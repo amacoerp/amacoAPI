@@ -3,11 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+
 use App\Models\ColumnData;
 use App\Models\Expense;
 use App\Models\payment_account;
 use App\Models\Party;
+use App\Models\Division;
 use App\Models\PaymentAccount;
+use App\Models\CompanyBank;
+use App\Http\Controllers\Api\PartyController;
+use App\Http\Controllers\Api\EmployeesController;
+use App\Http\Controllers\Api\DivisionController;
 // use App\Models\Party;
 use App\Models\AccountCategory;
 
@@ -545,5 +551,85 @@ return response()->json($expenses);
         return $expenses;
     }
 
+    public static function shows($id)
+    {
+        $expense=Expense::where('id',$id)->first();
+        $expesne=$expense;
+        $data=[];
+        $resultArray = collect(explode(',',$expense->payment_account_id));
+        $memebrsInfo = $expense->payment_account_id;
+        $map=$resultArray->map(
+            function($items,$key) use($data) {
+               
+                
+                $result=Paymentaccount::where('id',floatval($items))->get();
+                
+                
+                return $result;
+            }
+        );
+        $res=AccountCategory::where('id',$expense->account_category_id)->get();
+        // $collection =  collect([explode('.',$memebrsInfo)]);
+
+        // $multiplied = $collection->map(function ($item, $key) {
+        //     return floatval($item) * 2;
+        // });
+        return response()->json([
+            $expense,
+            $expense->payment_account,
+            $expense->vendor_id,
+            $expense->column_data->map(function ($item) {
+                if (File::exists(public_path($item->value))) {
+                    $item['file'] = url($item->value);
+                }
+                return $item->column;
+            }),
+            'mapdata'=>$map,
+            
+            'account'=>$res,
+           
+            'img' => $expense->img(),
+            'referrenceImgUrl' => $expense->referrenceImg(),
+        ]);
+    }
+    public static function mjrExpense($did)
+    {
+        $account_categories=AccountCategoryController::index();
+        return response()->json([
+            'vendor' => PartyController::vendor($did),
+            'payment_account' =>PaymentAccount::all(),
+            'employee' =>EmployeesController::getEmp()->original,
+            'account_categories'=>$account_categories->original,
+            'division'=>Division::all(),
+            'paidDivision'=>DivisionController::paidDivision()->original,
+            'companyBank'=>CompanyBank::all()
+            // 'product' => $this->productShow($pid)['product'],
+            // 'price' => $this->productShow($pid)['prices'],
+            // 'product_in_category' => CategoryController::products_in_category2(),
+            // 'manufacture' => Manufacturer::get(),
+            // 'getAllCat'=>Category::get(),
+           
+        ]);
+    }
+    public static function mjrExpenseUpdate($did,$eid)
+    {
+        $account_categories=AccountCategoryController::index();
+        return response()->json([
+            'vendor' => PartyController::vendor($did),
+            'payment_account' =>PaymentAccount::all(),
+            'employee' =>EmployeesController::getEmp()->original,
+            'account_categories'=>$account_categories->original,
+            'division'=>Division::all(),
+            'paidDivision'=>DivisionController::paidDivision()->original,
+            'companyBank'=>CompanyBank::all(),
+            'expense'=>self::shows($eid)->original
+            // 'product' => $this->productShow($pid)['product'],
+            // 'price' => $this->productShow($pid)['prices'],
+            // 'product_in_category' => CategoryController::products_in_category2(),
+            // 'manufacture' => Manufacturer::get(),
+            // 'getAllCat'=>Category::get(),
+           
+        ]);
+    }
     
 }

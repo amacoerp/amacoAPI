@@ -21,7 +21,7 @@ class AccountCategoryController extends Controller
      *
      */
 
-    public function checkSubcategories($id)
+    public static function checkSubcategories($id)
     {
         $groupedCategories = AccountCategory::where('delete_status',0)->get()->groupBy('parent_id');
         // dd($groupedCategories[0]);
@@ -31,13 +31,13 @@ class AccountCategoryController extends Controller
                 $temp->map(function ($category){
                     return  [
                         'category'=>$category,
-                        'sub_categories'=>$this->checkSubcategories($category->id)];
+                        'sub_categories'=>self::checkSubcategories($category->id)];
                 }
             ),
             ];
             return $data[0];
         }
-        return $this->subCategory($id);
+        return self::subCategory($id);
     }
     public static function checkParentcategories($a_id)
     {
@@ -90,7 +90,7 @@ class AccountCategoryController extends Controller
         // return $this->subCategory($id);
     }
 
-    public function index()
+    public static function index()
     {
         // $groupedCategories = AccountCategory::all()->groupBy('parent_id');
         // dd($groupedCategories[0]);
@@ -100,7 +100,7 @@ class AccountCategoryController extends Controller
             $accountCategories->map(function($accountCategory){
             return [
                 'category' => $accountCategory,
-                'sub_categories' => $this->checkSubcategories($accountCategory->id),
+                'sub_categories' => self::checkSubcategories($accountCategory->id),
                 // 'sub_categories' => $this->subCategory($accountCategory->id),
             ];
         }),
@@ -170,7 +170,7 @@ class AccountCategoryController extends Controller
         return response()->json($accountCategory->id." has been successfully deleted.");
     }
 
-    public function subCategory($id)
+    public static function subCategory($id)
     {
         if($id == 0){
             $sub_categories = AccountCategory::where([['parent_id', '=', null],['delete_status','=',0]])->get();
