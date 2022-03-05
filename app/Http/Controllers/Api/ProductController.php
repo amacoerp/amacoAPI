@@ -5,8 +5,12 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Category;
+use App\Models\Manufacturer;
 use Illuminate\Support\Facades\DB;
 // use Stichoza\GoogleTranslate\GoogleTranslate;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\PartyController;
 
 class ProductController extends Controller
 {
@@ -126,4 +130,17 @@ class ProductController extends Controller
         }
     }
     
+
+    public function mjrProductAdd($did,$cid){
+        return response()->json([
+            'vendor' => PartyController::vendor($did),
+            'product_in_category' => CategoryController::products_in_category2(),
+            'manufacture' => Manufacturer::get(),
+            'category'=>Category::where('id',$did)->get(),
+            // 'banks' => CompanyBankController::banks(),
+            // 'products' => ProductController::index(),
+            // 'sales' => $this -> shows($id),
+            // 'uom' => UOMController::uom(),
+        ]);
+    }
 }

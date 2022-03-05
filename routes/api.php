@@ -292,6 +292,8 @@ Route::get('enc', [EncController::class, 'index']);
 
 Route::get('mjrQuoteEdit/{did}/{id}', [QuotationController::class, 'mjrQuoteEdit']);
 Route::get('mjrQuoteInc/{did}', [QuotationController::class, 'mjrQuoteInc']);
+Route::get('mjrProductAdd/{did}/{cid}', [ProductController::class, 'mjrProductAdd']);
+
 
 
 

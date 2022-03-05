@@ -273,4 +273,59 @@ class CategoryController extends Controller
         $categories = Category::get();
         return response()->json($categories, 200);
     }
+
+    public static function category()
+    {
+        $categories = Category::where('parent_id', '=', null)->get();
+        $categories -> map(function ($item){
+            $item['totalProducts']  = $this -> getSubCat($item -> id);
+            return $item;
+        });
+        return $categories;
+    }
+
+    public static function products_in_category2()
+    {
+        $cat = DB::table('categories')
+            ->leftJoin(
+                'products',
+                'categories.id',
+                '=',
+                'products.category_id'
+            )
+            ->select(['categories.*', 'products.category_id'])
+            ->get();
+        $grouped = $cat->groupBy('category_id');
+        $data = array();
+        foreach ($grouped as $group) {
+            // dd($group);
+            // array_push($data,[
+            //     'id' => $group[0]->id,
+            //     'name' => $group[0]->name,
+            //     'description' => $group[0]->description,
+            //     'products' =>count($group),
+            //     ]
+            // );
+            if ($group[0]->category_id == null) {
+                foreach ($group as $item) {
+                    array_push($data, [
+                        'id' => $item->id,
+                        'name' => $item->name,
+                        'description' => $item->description,
+                        'products' => 0,
+                    ]);
+                }
+            } else {
+                array_push($data, [
+                    'id' => $group[0]->id,
+                    'name' => $group[0]->name,
+                    'description' => $group[0]->description,
+                    'products' => count($group),
+                ]);
+            };
+        }
+
+        return $data;
+    }
+
 }
