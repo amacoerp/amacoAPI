@@ -291,7 +291,21 @@ Route::get('enc', [EncController::class, 'index']);
 //multi Json responce API's
 
 Route::get('mjrQuoteEdit/{did}/{id}', [QuotationController::class, 'mjrQuoteEdit']);
+Route::get('mjrQuoteDno/{did}/{id}', [QuotationController::class, 'mjrQuoteDno']);
+Route::get('mjrPurchase/{did}/{id}', [QuotationController::class, 'mjrPurchase']);
 Route::get('mjrQuoteInc/{did}', [QuotationController::class, 'mjrQuoteInc']);
+Route::get('mjrInvInc/{did}', [InvoiceController::class, 'mjrInvInc']);
+Route::get('mjrEditInc/{did}/{id}', [InvoiceController::class, 'mjrEditInc']);
+Route::get('mjrRfqInc/{did}', [RFQController::class, 'mjrRfqInc']);
+Route::get('mjrRfqEdit/{did}/{id}', [RFQController::class, 'mjrRfqEdit']);
+Route::get('mjrPurchaseEdit/{did}/{id}', [PurchaseInvoiceController::class, 'mjrPurchaseEdit']);
+
+Route::get('mjrSalesReturnInc/{did}', [SalesReturnController::class, 'mjrSalesReturnInc']);
+Route::get('mjrSalesReturnEdit/{did}/{id}', [SalesReturnController::class, 'mjrSalesReturnEdit']);
+
+
+Route::get('mjrPurchaseReturnInc/{did}', [PurchaseReturnController::class, 'mjrPurchaseReturnInc']);
+Route::get('mjrPurchaseReturnEdit/{did}/{id}', [PurchaseReturnController::class, 'mjrPurchaseReturnEdit']);
 
 
 

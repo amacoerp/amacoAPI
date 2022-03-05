@@ -12,8 +12,38 @@ use App\Models\Product;
 use DB;
 use Config;
 
+
+use App\Http\Controllers\Api\PartyController;
+use App\Http\Controllers\Api\DesignationController;
+use App\Http\Controllers\Api\CompanyBankController;
+use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\UOMController;
+
 class InvoiceController extends Controller
 {
+
+
+
+    public function mjrInvInc($did){
+        return response()->json([
+            'customer' => PartyController::customer($did),
+            'products' => ProductController::index(),
+            'uom' => UOMController::uom(),
+            'productPrice' => ProductPriceController::productPrice(),
+        ]);
+    }
+
+    public function mjrEditInc($did,$id){
+        return response()->json([
+            'customer' => PartyController::customer($did),
+            'products' => ProductController::index(),
+            'uom' => UOMController::uom(),
+            'inv' => $this -> shows($id) ,
+            'productPrice' => ProductPriceController::productPrice(),
+        ]);
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -158,6 +188,38 @@ class InvoiceController extends Controller
      * @param  \App\Models\Invoice  $invoice
      * @return \Illuminate\Http\Response
      */
+    public function shows($id)
+    {
+        $d = Invoice::where('id',$id)->get();
+        // return $invoice = $d[0];
+        return [
+            $invoice = $d[0],
+            $invoice->party,
+            // $invoice->contact,
+            $invoice->quotation,
+            //$invoice->quotation->quotationDetail,
+            $invoice->invoiceDetail->map(function ($invoice_detail){
+                return [
+
+                    
+                    $invoice_detail['margin']=$invoice_detail->purchase_price?(((((float)$invoice_detail->sell_price)-((float)$invoice_detail->purchase_price))/((float)
+                    $invoice_detail->purchase_price))*100):$invoice_detail->margin,
+                    $invoice_detail['delivered_quantity']=$invoice_detail->getDelivered_invoice_Quantity($invoice_detail),
+                    $invoice_detail['balance'] = (int)$invoice_detail->quantity - (int)$invoice_detail->getDelivered_invoice_Quantity($invoice_detail),
+                    $invoice_detail->quotationDetail,
+                    $invoice_detail->product
+                ];
+            }),
+            // $invoice->invoiceDetail->map(function ($invoice_detail){
+            //     return [
+            //         $invoice_detail->quotationDetail,
+            //     ];
+            // }),
+
+            // $product['name_ar'] = file_get_contents('https://api.mymemory.translated.net/get?q=helloworld!&langpair=en|ar');
+
+        ];
+    }
     public function show(Invoice $invoice)
     {
         return [

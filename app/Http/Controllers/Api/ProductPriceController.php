@@ -19,6 +19,11 @@ class ProductPriceController extends Controller
         return response()->json($products);
     }
 
+    public static function productPrice(){
+        $products = ProductPrice::all();
+        return $products;
+    }
+
     /**
      * Store a newly created resource in storage.
      *

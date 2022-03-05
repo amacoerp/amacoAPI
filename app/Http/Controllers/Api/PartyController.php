@@ -357,7 +357,7 @@ class PartyController extends Controller
     }
 
     // Api fo vendor list
-    public function vendor($id)
+    public static function vendor($id)
     {
         $vendors = Party::join('party_divisions','party_divisions.party_id','parties.id')
         ->join('payment_accounts','payment_accounts.id','party_divisions.div_id')

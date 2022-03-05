@@ -27,6 +27,7 @@ use App\Http\Controllers\Api\DesignationController;
 use App\Http\Controllers\Api\CompanyBankController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\UOMController;
+use App\Http\Controllers\Api\ProductPriceController;
 
 class QuotationController extends Controller
 {
@@ -41,6 +42,26 @@ class QuotationController extends Controller
             'products' => ProductController::index(),
             'sales' => $this -> shows($id),
             'uom' => UOMController::uom(),
+        ]);
+    }
+
+    public function mjrPurchase($did,$id){
+        return response()->json([
+            'vendor' => PartyController::vendor($did),
+            'users' => DesignationController::index(),
+            'banks' => CompanyBankController::banks(),
+            'products' => ProductController::index(),
+            'sales' => $this -> shows($id),
+            'uom' => UOMController::uom(),
+            'productPrice' => ProductPriceController::productPrice(),
+
+        ]);
+    }
+
+    public function mjrQuoteDno($did,$id){
+        return response()->json([           
+            'products' => ProductController::index(),
+            'sales' => $this -> shows($id),
         ]);
     }
 

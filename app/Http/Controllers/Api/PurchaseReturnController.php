@@ -17,8 +17,41 @@ use App\Models\PurchaseReturnDetail;
 use DB;
 
 
+use App\Http\Controllers\Api\PartyController;
+use App\Http\Controllers\Api\DesignationController;
+use App\Http\Controllers\Api\CompanyBankController;
+use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\UOMController;
+use App\Http\Controllers\Api\ProductPriceController;
+
+
 class PurchaseReturnController extends Controller
 {
+    
+
+    public function mjrPurchaseReturnInc($did){
+        return response()->json([
+            'vendor' => PartyController::vendor($did),
+            'products' => ProductController::index(),
+            'uom' => UOMController::uom(),
+            'productPrice' => ProductPriceController::productPrice(),
+        ]);
+
+    }
+
+    public function mjrPurchaseReturnEdit($did,$id){
+        $d = $this -> getPurchaseReturnEditData($id);
+        return response()->json([
+            'vendor' => PartyController::vendor($did),
+            'products' => ProductController::index(),
+            'uom' => UOMController::uom(),
+            'productPrice' => ProductPriceController::productPrice(),
+            'eData' => $d->original,
+        ]);
+
+    }
+
+
     public function index($id){
         
         $data = PurchaseInvoice::

@@ -17,6 +17,27 @@ use Illuminate\Support\Facades\File;
 
 class RFQController extends Controller
 {
+
+    public function mjrRfqInc($did){
+        return response()->json([
+            'vendor' => PartyController::vendor($did),
+            'products' => ProductController::index(),
+            'uom' => UOMController::uom(),
+            'productPrice' => ProductPriceController::productPrice(),
+        ]);
+    }
+
+    public function mjrRfqEdit($did,$id){
+        return response()->json([
+            'vendor' => PartyController::vendor($did),
+            'products' => ProductController::index(),
+            'uom' => UOMController::uom(),
+            'productPrice' => ProductPriceController::productPrice(),
+            // 'rfq' => $this -> show($id)
+        ]);
+    }
+
+
     /**
      * Display a listing of the resource.
      *
