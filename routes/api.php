@@ -311,6 +311,7 @@ Route::get('mjrSalesReturnEdit/{did}/{id}', [SalesReturnController::class, 'mjrS
 
 Route::get('mjrPurchaseReturnInc/{did}', [PurchaseReturnController::class, 'mjrPurchaseReturnInc']);
 Route::get('mjrPurchaseReturnEdit/{did}/{id}', [PurchaseReturnController::class, 'mjrPurchaseReturnEdit']);
+Route::get('mjrCategory', [CategoryController::class, 'mjrCategory']);
 
 
 
