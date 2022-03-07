@@ -16,9 +16,21 @@ use App\Http\Controllers\Api\AccountCategoryController;
 use App\Models\Quotation;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Api\PartyController;
+
 
 class AccountStatementController extends Controller
 {
+
+
+    public function vendorStatementNew($did){
+        $d = $this -> vendorStatement1();
+        return response()->json([
+            'venState' => $d -> original,
+            'vendors' => PartyController::vendor($did),
+            
+        ]);
+    }
 
     public function getInvoiceData($party_id,  $to_date, $from_date = null)
     {
@@ -262,6 +274,54 @@ class AccountStatementController extends Controller
   
     return response($datas);
 
+  }
+  public function vendorStatement1()
+  {
+      $invoiceCollection = new Collection();
+     
+          $invoiceCollection = PurchaseInvoice::join('parties','purchase_invoices.party_id','parties.id')->select('parties.credit_days','purchase_invoices.*')->get();
+        //   $invoiceCollection = Quotation::join('parties','quotations.party_id','parties.id')->where('transaction_type','purchase')->select('parties.credit_days','quotations.*')->get();
+     
+
+        $receiptCollection = new Collection();
+     
+          $receiptCollection = Expense::where('vendor_id','!=',0)->get();
+        //   $receiptCollection = Expense::join('parties','expenses.vendor_id','parties.id')->get();
+     
+
+      $data = $invoiceCollection->concat($receiptCollection);
+      $data = $data->sortBy('created_at');
+
+      $data && ($datas['data'] = $data->map(function ($item) {
+          if (isset($item->invoice_no)) {
+            $item['date'] = $item->created_at;
+            $item['code_no'] = $item->invoice_no;
+            $item['description'] = "Purchase"."/".(isset($item->party)?$item->party->firm_name:" ");
+              $item['debit'] = null;
+              $item['credit'] = floatval(str_replace(",","",$item->total_value));
+              //   $item['po_number'] = $item->po_number;
+              $item['credit_days'] = floatval(isset($item->party)?$item->party->credit_days:" ");
+              return [$item];
+          }
+         
+          if($item->voucher_no) {
+              $item['date'] = $item->created_at;
+              $item['code_no'] = $item->voucher_no;
+              $item['description'] = "Matrial Purchase";
+              $item['debit'] = floatval($item->amount);
+              $item['party_id'] = floatval($item->vendor_id);
+            //   $item['po_number'] = $item->voucher_no;
+              $item['credit'] = null;
+              $item['credit_days'] = floatval($item->credit_days);
+              return [$item];
+          }
+      }));
+      $datas['opening_balance'] = 0;
+      $datas['name'] = "All";
+      $datas['from_date'] =  "2021-01-01";
+      $datas['to_date'] =  substr(now(), 0, 10);
+
+      return response()->json([$datas]);
   }
   public function vendorStatement(Request $request)
   {
