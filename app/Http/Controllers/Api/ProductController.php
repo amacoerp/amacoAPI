@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 // use Stichoza\GoogleTranslate\GoogleTranslate;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\PartyController;
+use App\Http\Controllers\Api\UOMController;
 
 class ProductController extends Controller
 {
@@ -180,6 +181,7 @@ class ProductController extends Controller
             'product_in_category' => CategoryController::products_in_category2(),
             'manufacture' => Manufacturer::get(),
             'getAllCat'=>Category::get(),
+            'uom'=>UOMController::uom(),
            
         ]);
     }
