@@ -19,7 +19,7 @@ class UOMController extends Controller
         $data = UOM::get();
         return response()->json($data);
     }
-    public function uom()
+    public static function uom()
     {
         $data = UOM::get();
         return $data;
