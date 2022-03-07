@@ -1049,7 +1049,7 @@ class QuotationController extends Controller
         return response()->json($quotations);
     }
 
-    public function salesList()
+    public static function salesList()
     {
         $quotations = Quotation::where(['transaction_type' => 'sale'])
             ->whereNotExists(function ($query) {
@@ -1103,7 +1103,7 @@ class QuotationController extends Controller
         return response()->json($quotations_data[0], 200);
     }
 
-    public function acceptedList()
+    public static function acceptedList()
     {
         $quotations = Quotation::where(['status' => 'accept', 'transaction_type' => 'sale'])
             ->whereNotExists(function ($query) {

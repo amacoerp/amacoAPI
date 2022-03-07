@@ -48,6 +48,7 @@ use App\Http\Controllers\Api\MasterAccountController;
 use App\Http\Controllers\Api\InvestmentsDetailsController;
 use App\Http\Controllers\Api\ProfitLossController;
 use App\Http\Controllers\Api\UOMController;
+use App\Http\Controllers\Api\StackController;
 
 use App\Http\Controllers\Api\PurchaseReturnController;
 use App\Http\Controllers\Api\SalesReturnController;
@@ -313,6 +314,10 @@ Route::get('mjrSalesReturnEdit/{did}/{id}', [SalesReturnController::class, 'mjrS
 Route::get('mjrPurchaseReturnInc/{did}', [PurchaseReturnController::class, 'mjrPurchaseReturnInc']);
 Route::get('mjrPurchaseReturnEdit/{did}/{id}', [PurchaseReturnController::class, 'mjrPurchaseReturnEdit']);
 Route::get('mjrCategory', [CategoryController::class, 'mjrCategory']);
+Route::get('stateCard', [StackController::class, 'stateCard']);
+Route::get('dashboard', [StackController::class, 'dashboard']);
+Route::get('vendorStatementNew/{id}', [AccountStatementController::class, 'vendorStatementNew']);
+
 
 
 
