@@ -20,7 +20,7 @@ class CompanyBankController extends Controller
        
         return response()->json($bank);
     }
-    public function banks()
+    public static function banks()
     {
         $bank = CompanyBank::all();
        

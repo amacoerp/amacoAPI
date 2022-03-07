@@ -164,7 +164,7 @@ class ProductController extends Controller
             'vendor' => PartyController::vendor($did),
             'product_in_category' => CategoryController::products_in_category2(),
             'manufacture' => Manufacturer::get(),
-            'category'=>Category::where('id',$did)->get(),
+            'category'=>Category::where('id',$cid)->get(),
             // 'banks' => CompanyBankController::banks(),
             // 'products' => ProductController::index(),
             // 'sales' => $this -> shows($id),
