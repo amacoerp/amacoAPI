@@ -54,7 +54,7 @@ class ColumnController extends Controller
      * @param  \App\Models\Column  $column
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public static function show($id)
     {
         $accountCategory = AccountCategory::where('id',$id)->first();
         if ($accountCategory == null) {

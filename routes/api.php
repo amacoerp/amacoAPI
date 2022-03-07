@@ -294,7 +294,8 @@ Route::get('mjrProductUpdate/{pid}', [ProductController::class, 'mjrProductUpdat
 Route::get('mjrPurchaseInvoice/{poid}',[QuotationController::class, 'mjrPurchaseInvoice']);
 Route::get('mjrBalanceSheet',[AccountStatementController::class, 'mjrBalanceSheet']);
 Route::get('mjrExpense/{did}',[ExpenseController::class, 'mjrExpense']);
-Route::get('mjrExpenseUpdate/{did}/{eid}',[ExpenseController::class, 'mjrExpenseUpdate']);
+Route::get('mjrCustomerStatement/{did}',[AccountStatementController::class, 'mjrCustomerStatement']);
+Route::get('mjrExpenseUpdate/{did}/{eid}/{cid}',[ExpenseController::class, 'mjrExpenseUpdate']);
 Route::get('mjrQuoteEdit/{did}/{id}', [QuotationController::class, 'mjrQuoteEdit']);
 Route::get('mjrQuoteDno/{did}/{id}', [QuotationController::class, 'mjrQuoteDno']);
 Route::get('mjrPurchase/{did}/{id}', [QuotationController::class, 'mjrPurchase']);

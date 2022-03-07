@@ -339,6 +339,70 @@ class AccountStatementController extends Controller
        
     ]);
   }
+
+  //Customer Statements
+  public static function allCustomerStatement()
+    {
+        $invoiceCollection = new Collection();
+      
+        // if($request->from_date){
+        //     $invoiceCollection = Invoice::join('parties','invoices.party_id','parties.id')->select('parties.credit_days','invoices.*')->whereBetween('invoices.created_at', [$request->from_date . ' ' . '00:00:00', $request->to_date ? $request->to_date . ' ' . '23:59:59' : now()])->get();
+        // }else{
+            $invoiceCollection = Invoice::all();
+        // }
+
+        $receiptCollection = new Collection();
+        // if($request->from_date){
+        //     $receiptCollection = Receipt::join('parties','receipts.party_id','parties.id')->select('parties.credit_days','receipts.*')->whereBetween('receipts.created_at', [$request->from_date . ' ' . '00:00:00', $request->to_date ? $request->to_date. ' ' . '23:59:59' : now()])->get();
+        // }else{
+            $receiptCollection = Receipt::all();
+        // }
+
+        $data = $invoiceCollection->concat($receiptCollection);
+        $data = $data->sortBy('created_at');
+
+        $data && ($datas['data'] = $data->map(function ($item) {
+            if ($item->total_value) {
+                $item['date'] = $item->created_at;
+                $item['code_no'] = $item->invoice_no;
+                $item['description'] = "Sale"."/".(isset($item->party)?$item->party->firm_name:" ");
+                $item['debit'] = floatval(str_replace(",","",$item->total_value));
+                $item['po_number'] = $item->po_number;
+                $item['credit'] = 0;
+                $item['credit_days'] = floatval(isset($item->party)?($item->party->credit_days):0);
+                return [$item];
+            }
+
+            if ($item->paid_amount) {
+                $item['date'] = $item->created_at;
+                $item['code_no'] = $item->receipt_no;
+                $item['description'] = "Receipt"."/".$item->party->firm_name;
+                $item['credit'] = floatval(str_replace(",","",$item->paid_amount));
+                $item['po_number'] = $item->po_number;
+                $item['debit'] = 0;
+                $item['credit_days'] = floatval($item->party->credit_days);
+                return [$item];
+            }
+        }));
+        $datas['opening_balance'] = 0;
+        $datas['name'] = "All";
+        $datas['from_date'] = "2021-01-01";
+        $datas['to_date'] =  substr(now(), 0, 10);
+
+        return response()->json([$datas]);
+    }
+
+    public static function mjrCustomerStatement($did)
+    {
+       
+        return response()->json([
+            'vendor'=>PartyController::customer($did),
+            'customerStatement' => self::allCustomerStatement()->original,
+            
+          
+           
+        ]);
+    }
   
     
 }

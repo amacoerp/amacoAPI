@@ -611,8 +611,9 @@ return response()->json($expenses);
            
         ]);
     }
-    public static function mjrExpenseUpdate($did,$eid)
+    public static function mjrExpenseUpdate($did,$eid,$cid)
     {
+        $colum=ColumnController::show($cid);
         $account_categories=AccountCategoryController::index();
         return response()->json([
             'vendor' => PartyController::vendor($did),
@@ -622,7 +623,8 @@ return response()->json($expenses);
             'division'=>Division::all(),
             'paidDivision'=>DivisionController::paidDivision()->original,
             'companyBank'=>CompanyBank::all(),
-            'expense'=>self::shows($eid)->original
+            'expense'=>self::shows($eid)->original,
+            'columns'=>$colum->original
             // 'product' => $this->productShow($pid)['product'],
             // 'price' => $this->productShow($pid)['prices'],
             // 'product_in_category' => CategoryController::products_in_category2(),
