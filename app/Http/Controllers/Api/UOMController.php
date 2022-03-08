@@ -16,12 +16,12 @@ class UOMController extends Controller
      */
     public function index()
     {
-        $data = UOM::get();
+        $data = UOM::orderBy('label','ASC')->get();
         return response()->json($data);
     }
     public static function uom()
     {
-        $data = UOM::get();
+        $data = UOM::orderBy('label','ASC')->get();
         return $data;
     }
 
