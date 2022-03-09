@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Employees;
 use App\Models\EmployeeDivision;
+use App\Models\Division;
 
 
 class EmployeesController extends Controller
@@ -23,11 +24,33 @@ class EmployeesController extends Controller
          ->orderby('emp_id','DESC')
          ->select('employee.name as e_name','employee.*')
          ->get();
+         $data -> map(function ($item) {
+            $item['divisions'] = $this -> getDiv($item['emp_id']);
+         });
         return response()->json([
            'status' => 200,
            'getData' => $data,
+           'divs' => Division::get(),
           ]);
     }
+
+
+    public function updateDiv(Request $request){
+        EmployeeDivision::where('e_id',$request -> id)->delete();
+        foreach ($request -> data as $key => $value) {
+                $data = EmployeeDivision::create([
+                    'e_id' => $request -> id,
+                    'div_id' => $value['id'],
+                ]);
+        }
+        return $request -> id;
+    }
+
+    public function getDiv($id){
+        return EmployeeDivision::join('divisions','divisions.id','employee_division.div_id')->where('employee_division.e_id',$id)->select('divisions.*')->get();
+    }
+
+
      public static function getEmp()
     {
          $data = Employees::orderby('emp_id','DESC')
@@ -99,7 +122,7 @@ class EmployeesController extends Controller
         if($request->hasFile('file')){
             $request->file('file');
             $fname =  $request->file('file','name');
-            $fpath = $request->file('file')->move('uploadedFiles/',$fname.'.jpg');
+            $fpath = $request->file('file')->move('uploadedFiles/',$fname.'.'.$request->file('file')->getClientOriginalExtension());
         }
          $data -> file = $fpath;
          $data -> passport_number = $request->input('passport_number');

@@ -241,6 +241,7 @@ Route::get('sales-return-table', [SalesReturnController::class, 'SalesReturnTabl
 // empoyee Api
 Route::post('save-emp', [EmployeesController::class, 'store']);
 Route::post('update-emp', [EmployeesController::class, 'update']);
+Route::post('update-emp-div', [EmployeesController::class, 'updateDiv']);
 Route::get('getEmp/{id}', [EmployeesController::class, 'index']);
 Route::get('getEmp', [EmployeesController::class, 'getEmp']);
 Route::delete('delete-emp/{id}', [EmployeesController::class, 'destroy']);
