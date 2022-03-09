@@ -1078,6 +1078,7 @@ class QuotationController extends Controller
                         "transaction_type" => $quotation->transaction_type,
                         'discount_in_p' => $quotation['discount_in_p'],
                         'div_id' => $quotation->div_id,
+                        "subject" => isset($quotation->subject)?$quotation->subject:"",
                         'quotation_details' => $quotation->quotationDetail->map(function ($quotation_detail) {
                             $quotation_detail = QuotationDetail::where('id', '=', $quotation_detail->id)->first();
                             return [
@@ -1094,6 +1095,7 @@ class QuotationController extends Controller
                                 "margin" => $quotation_detail->margin,
                                 "sell_price" => $quotation_detail->sell_price,
                                 "remark" => $quotation_detail->remark,
+                               
                             ];
                         }),
                     ];
