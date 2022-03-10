@@ -42,6 +42,7 @@ class PartyController extends Controller
         $vendors = Party::join('party_divisions','party_divisions.party_id','parties.id')
         ->join('payment_accounts','payment_accounts.id','party_divisions.div_id')
         ->where('payment_accounts.div_id',$id)
+        ->orderBy('parties.firm_name','ASC')
         ->select('parties.id', 'parties.firm_name','parties.party_type','parties.contact','parties.vat_no','parties.opening_balance','parties.credit_days','payment_accounts.div_id')
         ->get();
        
