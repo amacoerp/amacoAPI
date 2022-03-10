@@ -24,6 +24,7 @@ class ProductController extends Controller
             ->leftJoin('categories','categories.id','=','products.category_id')
             ->leftJoin('divisions','divisions.id','=','products.division_id')
             ->select('products.*','categories.name as category_name', 'divisions.name as division_name')
+            ->orderBy('products.name')
             ->get();
         return $products;
     }
