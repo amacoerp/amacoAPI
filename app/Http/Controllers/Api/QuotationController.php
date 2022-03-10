@@ -505,7 +505,7 @@ class QuotationController extends Controller
             "po_number" => $quotation->po_number,
             "transaction_type" => $quotation->transaction_type,
             "ps_date" => $quotation->ps_date,
-            "qstatus" => $quotation->ps_date,
+            "qstatus" => $quotation->qstatus,
             "sales_order_number" => $quotation->sales_order_number,
             "contact" => $quotation->contact,
             "party" => $quotation->party,
