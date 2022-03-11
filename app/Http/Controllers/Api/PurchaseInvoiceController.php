@@ -154,7 +154,7 @@ class PurchaseInvoiceController extends Controller
                 'purchase_price' => $invoice_detail['purchase_price'],
                 'quantity' => $invoice_detail['quantity'],
                 
-                'unit_of_measure' => $invoice_detail['unit_of_measure'],
+                'unit_of_measure' => isset($invoice_detail['unit_of_measure']) ? $invoice_detail['unit_of_measure'] : null,
                 'description' => $invoice_detail['description']?$invoice_detail['description']:$invoice_detail['product'],
                 // 'arabic_description' => $invoice_detail['arabic_description']?$invoice_detail['arabic_description']:$arDescription->data->translations[0]->translatedText,
                 'total_amount' => $invoice_detail['total_amount'],

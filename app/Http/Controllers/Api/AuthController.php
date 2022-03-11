@@ -84,6 +84,9 @@ class AuthController extends Controller
      */
     public function me()
     {
+
+    
+
          if(Auth::user()->role->name=="SA"){
             $divs = DB::table('divisions')->get();
             $type = DB::table('divisions')->get(['divisions.id','divisions.name']);
