@@ -25,6 +25,9 @@ class InvoiceController extends Controller
 
 
     public function mjrInvInc($did){
+
+        
+
         return response()->json([
             'customer' => PartyController::customer($did),
             'products' => ProductController::index(),
@@ -34,6 +37,9 @@ class InvoiceController extends Controller
     }
 
     public function mjrEditInc($did,$id){
+
+
+
         return response()->json([
             'customer' => PartyController::customer($did),
             'products' => ProductController::index(),
@@ -116,6 +122,8 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
+
+        
         $data = $request->json()->all();
         // dd($data);
         // dd($request->vat_in_value);

@@ -94,6 +94,7 @@ Route::group(
     }
 );
 
+
 // resource api links
 
 Route::apiResource('products',ProductController::class);
