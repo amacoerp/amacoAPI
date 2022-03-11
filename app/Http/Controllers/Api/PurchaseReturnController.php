@@ -305,7 +305,7 @@ class PurchaseReturnController extends Controller
                         'description' => $quotation_detail['description']?$quotation_detail['description']:'',
                         'product_description' => $quotation_detail['product_name'],
                         'quantity' => $quotation_detail['quantity'],
-                        'unit_of_measure' => $quotation_detail['unit_of_measure'],
+                        'unit_of_measure' => isset($quotation_detail['unit_of_measure']) ? $quotation_detail['unit_of_measure'] : null,
                         'margin' => $quotation_detail['margin'],
                         'sell_price' => $quotation_detail['sell_price'],
                         'remark' => $quotation_detail['remark'],
