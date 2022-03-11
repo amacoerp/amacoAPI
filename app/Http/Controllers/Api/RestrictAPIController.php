@@ -11,8 +11,13 @@ class RestrictAPIController extends Controller
 {
     public function checkAuth(){
         if(Auth::user()){
-            return 1;
+            return 0;
         }
-        return 0;
+        return 1;
+    }
+
+
+    public function getIp(){
+       return request()->ip();
     }
 }

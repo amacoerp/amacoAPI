@@ -28,6 +28,9 @@ class UserController extends Controller
      */
     public static function index()
     {
+        // if(RestrictAPIController::checkAuth()){
+        //     return ['Authentication failed Your IP address Will be Logged for security concern'];
+        // }
         $users = User::all();
         // $div=$users->UserDivision;
         $user['division']=8;
