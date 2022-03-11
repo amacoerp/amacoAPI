@@ -35,9 +35,6 @@ class UserController extends Controller
             if ($user->role){
                 $user['role_name'] = $user->role->name;
                 
-               
-                
-                
             }else{
                 $user['role_name'] = null;
             }

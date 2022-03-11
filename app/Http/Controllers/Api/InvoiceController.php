@@ -165,7 +165,7 @@ class InvoiceController extends Controller
             $_invoice_detail = InvoiceDetail::create([
                 'quotation_detail_id' => $invoice_detail['id']?$invoice_detail['id']:null,
                 'product_id' => $invoice_detail['productId']?$invoice_detail['productId']:$product->id,
-                'sell_price' => $invoice_detail['sell_price'],
+                'sell_price' => $invoice_detail['sell_price']? $invoice_detail['sell_price'] : 0,
                 'quantity' => $invoice_detail['quantity'],
                 'margin' => $invoice_detail['margin'],
                 'total_amount' => $invoice_detail['total_amount'],
@@ -173,7 +173,7 @@ class InvoiceController extends Controller
                 'description' => $invoice_detail['description']?$invoice_detail['description']:$invoice_detail['product'],
                 // 'arabic_description' => $invoice_detail['arabic_description']?$invoice_detail['arabic_description']:$arDescription->data->translations[0]->translatedText,
                 'invoice_id' => $_invoice_id,
-                'purchase_price' => $invoice_detail['purchase_price']?$invoice_detail['purchase_price']:null,
+                'purchase_price' => $invoice_detail['purchase_price']?$invoice_detail['purchase_price']:0,
                 // 'product_name' => $invoice_detail['product']?$invoice_detail['product']:null,
                 // 'unit_of_measure' => $invoice_detail['unit_of_measure']?$invoice_detail['unit_of_measure']:null,
             ]);
