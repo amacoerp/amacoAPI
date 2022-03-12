@@ -322,7 +322,7 @@ class InvoiceController extends Controller
             'vat_in_value' => $request->vat_in_value,
             'grand_total' => $request->grand_total,
             'delivery_no' => null,
-            'party_id' => $request->party_id,
+            'party_id' => $request->party_id ? $request->party_id : 0,
             'div_id' => $request->div_id?$request->div_id:0,  // ? $request->ps_date : Carbon::now()
             'user_id' => $request->user_id?$request->user_id:0,
             // 'contact_id' => $request->contact_id
