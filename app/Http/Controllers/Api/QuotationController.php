@@ -315,7 +315,7 @@ class QuotationController extends Controller
                 'freight_type' => $request['freight'],
                 'delivery_time' => $request['delivery_time'],
                 'inco_terms' => $request['inco_terms'],
-                'contact_id' => $request['contact_id']?$request['contact_id']:null,
+                'contact_id' => isset($request['contact_id'])?$request['contact_id']:0,
                 'transaction_type' => $request['transaction_type'],
                 'ps_date' => $request['ps_date'],  // ? $request['ps_date'] : Carbon::now()
                 'sign' => $request['sign'],  // ? $request['ps_date'] : Carbon::now()
