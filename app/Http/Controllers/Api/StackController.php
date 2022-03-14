@@ -17,7 +17,7 @@ class StackController extends Controller
         // if(RestrictAPIController::checkAuth()){
         //     return ["You are not authorized to access this API."];
         // }
-        return response()->json([ 'valid' => auth()->check() ]);
+        // return response()->json([ 'valid' => auth()->check() ]);
 
 
         $stackData = $this -> stateCard();
