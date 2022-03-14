@@ -14,9 +14,11 @@ class StackController extends Controller
 {
 
     public function dashboard(){
-        if(RestrictAPIController::checkAuth()){
-            return ["You are not authorized to access this API."];
-        }
+        // if(RestrictAPIController::checkAuth()){
+        //     return ["You are not authorized to access this API."];
+        // }
+        return response()->json([ 'valid' => auth()->check() ]);
+
 
         $stackData = $this -> stateCard();
         return response()->json([
@@ -27,9 +29,9 @@ class StackController extends Controller
     }
 
     public function stateCard(){
-        if(RestrictAPIController::checkAuth()){
-            return ["You are not authorized to access this API."];
-        }
+        // if(RestrictAPIController::checkAuth()){
+        //     return ["You are not authorized to access this API."];
+        // }
         $d = QuotationController::salesList();
         $q = QuotationController::acceptedList();
         return response()->json([
