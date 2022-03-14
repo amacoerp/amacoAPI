@@ -401,6 +401,11 @@ class QuotationController extends Controller
                     $filePath = null;
                     if ($request->file('file' . $index)) {
                         $filePath = $request->file('file' . $index)->move('quotation/quotation_detail/' . $quotation_id);
+                    }else{
+                        if(isset($quotation_detail['file'])){
+                            // $filePath = explode("public/",$quotation_detail['file'])[1];
+                            $filePath = $quotation_detail['file'];
+                        }
                     }
                     if(!$quotation_detail['product_id'])
                     {
@@ -596,6 +601,7 @@ class QuotationController extends Controller
             "validity" => $quotation->validity,
             "payment_terms" => $quotation->payment_terms,
             "warranty" => $quotation->warranty,
+            "qstatus" => $quotation->qstatus,
             "delivery_time" => $quotation->delivery_time,
             "inco_terms" => $quotation->inco_terms,
             "po_number" => $quotation->po_number,
@@ -729,7 +735,12 @@ class QuotationController extends Controller
                 $filePath = $request->file('files' . $index)->move('quotation/quotation_detail/' . $request->id);
             }else{
                 if(isset($quotation_detail['file'])){
-                    $filePath = explode("public/",$quotation_detail['file'])[1];
+                    try {
+                        $filePath = explode("public/",$quotation_detail['file'])[1];
+                    } catch (\Throwable $th) {
+                        $filePath =$quotation_detail['file'];
+                    }
+                   
                 }
                 
             }

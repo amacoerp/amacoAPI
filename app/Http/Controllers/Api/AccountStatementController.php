@@ -19,7 +19,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Api\PartyController;
 
 
-class AccountStatementController extends Controller
+class AccountStatementControlzler extends Controller
 {
 
 
