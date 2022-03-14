@@ -17,9 +17,9 @@ class StackController extends Controller
         // if(RestrictAPIController::checkAuth()){
         //     return ["You are not authorized to access this API."];
         // }
-        // return response()->json([ 'valid' => auth()->check() ]);
-
-
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $stackData = $this -> stateCard();
         return response()->json([
             'invoice' => InvoiceController::index(),
@@ -32,6 +32,9 @@ class StackController extends Controller
         // if(RestrictAPIController::checkAuth()){
         //     return ["You are not authorized to access this API."];
         // }
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $d = QuotationController::salesList();
         $q = QuotationController::acceptedList();
         return response()->json([

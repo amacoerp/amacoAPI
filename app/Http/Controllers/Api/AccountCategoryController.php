@@ -23,6 +23,7 @@ class AccountCategoryController extends Controller
 
     public static function checkSubcategories($id)
     {
+        
         $groupedCategories = AccountCategory::where('delete_status',0)->get()->groupBy('parent_id');
         // dd($groupedCategories[0]);
         if($groupedCategories->has($id)){
@@ -193,6 +194,9 @@ class AccountCategoryController extends Controller
     }
     public function accountCategory()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         // $name = strtolower($name);
         $category = AccountCategory::where([['delete_status','=',0]])->get();
         return response()->json($category);

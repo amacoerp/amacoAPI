@@ -108,6 +108,9 @@ class DivisionController extends Controller
     }
     public static function paidDivision()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
        
         $divEopenbalance=Expense::where('is_paid',1)->sum('amount');
         $divRopenbalance=Receipt::sum('paid_amount');

@@ -538,6 +538,9 @@ return response()->json($expenses);
     }
     public function expense_chart()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         // $aResult=AccountCategory::where('parent_id',null)->get();
         $eResult=Expense::join('account_categories','account_categories.id','expenses.account_category_id')->get();
        

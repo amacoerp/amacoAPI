@@ -128,6 +128,9 @@ class AccountStatementControlzler extends Controller
 
     public function allAccountStatement(Request $request)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $invoiceCollection = new Collection();
         if($request->from_date){
             $invoiceCollection = Invoice::join('parties','invoices.party_id','parties.id')->select('parties.credit_days','invoices.*')->whereBetween('invoices.created_at', [$request->from_date . ' ' . '00:00:00', $request->to_date ? $request->to_date . ' ' . '23:59:59' : now()])->get();
