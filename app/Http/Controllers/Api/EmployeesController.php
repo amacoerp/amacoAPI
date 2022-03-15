@@ -18,6 +18,9 @@ class EmployeesController extends Controller
      */
     public function index($id)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
          $data = Employees::
         join('employee_division','employee_division.e_id','employee.emp_id')
         ->where('employee_division.div_id',$id)
@@ -36,6 +39,9 @@ class EmployeesController extends Controller
 
 
     public function updateDiv(Request $request){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         EmployeeDivision::where('e_id',$request -> id)->delete();
         foreach ($request -> data as $key => $value) {
                 $data = EmployeeDivision::create([
@@ -53,6 +59,9 @@ class EmployeesController extends Controller
 
      public static function getEmp()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
          $data = Employees::orderby('emp_id','DESC')
          ->select('employee.name as e_name','employee.*')
          ->get();
@@ -63,6 +72,9 @@ class EmployeesController extends Controller
     }
     public function getE()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
          $data = Employees::
         join('employee_division','employee_division.e_id','employee.emp_id')
         // ->where('employee_division.div_id',$id)
@@ -80,6 +92,9 @@ class EmployeesController extends Controller
     }
 
     public function getDivision($id){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $data = EmployeeDivision::where('e_id',$id)->get();
         return $data;
     }
@@ -103,7 +118,9 @@ class EmployeesController extends Controller
     public function store(Request $request)
     {
 
-
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
 
 
         $data = new Employees;
@@ -229,7 +246,9 @@ class EmployeesController extends Controller
      */
     public function update(Request $request)
     {
-
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         
         $fpath = $request->input('file');
         // Employees::where('emp_id',$request->id)->update(array('name'=>$request['name']));
@@ -273,6 +292,9 @@ class EmployeesController extends Controller
      */
     public function destroy($id)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $d = Employees::
         where('emp_id','=',$id)
         ->delete();

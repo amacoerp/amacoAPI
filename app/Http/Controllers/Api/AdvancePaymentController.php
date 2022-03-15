@@ -19,6 +19,9 @@ class AdvancePaymentController extends Controller
      */
     public function index()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $allPayments = AdvancePayment::all();
 
         $allPayments->map(function($payment){
@@ -38,6 +41,9 @@ class AdvancePaymentController extends Controller
      */
     public function store(Request $request)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $data = $request->json()->all();
 
         $payment = AdvancePayment::create($data);
@@ -53,6 +59,9 @@ class AdvancePaymentController extends Controller
      */
     public function show(AdvancePayment $advancePayment)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         return response()->json([$advancePayment], 200);
     }
 
@@ -65,6 +74,9 @@ class AdvancePaymentController extends Controller
      */
     public function update(Request $request, AdvancePayment $advancePayment)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $advancePayment = AdvancePayment::findOrFail($request->id);
         
         $advancePayment->update([
@@ -91,12 +103,18 @@ class AdvancePaymentController extends Controller
      */
     public function destroy(AdvancePayment $advancePayment)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $advancePayment->delete();
 
         return response()->json(['msg'=>"Successfully destroyed"], 200);
     }
     public function updateAdvancepay(Request $request)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $advancePayment = AdvancePayment::findOrFail($request->id);
         
         $advancePayment->update([

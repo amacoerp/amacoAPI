@@ -24,6 +24,9 @@ class AccountStatementControlzler extends Controller
 
 
     public function vendorStatementNew($did){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $d = $this -> vendorStatement1();
         return response()->json([
             'venState' => $d -> original,
@@ -180,6 +183,9 @@ class AccountStatementControlzler extends Controller
     }
     public function profitLoss(Request $request)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $user_details = new Collection();
         $user_details = PaymentAccount::join('investments','investments.payment_account_id','payment_accounts.id')->get();
         $datas['data'] = $user_details->map(function ($item) {
@@ -191,6 +197,9 @@ class AccountStatementControlzler extends Controller
     }
     public function vat(Request $request)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $invoiceCollection = new Collection();
        
         $invoiceCollection = Invoice::whereBetween('created_at', [$request->from_date . ' ' . '00:00:00', $request->to_date ? $request->to_date. ' ' . '23:59:59' : now()])->get();
@@ -239,6 +248,9 @@ class AccountStatementControlzler extends Controller
     }
   public function responseData()
   {
+    if(!auth()->check())
+    return ["You are not authorized to access this API."];
+    
       $date="2021-01-01";
       $to_date=now();
     $temp = date('Y-m-d H:i:s');
@@ -377,6 +389,9 @@ class AccountStatementControlzler extends Controller
 
   //Balance Sheet Data
   public function mjrBalanceSheet(){
+    if(!auth()->check())
+    return ["You are not authorized to access this API."];
+    
     $paid_div=DivisionController::paidDivision();
     $response_data=$this->responseData();
     $res=InvoiceController::salesTax2();
@@ -457,6 +472,9 @@ class AccountStatementControlzler extends Controller
 
     public static function mjrCustomerStatement($did)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
        
         return response()->json([
             'vendor'=>PartyController::customer($did),

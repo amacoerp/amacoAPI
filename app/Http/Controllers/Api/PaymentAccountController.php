@@ -16,6 +16,9 @@ class PaymentAccountController extends Controller
      */
     public function index()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $payment_accounts = PaymentAccount::all();
         return response()->json($payment_accounts);
     }
@@ -28,6 +31,9 @@ class PaymentAccountController extends Controller
      */
     public function store(Request $request)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         // $data = $request->json()->all();
         // dd($request);
         $payment_account = PaymentAccount::create($request->all());
@@ -65,6 +71,9 @@ class PaymentAccountController extends Controller
      */
     public function destroy(payment_account $payment_account)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $payment_account->delete();
         return response()->json(['msg'=>"Successfully deleted"], 200);
     }

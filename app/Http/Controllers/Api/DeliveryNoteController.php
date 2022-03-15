@@ -66,6 +66,10 @@ class DeliveryNoteController extends Controller
 
     public function index()
     {
+
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $deliveryNotes = DeliveryNote::orderBy('created_at', 'DESC')->get();
 
         $data = $deliveryNotes->map(function ($deliveryNote) {
@@ -122,6 +126,10 @@ class DeliveryNoteController extends Controller
     
     public function store(Request $request)
     {
+
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         if($request->quotation_id)
         {
         $quotation = Quotation::where('id', $request->quotation_id)->first();
@@ -253,6 +261,9 @@ class DeliveryNoteController extends Controller
      */
     public function show($id,$s)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         
         $deliveryNote = DeliveryNote::where('id',$id)->orderBy('created_at', 'DESC')->get();
         
@@ -293,6 +304,9 @@ class DeliveryNoteController extends Controller
      */
     public function update(Request $request, DeliveryNote $deliveryNote)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $data = $request->all();
         $deliveryNote->update($data);
 
@@ -307,6 +321,9 @@ class DeliveryNoteController extends Controller
      */
     public function destroy(DeliveryNote $deliveryNote)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $deliveryNote->delete();
 
         return response()->json(['msg' => "Delivery Note with id: " . $deliveryNote->id . " has successfully Deleted"]);

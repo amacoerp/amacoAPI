@@ -19,6 +19,9 @@ class ReceiptController extends Controller
      */
     public function index()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $allReceipt = Receipt::join('payment_accounts','receipts.div_id','payment_accounts.id')->select(
             'payment_accounts.name as div_name',
             'receipts.*'
@@ -40,6 +43,9 @@ class ReceiptController extends Controller
      */
     public function store(Request $request)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $data = $request->json()->all();
          $filePath=null;
         if ($request->file('file')) {
@@ -92,6 +98,9 @@ class ReceiptController extends Controller
      */
     public function show(Receipt $receipt)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
        $receipt['referrenceImgUrl'] =$receipt->referrenceImg();
         return response()->json([$receipt],200);
     }
@@ -105,6 +114,9 @@ class ReceiptController extends Controller
      */
     public function update(Request $request, Receipt $receipt)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         // $data = $request->json()->all();
         $receipt = Receipt::findOrFail($request->id);
         // $filePath=null;
@@ -151,6 +163,9 @@ class ReceiptController extends Controller
      */
     public function destroy(Receipt $receipt)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $receipt->delete();
 
         return response()->json(['msg'=>"Permanently deleted"], 200);
@@ -158,6 +173,9 @@ class ReceiptController extends Controller
 
     public function singleReceipt($id)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $receipt = Receipt::where('receipts.id',$id)->join('divisions','receipts.div_id','divisions.id')->select(
             'divisions.name as div_name',
             'receipts.*'
@@ -182,6 +200,9 @@ class ReceiptController extends Controller
     }
     public function updateReceipt(Request $request)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $receipt = Receipt::findOrFail($request->id);
         $filePath=null;
         if ($request->file('file')) {

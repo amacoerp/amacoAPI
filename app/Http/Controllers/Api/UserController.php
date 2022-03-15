@@ -72,6 +72,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        
         if(!auth()->check())
         return ["You are not authorized to access this API."];
         

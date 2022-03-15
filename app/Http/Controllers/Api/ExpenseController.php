@@ -39,6 +39,9 @@ class ExpenseController extends Controller
     // }
     public function index()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
 //         $expenses = Expense::join('account_categories','expenses.account_category_id','account_categories.id')->join('divisions','expenses.div_id','divisions.id')->
 //         join('divisions as divtable','expenses.utilize_div_id','divtable.id')->select(
 //     'divisions.name as paid_from',
@@ -71,14 +74,23 @@ return response()->json($expenses);
 
 
     public function getPartyName($id){
+        
         $data = Party::where('id',$id)->get();
-        return $data[0]->firm_name;
+        try {
+            return $data[0]->firm_name;
+
+        } catch (\Throwable $th) {
+           return '--';
+        }
         // return "vbsdbcbs";
     }
 
     // to get all paid expenses
     public function paid()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $expenses = $expenses = Expense::join('account_categories','expenses.account_category_id','account_categories.id')->join('payment_accounts','expenses.utilize_div_id','payment_accounts.id')->select(
             'payment_accounts.name as paid_from',
             'payment_accounts.name as paid_towards',
@@ -270,6 +282,9 @@ return response()->json($expenses);
      */
     public function show(Expense $expense)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $data=[];
         $resultArray = collect(explode(',',$expense->payment_account_id));
         $memebrsInfo = $expense->payment_account_id;
@@ -349,6 +364,9 @@ return response()->json($expenses);
      */
         public function destroy(Expense $expense)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $expense->delete();
         $res=AdvancePayment::where('expense_id',$expense->id)->delete();
         return response()->json(['msg' => 'Expense ' . $expense . ' has been deleted.']);
@@ -356,6 +374,9 @@ return response()->json($expenses);
 
     public function expenseUpdate(Request $request, Expense $expense)
     {     
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         if ($request->file('file_path')) {
             $filePath = $request->file('file_path')->move("expenses/filePath",  $request->file('file_path')->getClientOriginalName());
             $expenseF=Expense::where('id',$request->id)->update([
@@ -556,6 +577,9 @@ return response()->json($expenses);
 
     public static function shows($id)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $expense=Expense::where('id',$id)->first();
         $expesne=$expense;
         $data=[];
@@ -597,6 +621,9 @@ return response()->json($expenses);
     }
     public static function mjrExpense($did)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $account_categories=AccountCategoryController::index();
         return response()->json([
             'vendor' => PartyController::vendor($did),
@@ -616,6 +643,9 @@ return response()->json($expenses);
     }
     public static function mjrExpenseUpdate($did,$eid,$cid)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $colum=ColumnController::show($cid);
         $account_categories=AccountCategoryController::index();
         return response()->json([

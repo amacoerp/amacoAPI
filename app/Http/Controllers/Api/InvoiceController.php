@@ -26,6 +26,9 @@ class InvoiceController extends Controller
 
     public function mjrInvInc($did){
 
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         
 
         return response()->json([
@@ -39,6 +42,9 @@ class InvoiceController extends Controller
     public function mjrEditInc($did,$id){
 
 
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
 
         return response()->json([
             'customer' => PartyController::customer($did),
@@ -103,6 +109,9 @@ class InvoiceController extends Controller
     }
     public static function index()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $invoices = Invoice::where('status','!=','Delivered')
         ->orderBy('created_at','DESC')->get();
         // $result=$invoices->party;
@@ -123,6 +132,9 @@ class InvoiceController extends Controller
     public function store(Request $request)
     {
 
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         
         $data = $request->json()->all();
         // dd($data);
@@ -198,6 +210,9 @@ class InvoiceController extends Controller
      */
     public function shows($id)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $d = Invoice::where('id',$id)->get();
         // return $invoice = $d[0];
         return [
@@ -298,6 +313,9 @@ class InvoiceController extends Controller
 
     public function update(Request $request, Invoice $invoice)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $data = $request->all();
         $data['status'] = 'Delivered';
         $data['delivery_no'] = $this->getDeliveryNo();
@@ -306,6 +324,9 @@ class InvoiceController extends Controller
     }
     public function Invoiceupdate(Request $request, Invoice $invoice)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $apikey=  \Config::get('example.key');
         $invoice = Invoice::where('id',$request->id)->first();
         
@@ -427,17 +448,26 @@ class InvoiceController extends Controller
      */
     public function destroy(Invoice $invoice)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         return ($invoice->delete());
     }
 
     public function history()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $invoices = Invoice::where('status', '=', 'Delivered')
         ->orderBy('created_at', 'DESC')->get();
         return response()->json($invoices);
     }
     public static function salesTax(Invoice $invoice)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $invoices = Invoice::get();
         $invoices->map(function($val){
             
@@ -448,6 +478,9 @@ class InvoiceController extends Controller
 
     public static function salesTax2()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $invoices = Invoice::get();
         $invoices->map(function($val){
             
@@ -458,6 +491,9 @@ class InvoiceController extends Controller
 
     public function PurchaseInvoiceupdate(Request $request, Invoice $invoice)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         
         $apikey=  \Config::get('example.key');
         $invoice = PurchaseInvoice::where('id',$request->id)->first();
@@ -574,6 +610,9 @@ class InvoiceController extends Controller
     }
     public function PurchaseInvoiceCreate(Request $request, Invoice $invoice)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $apikey=  \Config::get('example.key');
         $invoice = PurchaseInvoice::where('id',$request->id)->first();
         

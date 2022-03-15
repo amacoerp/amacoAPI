@@ -14,6 +14,10 @@ class LoginLogController extends Controller
 {
 
     public function loginActivities(){
+         
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $data = LoginLog::join('users','users.id','login_logs.u_id')
         ->select('login_logs.u_id as id','users.name as name','login_logs.date_time as time','login_logs.type as type')
         ->orderBy('login_logs.id','DESC')
@@ -41,6 +45,10 @@ class LoginLogController extends Controller
     }
 
     public function activityLogs(){
+         
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
 
         $productLog = $this->getProductLog();
         $partyLog = $this ->getPartyLog();

@@ -29,6 +29,9 @@ class SalesReturnController extends Controller
 
 
     public function mjrSalesReturnInc($did){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
 
         return response()->json([
             'customer' => PartyController::customer($did),
@@ -41,6 +44,9 @@ class SalesReturnController extends Controller
 
 
     public function mjrSalesReturnEdit($did,$id){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
 
          $d = $this -> getsReturnEditData($id);
         return response()->json([
@@ -66,6 +72,9 @@ class SalesReturnController extends Controller
     }
 
       public function getSalesReturnINV($id){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $purchaseReturn = PurchaseReturn::
         join('parties','parties.id','purchase_returns.party_id')
         ->where('purchase_returns.transaction_type','sales')
@@ -215,6 +224,9 @@ class SalesReturnController extends Controller
 
 
     public function SalesReturnTableData(){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $quotations = PurchaseReturn::
         join('parties','parties.id','purchase_returns.party_id')
         ->where("transaction_type",'sales')

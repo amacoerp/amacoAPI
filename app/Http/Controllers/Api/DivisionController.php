@@ -19,6 +19,9 @@ class DivisionController extends Controller
 
     public function index()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $div = Division::all();
         return response()->json($div);
     }
@@ -26,10 +29,16 @@ class DivisionController extends Controller
 
     public function show(Division $div)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         return response()->json(array($div));
     }
     public function store(Request $request)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
        
         $data = $request->json()->all();
         $apikey=  \Config::get('example.key');
@@ -66,6 +75,9 @@ class DivisionController extends Controller
 
     public function update(Request $request, Division $div)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
        
         $apikey=  \Config::get('example.key');
         if($request->company_name)
