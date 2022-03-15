@@ -45,8 +45,7 @@ class PartyController extends Controller
         if(!auth()->check())
         return ["You are not authorized to access this API."];
         
-        $vendors = Party::join('party_divisions','par
-        ty_divisions.party_id','parties.id')
+        $vendors = Party::join('party_divisions','party_divisions.party_id','parties.id')
         ->join('payment_accounts','payment_accounts.id','party_divisions.div_id')
         ->where('payment_accounts.div_id',$id)
         ->orderBy('parties.firm_name','ASC')

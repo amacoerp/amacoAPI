@@ -30,6 +30,9 @@ class PurchaseReturnController extends Controller
     
 
     public function mjrPurchaseReturnInc($did){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         return response()->json([
             'vendor' => PartyController::vendor($did),
             'products' => ProductController::index(),
@@ -40,6 +43,9 @@ class PurchaseReturnController extends Controller
     }
 
     public function mjrPurchaseReturnEdit($did,$id){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $d = $this -> getPurchaseReturnEditData($id);
         return response()->json([
             'vendor' => PartyController::vendor($did),
@@ -53,6 +59,9 @@ class PurchaseReturnController extends Controller
 
 
     public function index($id){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         
         $data = PurchaseInvoice::
         where('party_id','=',$id)
@@ -71,6 +80,9 @@ class PurchaseReturnController extends Controller
 
 
     public function getPurchaseReturnEditData($id){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $data = PurchaseReturn::
         where('purchase_returns.transaction_type','purchase')
         ->where('purchase_returns.pr_id','=',$id)
@@ -106,6 +118,10 @@ class PurchaseReturnController extends Controller
 
 
     public function getReturnInv($id){
+
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $purchaseReturn = PurchaseReturn::
         join('parties','parties.id','purchase_returns.party_id')
         ->where('purchase_returns.transaction_type','purchase')
@@ -124,6 +140,8 @@ class PurchaseReturnController extends Controller
     }
 
     public function getProductsPR($po){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
 
        
           $dd = PurchaseReturnDetail::
@@ -185,6 +203,9 @@ class PurchaseReturnController extends Controller
     }
 
     public function purchasereturn(Request $request){
+
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
 
         $rfqId = $request->rfq_id ? $request->rfq_id :null;
         $parentId = null;
@@ -389,6 +410,10 @@ class PurchaseReturnController extends Controller
     }
 
     public function purchaseReturnTableData(){
+
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $quotations = PurchaseReturn::
         join('parties','parties.id','purchase_returns.party_id')
         ->where("purchase_returns.transaction_type",'purchase')
@@ -400,6 +425,9 @@ class PurchaseReturnController extends Controller
     }
 
     public function getPurchaseReturnINV($id){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+
         $purchaseReturn = PurchaseReturn::
         join('parties','parties.id','purchase_returns.party_id')
         ->where('purchase_returns.transaction_type','purchase')
@@ -427,6 +455,9 @@ class PurchaseReturnController extends Controller
 
     public function deletepurchasereturn($id){
 
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+
         $purchaseR = PurchaseReturn::where('pr_id','=',$id)->delete();
         $purchaseRD = PurchaseReturnDetail::where('pr_id','=',$id)->delete();
          return response()->json([
@@ -440,6 +471,8 @@ class PurchaseReturnController extends Controller
     }
 
     public function purchasereturnUpdate(Request $request){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
 
         // $rfqId = $request->rfq_id ? $request->rfq_id :null;
         // $parentId = null;

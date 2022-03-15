@@ -19,6 +19,9 @@ class RFQController extends Controller
 {
 
     public function mjrRfqInc($did){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         return response()->json([
             'vendor' => PartyController::vendor($did),
             'products' => ProductController::index(),
@@ -28,6 +31,9 @@ class RFQController extends Controller
     }
 
     public function mjrRfqEdit($did,$id){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         return response()->json([
             'vendor' => PartyController::vendor($did),
             'products' => ProductController::index(),
@@ -45,6 +51,9 @@ class RFQController extends Controller
      */
     public function index()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
 
         //
         // $rfqs = RFQ::whereNotExists(function ($query) {
@@ -100,6 +109,9 @@ class RFQController extends Controller
      */
     public function store(Request $request)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $data = $request->json()->all();
         // return response()->json($request, 201);
         // dd($request->file('files'));
@@ -192,6 +204,10 @@ class RFQController extends Controller
      */
     public function show(RFQ $rfq)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
+
         // $_rfq = RFQ::findOrFail($rfq);
 
         // $rfq_details = DB::table('r_f_q_s')
@@ -262,6 +278,9 @@ class RFQController extends Controller
      */
     public function update(Request $request) //, RFQ $rfq
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         // $rules = [
         //     'requested_date' => 'required',
         //     'require_date' => 'required',
@@ -373,6 +392,9 @@ class RFQController extends Controller
      */
     public function destroy(RFQ $rfq)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $res = $rfq->delete();
         if ($res) {
             return (['msg' => 'RFQ' . ' ' . $rfq->id . ' is successfully deleted']);
@@ -390,6 +412,9 @@ class RFQController extends Controller
 
     public function history()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $rfqs = RFQ::whereExists(function ($query) {
             $query->select(DB::raw(1))
                 ->from('quotations')

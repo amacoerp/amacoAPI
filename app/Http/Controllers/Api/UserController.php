@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use DB;
+use Illuminate\Support\Facades\Crypt;
+
 
 
 class UserController extends Controller
@@ -411,6 +413,8 @@ class UserController extends Controller
 
     public function getAllEmails(){
         $data = User::select('email')->get();
+        
+        // $encrypted = Crypt::encrypt(json_encode($data));
         return response()->json($data);
     }
 }
