@@ -139,7 +139,7 @@ class InvoiceController extends Controller
         }
         else
         {
-            return ('AMC-INV-' . $current_year . '-'. $current_month ."00");
+            return ('AMC-INV-' . $current_year . '-'. $current_month ."01");
         }
     }
     /**
