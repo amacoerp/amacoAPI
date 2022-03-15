@@ -8,6 +8,7 @@ use App\Models\QuotationDetail;
 use Illuminate\Http\Request;
 use App\Models\DeliveryNote;
 use App\Models\Designation;
+use App\Models\Invoice;
 use App\Models\DeliveryNoteDetail;
 use App\Models\CompanyBank;
 use Illuminate\Database\Eloquent\Collection;
@@ -1060,6 +1061,69 @@ class QuotationController extends Controller
             ->get();
 
         return response()->json($quotations);
+    }
+    public static function allSalesList()
+    {
+        $quotations = Quotation::where(['quotations.transaction_type' => 'sale'])
+            ->whereNotExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('invoices')
+                    ->whereRaw('invoices.quotation_id = quotations.id');
+            })->orderBy('quotations.created_at', 'DESC')
+            ->get();
+            
+        $invoices = Quotation::join('invoices','invoices.quotation_id' , 'quotations.id')->where(['quotations.transaction_type' => 'sale'])
+        ->whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('invoices')
+                ->whereRaw('invoices.quotation_id = quotations.id');
+        })->orderBy('quotations.created_at', 'DESC')
+        ->get();
+        $res=$quotations->concat($invoices);
+        $quotations_data = [
+            $res->map(
+                function ($quotation) {
+                    return [
+                        'id' => $quotation->id,
+                        'quotation_no' => $quotation->quotation_no,
+                        'created_at' => $quotation->created_at,
+                        'updated_at' => $quotation->updated_at,
+                        'status' => (isset($quotation->invoice_no))?'history':$quotation->status,
+                        'total_value' => $quotation->total_value,
+                        'party_id' => $quotation->party_id,
+                        "contact_id" => $quotation->contact_id,
+                        "contact" => $quotation->contact,
+                        "party" => $quotation->party,
+                        "vat_in_value" => $quotation->vat_in_value,
+                        "net_amount" => $quotation->net_amount,
+                        "transaction_type" => $quotation->transaction_type,
+                        'discount_in_p' => $quotation['discount_in_p'],
+                        'div_id' => $quotation->div_id,
+                        "subject" => isset($quotation->subject)?$quotation->subject:"",
+                        'quotation_details' => $quotation->quotationDetail->map(function ($quotation_detail) {
+                            $quotation_detail = QuotationDetail::where('id', '=', $quotation_detail->id)->first();
+                            return [
+                                "id" => $quotation_detail['id'],
+                                "created_at" => $quotation_detail->created_at,
+                                "updated_at" => $quotation_detail->updated_at,
+                                "product_id" => $quotation_detail->product_id,
+                                "product" => array($quotation_detail->product),
+                                "description" => $quotation_detail->description,
+                                "quantity" => $quotation_detail->quantity,
+                                "total_amount" => $quotation_detail->total_amount,
+                                "analyse_id" => $quotation_detail->analyse_id,
+                                "purchase_price" => $quotation_detail->purchase_price,
+                                "margin" => $quotation_detail->margin,
+                                "sell_price" => $quotation_detail->sell_price,
+                                "remark" => $quotation_detail->remark,
+                               
+                            ];
+                        }),
+                    ];
+                }
+            ),
+        ];
+        return response()->json($quotations_data[0], 200);
     }
 
     public static function salesList()

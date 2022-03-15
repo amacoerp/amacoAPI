@@ -55,14 +55,16 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getCurrentYear()
+    public function getCurrentYear($date)
     {
-        return substr(date('Y'), 2);
+        return substr(date('Y',strtotime($date)), 2);
+        // return substr(date('Y'), 2);
     }
 
-    public function getCurrentMonth()
+    public function getCurrentMonth($date)
     {
-        return date('m');
+        return date('m',strtotime($date));
+        // return date('m');
     }
 
     public function getLastInvoiceNo()
@@ -77,13 +79,13 @@ class InvoiceController extends Controller
         // }
     }
 
-    public function getInvoiceNo()
+    public function getInvoiceNo($date)
     {
         $latest_invoice_no = $this->getLastInvoiceNo();
         $last_year = substr($latest_invoice_no, 6, 2);
         $last_month = substr($latest_invoice_no, 11, 2);
-        $current_year = $this->getCurrentYear();
-        $current_month = $this->getCurrentMonth();
+        $current_year = $this->getCurrentYear($date);
+        $current_month = $this->getCurrentMonth($date);
         // dd([$last_year, $current_year]);
         // if ($current_year != $last_year) {
         //     return ('AMC-INV-' . $current_year . '-'. $current_month  . sprintf("%02d", 1));
@@ -113,13 +115,31 @@ class InvoiceController extends Controller
        });
         return $invoices;
     }
-
+    public function genInvoiceNo($date)
+    {
+        $current_year = $this->getCurrentYear($date);
+        $current_month = $this->getCurrentMonth($date);
+       
+        $patern='AMC-INV-'.$current_year.'-'.$current_month;
+        $res=Invoice::where('invoice_no', 'like', '%'.$patern.'%')->latest('created_at')->first();
+        if($res)
+        {
+            $subval=explode("-",$res->invoice_no,)[3];
+           
+            return ('AMC-INV-' . $current_year . '-'. $current_month .  sprintf("%02d", ((int)(substr($subval,2)) + 1)));
+        }
+        else
+        {
+            return ('AMC-INV-' . $current_year . '-'. $current_month ."00");
+        }
+    }
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    
     public function store(Request $request)
     {
 
@@ -128,7 +148,9 @@ class InvoiceController extends Controller
         // dd($data);
         // dd($request->vat_in_value);
         // dd($request->vat_in_value);
-        $data['invoice_no'] = $this->getInvoiceNo();
+        $data['invoice_no'] = $this->genInvoiceNo($request['ps_date']);
+        // return $this->genInvoiceNo($request['ps_date']);
+        // $data['invoice_no'] = $this->getInvoiceNo($request['ps_date']);
         $data['issue_date'] = $request['ps_date'];
         $data['status'] = "New";
         $data['quotation_id'] = $request['quotation_id'];
