@@ -36,6 +36,10 @@ class QuotationController extends Controller
 
 
     public function mjrQuoteEdit($did,$id){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
+
         return response()->json([
             'customer' => PartyController::customer($did),
             'users' => DesignationController::index(),
@@ -47,6 +51,9 @@ class QuotationController extends Controller
     }
 
     public function mjrPurchase($did,$id){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         return response()->json([
             'vendor' => PartyController::vendor($did),
             'users' => DesignationController::index(),
@@ -60,6 +67,9 @@ class QuotationController extends Controller
     }
 
     public function mjrQuoteDno($did,$id){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         return response()->json([           
             'products' => ProductController::index(),
             'sales' => $this -> shows($id),
@@ -68,6 +78,9 @@ class QuotationController extends Controller
 
 
     public function mjrQuoteInc($did){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         return response()->json([
             'customer' => PartyController::customer($did),
             'users' => DesignationController::index(),
@@ -221,6 +234,9 @@ class QuotationController extends Controller
 
     public function index() // Purchase List
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $quotations = Quotation::where(['status' => 'New', 'transaction_type' => 'purchase'])
             ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
@@ -286,6 +302,9 @@ class QuotationController extends Controller
 
     public function store(Request $request)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         
         
         // $rfqId = null;
@@ -489,6 +508,7 @@ class QuotationController extends Controller
 
     public  function shows($id)
     {
+        
         $quotation = Quotation::where('id', $id)->first();
         $data = [
             "id" => $quotation->id,
@@ -585,6 +605,9 @@ class QuotationController extends Controller
 
     public function show($id)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $quotation = Quotation::where('id', $id)->first();
         $data = [
             "id" => $quotation->id,
@@ -690,6 +713,9 @@ class QuotationController extends Controller
      */
     public function update(Request $request)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         // return $request;
         $quotation = Quotation::where("id", $request->id)->first();
         $data = $request->all();
@@ -938,6 +964,9 @@ class QuotationController extends Controller
 
     public function updateQuotation(Request $request, $id)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
 
         // add validation
 
@@ -990,6 +1019,9 @@ class QuotationController extends Controller
      */
     public function destroy($id)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $quotation = Quotation::where('id', $id)->first();
 
         $res = $quotation->delete();
@@ -999,6 +1031,9 @@ class QuotationController extends Controller
     }
     public function destroy_details($id)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $quotation = QuotationDetail::where('id', $id)->first();
 
         $res = $quotation->delete();
@@ -1009,6 +1044,9 @@ class QuotationController extends Controller
 
     public function invoice_list()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $quotations = Quotation::where('status', '=', 'po')->orderBy('created_at', 'DESC')->get();
         $quotations_data = [
             $quotations->map(
@@ -1052,6 +1090,9 @@ class QuotationController extends Controller
 
     public function history()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $quotations = Quotation::whereExists(function ($query) {
             $query->select(DB::raw(1))
                 ->from('invoices')
@@ -1128,6 +1169,9 @@ class QuotationController extends Controller
 
     public static function salesList()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $quotations = Quotation::where(['transaction_type' => 'sale'])
             ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
@@ -1184,6 +1228,9 @@ class QuotationController extends Controller
 
     public static function acceptedList()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $quotations = Quotation::where(['status' => 'accept', 'transaction_type' => 'sale'])
             ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
@@ -1242,6 +1289,9 @@ class QuotationController extends Controller
 
     public function rejectedList()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $quotations = Quotation::where(['status' => 'reject', 'transaction_type' => 'sale'])
             ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
@@ -1298,6 +1348,7 @@ class QuotationController extends Controller
 
     public function deleteFile(QuotationDetail $quotation_detail)
     {
+        
         if (File::exists(public_path($quotation_detail->file_img_url))) {
 
             File::delete(public_path($quotation_detail->file_img_url));
@@ -1315,6 +1366,9 @@ class QuotationController extends Controller
 
     public function saleReport(Request $request)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $reports = Quotation::where('transaction_type','sale')
         ->whereBetween('created_at', [$request->from_date . ' ' . '00:00:00', $request->to_date ? $request->to_date . ' ' . '23:59:59' : now()])->get();
 
@@ -1366,6 +1420,9 @@ class QuotationController extends Controller
     }
     public function updateQuotestatus(Request $request)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $unique_po_no = Quotation::where('po_number', $request->po_number)->first();
         $data = $request->all();
         $quotation = Quotation::where("id", $request->id)->firstOrFail();
@@ -1436,6 +1493,9 @@ class QuotationController extends Controller
 
     public function  purchaseUpdate(Request $request)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
          // return $request;
          $quotation = Quotation::where("id", $request->id)->first();
         $data = $request->all();
@@ -1541,6 +1601,9 @@ class QuotationController extends Controller
 
 public function show_quotation($id)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $quotation = Quotation::where('id', $id)->first();
         $temp =  new Collection();
 
@@ -1659,6 +1722,9 @@ public function show_quotation($id)
         );
     }
     public function quoteHistory(){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $quotations = Quotation::where(['status' => 'accept', 'transaction_type' => 'sale'])
         ->whereExists(function ($query) {
             $query->select(DB::raw(1))
@@ -1719,6 +1785,9 @@ public function show_quotation($id)
     //multiple response data for purchase Invoice generate from purchase order
     public function mjrPurchaseInvoice($poid)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         return response()->json([
             // 'vendor' => PartyController::vendor($did),
             'sales_quotation' => $this->shows($poid),

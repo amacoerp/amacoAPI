@@ -17,6 +17,9 @@ class PurchaseInvoiceController extends Controller
 
 
     public function mjrPurchaseEdit($did,$id){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         return response()->json([
             'vendor' => PartyController::vendor($did),
             'products' => ProductController::index(),
@@ -60,6 +63,9 @@ class PurchaseInvoiceController extends Controller
     }
     public function index()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         // $invoices = PurchaseInvoice::where('status','!=','Delivered')
         // ->orderBy('created_at','DESC')->get();
         // return $invoices;
@@ -82,6 +88,9 @@ class PurchaseInvoiceController extends Controller
      */
     public function store(Request $request)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
 
         
         $fpath = NULL;
@@ -180,6 +189,9 @@ class PurchaseInvoiceController extends Controller
      */
     public function shows($id)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $d = PurchaseInvoice::where('id',$id)->get();
         return [
             $purchaseInvoice = $d[0],
@@ -195,6 +207,9 @@ class PurchaseInvoiceController extends Controller
     }
     public function show(PurchaseInvoice $purchaseInvoice)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         return [
             $purchaseInvoice,
             $purchaseInvoice->party,
@@ -247,6 +262,9 @@ class PurchaseInvoiceController extends Controller
 
     public function update(Request $request, PurchaseInvoice $purchaseInvoice)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $data = $request->all();
         // $data['status'] = 'Delivered';
         // $data['bill_no'] = $this->getDeliveryNo();
@@ -262,6 +280,9 @@ class PurchaseInvoiceController extends Controller
      */
     public function destroy($id)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         // $purchaseInvoice->delete();
         $data=PurchaseInvoice::where('id',$id)->delete();
         PurchaseInvoiceDetail::where('purchase_invoice_id',$id)->delete();
@@ -284,6 +305,10 @@ class PurchaseInvoiceController extends Controller
 
     public function purchaseInvoiceList()
     {
+        
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $quotations = Quotation::whereNotExists(function ($query) {
             $query->select(DB::raw(1))
                 ->from('purchase_invoices')

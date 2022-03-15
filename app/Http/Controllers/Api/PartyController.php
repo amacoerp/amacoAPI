@@ -33,15 +33,18 @@ class PartyController extends Controller
     
     public function index()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $parties = Party::get();
         return response()->json($parties, 200);
     }
 
 
     public function getParties($id){
-        if(RestrictAPIController::checkAuth()){
-            return ["You are not authorized to access this API."];
-        }
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $vendors = Party::join('party_divisions','party_divisions.party_id','parties.id')
         ->join('payment_accounts','payment_accounts.id','party_divisions.div_id')
         ->where('payment_accounts.div_id',$id)
@@ -67,6 +70,9 @@ class PartyController extends Controller
 
     public function store(Request $request)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         // return $request;
         // $path = storage_path() . "/json/jsondata.json";
         $apikey=  \Config::get('example.key');
@@ -166,6 +172,9 @@ class PartyController extends Controller
      */
     public function show(Party $party)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         // $path = storage_path() . "/json/jsondata.json"; // ie: /var/www/laravel/app/storage/json/filename.json
 
         // $json = json_decode(file_get_contents($path), true);
@@ -213,6 +222,9 @@ class PartyController extends Controller
     
     public function getPartyDet($id)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         // $path = storage_path() . "/json/jsondata.json"; // ie: /var/www/laravel/app/storage/json/filename.json
 
         // $json = json_decode(file_get_contents($path), true);
@@ -253,6 +265,9 @@ class PartyController extends Controller
      */
     public function update(Request $request, Party $party)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         // $rules = [
         //     'firm_name' => 'required',
         //     'registration_no' => 'required|max:12',
@@ -354,6 +369,9 @@ class PartyController extends Controller
      */
     public function destroy(Party $party)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $res = $party->delete();
         if ($res) {
             return (['msg' => 'party' . ' ' . $party->id . ' is successfully deleted']);
@@ -363,6 +381,9 @@ class PartyController extends Controller
     // Api fo vendor list
     public static function vendor($id)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $vendors = Party::join('party_divisions','party_divisions.party_id','parties.id')
         ->join('payment_accounts','payment_accounts.id','party_divisions.div_id')
         ->where('payment_accounts.div_id',$id)
@@ -380,6 +401,9 @@ class PartyController extends Controller
     // Api for customer list
     public static function customer($id)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $vendors = Party::join('party_divisions','party_divisions.party_id','parties.id')
         ->join('payment_accounts','payment_accounts.id','party_divisions.div_id')
         ->where('payment_accounts.div_id',$id)
@@ -424,6 +448,9 @@ class PartyController extends Controller
     // }
     public function allVendorExcept($product)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         // $this->product = $product;
         // $vendors = Party::whereNotExists(function ($query) {
         //     $query->select(DB::raw(1))
@@ -451,7 +478,9 @@ class PartyController extends Controller
     }
 
     public function getVData($product_id,$div_id){
-
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $data = Party::join('party_divisions','party_divisions.party_id','parties.id')
         ->join('payment_accounts','payment_accounts.id','party_divisions.div_id')
         ->where('payment_accounts.div_id',$div_id)
@@ -467,6 +496,9 @@ class PartyController extends Controller
     }
     public function partyDelete_all(Request $request)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         // $expense = ColumnData::where('expense_id',$id)->join('expenses','ColumnData.expense_id','parties.id')->where('party_id', $party_id)->get();
         if($request->status=="contact")
         {

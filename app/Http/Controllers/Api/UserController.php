@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use DB;
+use Illuminate\Support\Facades\Crypt;
+
 
 
 class UserController extends Controller
@@ -28,9 +30,9 @@ class UserController extends Controller
      */
     public static function index()
     {
-        // if(RestrictAPIController::checkAuth()){
-        //     return ['Authentication failed Your IP address Will be Logged for security concern'];
-        // }
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $users = User::all();
         // $div=$users->UserDivision;
         $user['division']=8;
@@ -70,6 +72,10 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $user = User::create([
             "name"=> $request->name,
             "nick_name"=> $request->nick_name,
@@ -175,6 +181,9 @@ class UserController extends Controller
      */
     public function show(User $user)
     {   
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         // $division=User::join('user_divisions','user_divisions.u_id','users.id')->where('users.id',$user->id)->get();
         $user['role_name'] = $user->role->name;
         $user['division']=1;
@@ -204,6 +213,9 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         if($request->password){
             $request['password'] = bcrypt($request->password);
         }else{
@@ -300,6 +312,9 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $user->delete();
         $payment_account = PaymentAccount::where('user_id',$user->id)->delete();
 
@@ -399,6 +414,8 @@ class UserController extends Controller
 
     public function getAllEmails(){
         $data = User::select('email')->get();
+        
+        // $encrypted = Crypt::encrypt(json_encode($data));
         return response()->json($data);
     }
 }

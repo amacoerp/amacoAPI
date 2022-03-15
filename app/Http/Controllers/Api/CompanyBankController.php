@@ -16,12 +16,18 @@ class CompanyBankController extends Controller
      */
     public function index()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $bank = CompanyBank::all();
        
         return response()->json($bank);
     }
     public static function banks()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $bank = CompanyBank::all();
        
         return $bank;
@@ -35,6 +41,9 @@ class CompanyBankController extends Controller
      */
     public function store(Request $request)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $bank = CompanyBank::create([
             'name'=> $request->name, 
             'iban_no'=> $request->iban_no, 
@@ -62,6 +71,9 @@ class CompanyBankController extends Controller
      */
     public function show(CompanyBank $companyBank)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         return response()->json($companyBank);
     }
 
@@ -74,10 +86,16 @@ class CompanyBankController extends Controller
      */
     public function update(Request $request, CompanyBank $companyBank)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
+
         $companyBank->update($request->all());
 
         return response()->json($companyBank);
     }
+
+    
 
     /**
      * Remove the specified resource from storage.
@@ -87,12 +105,18 @@ class CompanyBankController extends Controller
      */
     public function destroy(CompanyBank $companyBank)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $companyBank->delete();
 
         return response()->json(['msg'=>"Successfully Deleted"]);
     }
     public function companybank(CompanyBank $companyBank)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $companyBank->delete();
 
         return response()->json(['msg'=>"Successfully Deleted"]);

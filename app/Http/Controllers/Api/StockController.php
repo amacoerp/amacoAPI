@@ -21,6 +21,9 @@ class StockController extends Controller
      */
     public function index()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
 
         // $category=Category::join('products','products.category_id','categories.id')->Select('categories.*')->get();
      

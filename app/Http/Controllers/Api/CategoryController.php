@@ -15,6 +15,9 @@ class CategoryController extends Controller
 
 
     public function mjrCategory(){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $unCategorized = $this -> unCategorized_products();
         $cat = $this -> index();
         return response()->json([
@@ -235,6 +238,9 @@ class CategoryController extends Controller
 
     public function categorized_products($id)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $products = Product::where('category_id', '=', $id)->get();
         $data = $products->map(function ($product) {
 
@@ -252,6 +258,9 @@ class CategoryController extends Controller
 
     public function subCategory($id)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $sub_categories = Category::where('parent_id', '=', $id)->get();
         $sub_categories->map(function($item){
             $item['product'] = $this -> getProductQty($item -> id);
@@ -265,6 +274,9 @@ class CategoryController extends Controller
 
     public function unCategorized_products()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $products = Product::where('category_id', '=', null)->get();
         return response()->json($products);
     }

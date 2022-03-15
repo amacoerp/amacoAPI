@@ -16,6 +16,9 @@ class ContactController extends Controller
      */
     public function index()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $contacts = Contact::all();
         return response()->json($contacts, 200);
     }

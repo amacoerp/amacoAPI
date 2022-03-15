@@ -130,6 +130,9 @@ class AdvancePaymentStatementController extends Controller
     public function allAdvancePaymentStatement(Request $request)
     
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $advanceEopenbalance=Floatval('0.00');
         $advanceAopenbalance=Floatval('0.00');
         $paymentAccount = PaymentAccount::where('id', intval($request['payment_account_id']))->first();

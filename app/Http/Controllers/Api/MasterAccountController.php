@@ -108,6 +108,9 @@ class MasterAccountController extends Controller
 
     public function allAccountmasterStatement(Request $request)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $invoiceCollection = new Collection();
         $total_div=Paymentaccount::where('type','division')->sum('balance');
         // $total_div=Division::sum('opening_bal');

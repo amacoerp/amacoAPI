@@ -18,6 +18,9 @@ class ProductController extends Controller
 
     public static function index()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         // $products = Product::all();
         // return ($products);
         $products = DB::table('products')
@@ -31,6 +34,9 @@ class ProductController extends Controller
 //
     public function store(Request $request)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $rules = [
             'division_id' => 'required',
             'name' => 'required|max:255',
@@ -80,6 +86,9 @@ class ProductController extends Controller
 //
     public function show($product)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $productPrice = Product::where('id','=',$product)->first();
         $prices = $productPrice->productPrice->map(function ($productdetail){
                 return [
@@ -106,6 +115,9 @@ class ProductController extends Controller
 //
     public function update(Request $request, $id)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         // $rules = [
         //     'category_id' => 'required',
         //     'division_id' => 'required',
@@ -125,6 +137,9 @@ class ProductController extends Controller
     //
     public function destroy($id)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $product=Product::findOrfail($id);
         $res = $product->delete();
         if($res){
@@ -136,6 +151,9 @@ class ProductController extends Controller
     //show the Single product Info
     public function productShow($product)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $productPrice = Product::where('id','=',$product)->first();
         $prices = $productPrice->productPrice->map(function ($productdetail){
                 return [
@@ -161,6 +179,9 @@ class ProductController extends Controller
 
 
     public function mjrProductAdd($did,$cid){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         return response()->json([
             'vendor' => PartyController::vendor($did),
             'product_in_category' => CategoryController::products_in_category2(),
@@ -175,6 +196,9 @@ class ProductController extends Controller
 
     //json response to get single product info,price 
     public function mjrProductUpdate($pid){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         return response()->json([
             // 'vendor' => PartyController::vendor($did),
             'product' => $this->productShow($pid)['product'],
