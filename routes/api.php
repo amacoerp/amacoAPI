@@ -322,6 +322,9 @@ Route::get('dashboard', [StackController::class, 'dashboard']);
 Route::get('vendorStatementNew/{id}', [AccountStatementController::class, 'vendorStatementNew']);
 
 
+Route::get('getPONo/{date}', [PurchaseReturnController::class, 'getPONo']);
+
+
 
 
 
