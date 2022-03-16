@@ -255,6 +255,7 @@ class RFQController extends Controller
                     "product_name" => $rfq_detail->product_name,
                     "src" => $urlPath,
                     "product" => $rfq_detail->product?array($rfq_detail->product):null,
+                    "delete" => false,
                     // "prices" => isset($rfq_detail->product_id) ?$rfq_detail->product->productPrice:[],
                     // "party" =>  isset($rfq_detail->product_id) ?$rfq_detail->product->map(function ($price) {
                     //     return ($price->party);
@@ -350,6 +351,11 @@ class RFQController extends Controller
                 }
 
                 if ($rfq_update_data) {
+                    if($rfq_detail['delete'])
+                    {
+                        $rfq = RFQDetails::where('id', $rfq_detail['id'])->delete();
+                        return $rfq_detail['id'];
+                    }
                    
                     $_rfq_detail = $rfq_update_data->update([
                         'product_id' => $rfq_detail['product_id']?$rfq_detail['product_id']:null,

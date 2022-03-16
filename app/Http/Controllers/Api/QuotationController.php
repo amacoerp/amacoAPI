@@ -1186,6 +1186,7 @@ class QuotationController extends Controller
                     return [
                         'id' => $quotation->id,
                         'quotation_no' => $quotation->quotation_no,
+                        'quote_date' => $quotation->ps_date,
                         'created_at' => $quotation->created_at,
                         'updated_at' => $quotation->updated_at,
                         'status' => $quotation->status,
