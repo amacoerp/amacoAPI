@@ -573,13 +573,15 @@ class PurchaseReturnController extends Controller
             global $quotation_id;
             // $quotation_id = $quotation->pr_id;
             
+
+
+            PurchaseReturnDetail::where('pr_id', $request['rfq_id'])->delete();
+            
             if ($request->transaction_type === 'purchase') {
                 foreach ($request['quotation_details'] as $key => $quotation_detail) {
-                    if($quotation_detail['delete'])
-                    {
-                        $rfq = PurchaseReturnDetail::where('prd_id', $quotation_detail['prd_id'])->delete();
-                        return $quotation_detail['prd_id'];
-                    }
+                  
+                        // return $quotation_detail['prd_id'];
+                    
                     $a = $quotation_detail['po_number'];
                     $datas=PurchaseReturnDetail::where('prd_id',$quotation_detail['prd_id'])->first();
                     if($datas)
