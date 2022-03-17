@@ -335,6 +335,7 @@ class RFQController extends Controller
             $_rfq_id = $rfq['id'];
             $temp = json_decode($request['rfq_details'], true);
             $i = 0;
+            $rfq = RFQDetails::where('rfq_id', $_rfq_id)->delete();
             foreach ((array) $temp as $rfq_detail) {
                
                
@@ -350,23 +351,25 @@ class RFQController extends Controller
                 }
                 }
 
-                if ($rfq_update_data) {
-                    if($rfq_detail['delete'])
-                    {
-                        $rfq = RFQDetails::where('id', $rfq_detail['id'])->delete();
-                        return $rfq_detail['id'];
-                    }
+                // if ($rfq_update_data) {
+                    // if($rfq_detail['delete'])
+                    // {
+                    //     $rfq = RFQDetails::where('id', $rfq_detail['id'])->delete();
+                    //     return $rfq_detail['id'];
+                    // }
                    
-                    $_rfq_detail = $rfq_update_data->update([
-                        'product_id' => $rfq_detail['product_id']?$rfq_detail['product_id']:null,
-                        'product_name' => $rfq_detail['product_name'],
-                        'description' => ucwords(trans($rfq_detail['description'])),
-                        'quantity' => $rfq_detail['quantity'],
-                        'unit_of_measure' => $rfq_detail['unit_of_measure'],
+                //     $_rfq_detail = $rfq_update_data->update([
+                //         'product_id' => $rfq_detail['product_id']?$rfq_detail['product_id']:null,
+                //         'product_name' => $rfq_detail['product_name'],
+                //         'description' => ucwords(trans($rfq_detail['description'])),
+                //         'quantity' => $rfq_detail['quantity'],
+                //         'unit_of_measure' => $rfq_detail['unit_of_measure'],
                         
-                        // 'rfq_id' => $_rfq_id,
-                    ]);
-                }else{
+                       
+                //     ]);
+                // }else{
+                    // $rfq = RFQDetails::where('rfq_id', $_rfq_id)->delete();
+                    
                     RFQDetails::create([
                         'product_id' => $rfq_detail['product_id']?$rfq_detail['product_id']:null,
                         'description' => ucwords(trans($rfq_detail['description'])),
@@ -376,7 +379,7 @@ class RFQController extends Controller
                         'rfq_id' => $_rfq_id,
                         'file' => $filePath,
                     ]);
-                }
+                // }
                 $i++;
             }
 

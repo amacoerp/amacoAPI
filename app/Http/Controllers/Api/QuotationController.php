@@ -614,6 +614,7 @@ class QuotationController extends Controller
                     "file" => $urlPath,
                     "created_at" => $quotation_detail->created_at,
                     "updated_at" => $quotation_detail->updated_at,
+                    "delete" => false,
                    
                   
                 ];
@@ -774,6 +775,24 @@ class QuotationController extends Controller
             // 'sales_order_number' => $data['sales_order_number'],
         ]);
         $index = 0;
+        $quotationDetail = QuotationDetail::where([
+            // 'id' => $quotation_detail['id'],
+            'quotation_id' => $request->id
+        ])->delete();
+        $res=notes::where('quotation_id',$quotation->id)->delete();
+                $note_detail = json_decode($request->notes, true);
+                if($note_detail)
+                {
+                foreach ($note_detail as $div) {
+           
+                notes::create([
+                'quotation_id' => $quotation->id,
+                'notes' => $div['notes'], 
+                'div_id' => $request['div_id']?$request['div_id']:0,  // ? $request
+                'user_id' => $request['user_id']?$request['user_id']:0,
+                ]); 
+                }
+                }
         while ($request['quotation_detail' . $index] != null) {
             $quotation_detail = (array) json_decode($request['quotation_detail' . $index], true);
             $filePath = null;
@@ -802,63 +821,48 @@ class QuotationController extends Controller
             //         'name'=> $quotation_detail['description']
             //     ]);
             // }
-            if ($quotationDetail) {
-                // if (File::exists(public_path($quotationDetail->file_img_url))) {
+            // if ($quotationDetail) {
+                
+            //     $quotationDetail->update([
+            //         'total_amount' => $quotation_detail['total_amount'],
+            //         'analyse_id' => $quotation_detail['analyse_id'],
+            //         'product_id' => $quotation_detail['product_id'],
+            //         'purchase_price' => $quotation_detail['purchase_price'],
+            //         'description' => $quotation_detail['description'],
+            //         'quantity' => $quotation_detail['quantity'],
+            //         'discount' => $quotation_detail['discount'],
+            //         'discount_val' => $quotation_detail['discount_val'],
+            //         'margin' => $quotation_detail['margin'],
+            //         'sell_price' => $quotation_detail['sell_price'],
+            //         'unit_of_measure' => $quotation_detail['unit_of_measure'],
+            //         'product_description' => $quotation_detail['descriptionss']?$quotation_detail['descriptionss']:"",
+            //         'remark' => $quotation_detail['remark'],
+            //         'index1' => $quotation_detail['index1'],
+            //         'file_img_url' => $filePath,
 
-                //     File::delete(public_path($quotationDetail->file_img_url));
-                // }
-                $quotationDetail->update([
-                    'total_amount' => $quotation_detail['total_amount'],
-                    'analyse_id' => $quotation_detail['analyse_id'],
-                    'product_id' => $quotation_detail['product_id'],
-                    'purchase_price' => $quotation_detail['purchase_price'],
-                    'description' => $quotation_detail['description'],
-                    'quantity' => $quotation_detail['quantity'],
-                    'discount' => $quotation_detail['discount'],
-                    'discount_val' => $quotation_detail['discount_val'],
-                    'margin' => $quotation_detail['margin'],
-                    'sell_price' => $quotation_detail['sell_price'],
-                    'unit_of_measure' => $quotation_detail['unit_of_measure'],
-                    'product_description' => $quotation_detail['descriptionss']?$quotation_detail['descriptionss']:"",
-                    'remark' => $quotation_detail['remark'],
-                    'index1' => $quotation_detail['index1'],
-                    'file_img_url' => $filePath,
-
-                ]);
+            //     ]);
 
 
-                $res=notes::where('quotation_id',$quotation->id)->delete();
-                $note_detail = json_decode($request->notes, true);
-                if($note_detail)
-                {
-                foreach ($note_detail as $div) {
+                // $res=notes::where('quotation_id',$quotation->id)->delete();
+                // $note_detail = json_decode($request->notes, true);
+                // if($note_detail)
+                // {
+                // foreach ($note_detail as $div) {
            
-                notes::create([
-                'quotation_id' => $quotation->id,
-                'notes' => $div['notes'], 
-                'div_id' => $request['div_id']?$request['div_id']:0,  // ? $request['ps_date'] : Carbon::now()
-                'user_id' => $request['user_id']?$request['user_id']:0,
-                ]); 
-                }
-             }
-            } else {
-                if(!$quotation_detail['product_id'] )
-                {
-                    // $product_exist=Product::where('name','=',$quotation_detail['description'])->first();
-                    // if(!$product_exist){
-                    //     $product=Product::create([
-                    //         'name'=> $quotation_detail['description'],
-                    //         'div_id' => $request['div_id']?$request['div_id']:0,  // ? $request['ps_date'] : Carbon::now()
-                    //         'user_id' => $request['user_id']?$request['user_id']:0,
-                    //         'type' => 'Non inventory',
-                    //     ]);
-                    // }
-                    // else
-                    // {
-                    //     // $product=null;
-                    // }  
+                // notes::create([
+                // 'quotation_id' => $quotation->id,
+                // 'notes' => $div['notes'], 
+                // 'div_id' => $request['div_id']?$request['div_id']:0,  // ? $request
+                // 'user_id' => $request['user_id']?$request['user_id']:0,
+                // ]); 
+                // }
+                // }
+            // } else {
+                // if(!$quotation_detail['product_id'] )
+                // {
+                    
                    
-                }
+                // }
                 QuotationDetail::create([
                     'quotation_id' => $quotation->id,
                     'total_amount' => $quotation_detail['total_amount'],
@@ -878,7 +882,7 @@ class QuotationController extends Controller
                     'file_img_url' => $filePath,
 
                 ]);
-            }
+            // }
             $index++;
         }
         return response()->json($quotation->id);
@@ -1266,6 +1270,7 @@ class QuotationController extends Controller
                     return [
                         'id' => $quotation->id,
                         'quotation_no' => $quotation->quotation_no,
+                        'quotation_date' => $quotation->ps_date,
                         'created_at' => $quotation->created_at,
                         'updated_at' => $quotation->updated_at,
                         'status' => $quotation->status,
@@ -1541,6 +1546,10 @@ class QuotationController extends Controller
                  // 'sales_order_number' => $data['sales_order_number'],
              ]);
              $index = 0;
+             $resDel = QuotationDetail::where([
+                'quotation_id' => $request->id,
+                // 'quotation_id' => $request->id
+            ])->delete();
              while ($request['quotation_detail' . $index] != null) {
                 $quotation_detail = (array) json_decode($request['quotation_detail' . $index], true);
                  
@@ -1551,25 +1560,26 @@ class QuotationController extends Controller
                      'id' => $quotation_detail['id'],
                      // 'quotation_id' => $request->id
                  ])->first();
+                
                  
-                 if ($quotationDetail) {
+                //  if ($quotationDetail) {
                     
-                     $quotationDetail->update([
-                         'total_amount' => $quotation_detail['total_amount'],
-                         'product_id' => $quotation_detail['product_id'],
-                         'purchase_price' => $quotation_detail['purchase_price'],
-                         'description' => $quotation_detail['descriptions']?$quotation_detail['descriptions']:$quotation_detail['product_name'],
-                         'quantity' => $quotation_detail['quantity'],
-                         'margin' => $quotation_detail['margin'],
-                         'sell_price' => $quotation_detail['sell_price'],
-                         'remark' => $quotation_detail['remark'],
-                         'product_description' => $quotation_detail['descriptionss']?$quotation_detail['descriptionss']:"",
-                         'unit_of_measure' => $quotation_detail['unit_of_measure'],
+                //      $quotationDetail->update([
+                //          'total_amount' => $quotation_detail['total_amount'],
+                //          'product_id' => $quotation_detail['product_id'],
+                //          'purchase_price' => $quotation_detail['purchase_price'],
+                //          'description' => $quotation_detail['descriptions']?$quotation_detail['descriptions']:$quotation_detail['product_name'],
+                //          'quantity' => $quotation_detail['quantity'],
+                //          'margin' => $quotation_detail['margin'],
+                //          'sell_price' => $quotation_detail['sell_price'],
+                //          'remark' => $quotation_detail['remark'],
+                //          'product_description' => $quotation_detail['descriptionss']?$quotation_detail['descriptionss']:"",
+                //          'unit_of_measure' => $quotation_detail['unit_of_measure'],
      
-                     ]);
-                 } else {
-                     if(!$quotation_detail['product_id'])
-                     {
+                //      ]);
+                //  } else {
+                    //  if(!$quotation_detail['product_id'])
+                    //  {
                 //         $product_exist=Product::where('name','=',$quotation_detail['descriptions'])->first();
                 //         if(!$product_exist){
                 //         $product=Product::create([
@@ -1579,7 +1589,7 @@ class QuotationController extends Controller
                 //  'type' => 'Non inventory',
                 //          ]);
                 //         }
-                     }
+                    //  }
                      QuotationDetail::create([
                          'quotation_id' => $quotation->id,
                          'total_amount' => $quotation_detail['total_amount'],
@@ -1599,7 +1609,7 @@ class QuotationController extends Controller
                     
        
          
-                     }
+                    //  }
                  $index++;
                 
                  
