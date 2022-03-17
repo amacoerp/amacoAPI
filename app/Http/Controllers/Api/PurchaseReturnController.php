@@ -93,6 +93,10 @@ class PurchaseReturnController extends Controller
         ->where('pr_id','=',$id)
         ->select('products.*','purchase_returns_details.unit_of_measure as unit_of_measure','purchase_returns_details.*')
         ->get();
+
+        $datas -> map(function ($item) {
+            $item['delete'] = false;
+        });
         // $data[0]->party_id
 
         $party = Party::where('id',$data[0]->party_id)->get();
@@ -569,8 +573,15 @@ class PurchaseReturnController extends Controller
             global $quotation_id;
             // $quotation_id = $quotation->pr_id;
             
+
+
+            PurchaseReturnDetail::where('pr_id', $request['rfq_id'])->delete();
+            
             if ($request->transaction_type === 'purchase') {
                 foreach ($request['quotation_details'] as $key => $quotation_detail) {
+                  
+                        // return $quotation_detail['prd_id'];
+                    
                     $a = $quotation_detail['po_number'];
                     $datas=PurchaseReturnDetail::where('prd_id',$quotation_detail['prd_id'])->first();
                     if($datas)

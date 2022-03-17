@@ -372,6 +372,8 @@ class InvoiceController extends Controller
         ]);
         $temp = json_decode($request['invoice_details'], true);
         $i = 0;
+
+         InvoiceDetail::where('invoice_id', $request->id)->delete();
         foreach ((array) $temp as $invoice_detail) {
            
            
@@ -540,6 +542,8 @@ class InvoiceController extends Controller
         ]);
         $temp = json_decode($request['invoice_details'], true);
         $i = 0;
+
+        PurchaseInvoiceDetail::where('purchase_invoice_id', $request->id)->delete();
         foreach ((array) $temp as $invoice_detail) {
            
            
