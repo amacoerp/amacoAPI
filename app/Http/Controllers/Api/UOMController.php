@@ -47,7 +47,7 @@ class UOMController extends Controller
             'value' => $request -> value,
             'label' => $request -> label,
         ]);
-        $data = UOM::get();
+        $data = UOM::orderBy('label','ASC')->get();
         return response()->json($data);
 
     }
