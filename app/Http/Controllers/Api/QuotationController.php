@@ -1600,7 +1600,7 @@ class QuotationController extends Controller
                          'quantity' => $quotation_detail['quantity'],
                          'margin' => $quotation_detail['margin'],
                          'sell_price' => $quotation_detail['sell_price'],
-                         'unit_of_measure' => $quotation_detail['unit_of_measure'],
+                         'unit_of_measure' => isset($quotation_detail['unit_of_measure'])?$quotation_detail['unit_of_measure']:null,
                          'product_description' => isset($quotation_detail['descriptionss'])?$quotation_detail['descriptionss']:null,
                          
                         
