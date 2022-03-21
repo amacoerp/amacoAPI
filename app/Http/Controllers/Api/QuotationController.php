@@ -405,18 +405,18 @@ class QuotationController extends Controller
                     
                     QuotationDetail::create([
                         'quotation_id' => $quotation_id,
-                        'total_amount' => $quotation_detail['total_amount'],
+                        'total_amount' => isset($quotation_detail['total_amount']) ? $quotation_detail['total_amount'] : 0,
                         'analyse_id' => null,
                         'product_id' => isset($quotation_detail['productId'])?$quotation_detail['productId']:0,
                         // (isset($product_ID)?$product_ID:0)
-                        'purchase_price' => $quotation_detail['purchase_price'],
+                        'purchase_price' => isset($quotation_detail['purchase_price']) ? $quotation_detail['purchase_price'] : 0,
                         'description' => isset($quotation_detail['product_name'])?$quotation_detail['product_name']:(isset($quotation_detail['product']->description)?$quotation_detail['product']:null),
                         'product_description' => $quotation_detail['description'],
                         'quantity' => $quotation_detail['quantity'],
                         'unit_of_measure' => $quotation_detail['unit_of_measure'] ? $quotation_detail['unit_of_measure'] : null,
-                        'margin' => $quotation_detail['margin'],
-                        'sell_price' => $quotation_detail['sell_price'],
-                        'remark' => $quotation_detail['remark'],
+                        'margin' => isset($quotation_detail['margin']) ? $quotation_detail['margin'] : 0,
+                        'sell_price' => isset($quotation_detail['sell_price']) ? $quotation_detail['sell_price'] : 0,
+                        'remark' => isset($quotation_detail['remark']) ? $quotation_detail['remark'] : 0,
                     ]);
                 }
             } else {
