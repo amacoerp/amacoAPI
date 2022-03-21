@@ -1224,6 +1224,7 @@ class QuotationController extends Controller
                         "transaction_type" => $quotation->transaction_type,
                         'discount_in_p' => $quotation['discount_in_p'],
                         'div_id' => $quotation->div_id,
+                        'is_revised' => $quotation->is_revised,
                         "subject" => isset($quotation->subject)?$quotation->subject:"",
                         'quotation_details' => $quotation->quotationDetail->map(function ($quotation_detail) {
                             $quotation_detail = QuotationDetail::where('id', '=', $quotation_detail->id)->first();
@@ -1763,9 +1764,11 @@ public function show_quotation($id)
                 ->whereRaw('invoices.quotation_id = quotations.id');
         })->orderBy('created_at', 'DESC')
         ->get();
+        $revisedQuote=Quotation::where(['is_revised' => 1])->get();
     // $quotations = Quotation::where('status','=','New')->orderBy('created_at','DESC')->get();
+    $resData=$quotations->concat($revisedQuote);
     $quotations_data = [
-        $quotations->map(
+        $resData->map(
             function ($quotation) {
                 return [
                     'id' => $quotation->id,
