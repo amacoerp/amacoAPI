@@ -339,6 +339,7 @@ class PurchaseInvoiceController extends Controller
                         "transaction_type" => $quotation->transaction_type,
                         'discount_in_p' => $quotation->discount_in_p,
                         'ps_date' => $quotation->ps_date,
+                        'delete' => $quotation->delete,
                         'quotation_details' => $quotation->quotationDetail->map(function ($quotation_detail) {
                             $quotation_detail = QuotationDetail::where('id', '=', $quotation_detail->id)->first();
                             return [

@@ -629,7 +629,7 @@ class QuotationController extends Controller
         if(!auth()->check())
         return ["You are not authorized to access this API."];
         
-        $quotation = Quotation::where('id', $id)->first();
+        $quotation = Quotation::where(['id','=', $id],['delete','=',0])->first();
         $data = [
             "id" => $quotation->id,
             'quotation_no' => $quotation->quotation_no,
@@ -1046,11 +1046,14 @@ class QuotationController extends Controller
         if(!auth()->check())
         return ["You are not authorized to access this API."];
         
-        $quotation = Quotation::where('id', $id)->first();
+        $quotation = Quotation::where('id', $id)->update([
+            'delete'=>1
+        ]);
 
-        $res = $quotation->delete();
+        // $res = $quotation->delete();
+        $res = $quotation;
         if ($res) {
-            return (['msg' => 'Quotation' . ' ' . $quotation->id . ' is successfully deleted']);
+            return (['msg' => 'Quotation' . ' ' . $id . ' is successfully deleted']);
         }
     }
     public function destroy_details($id)
