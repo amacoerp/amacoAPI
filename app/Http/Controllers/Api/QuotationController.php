@@ -343,7 +343,7 @@ class QuotationController extends Controller
                 'rfq_id' => $request['rfq_id']?$request['rfq_id']:0,
                 'status' => $request['status'],
                 'parent_id' => $parentId,
-                'total_value' => $request['total_value'],
+                'total_value' => isset($request['total_value']) ? $request['total_value'] == "NaN" ? 0 : $request['total_value'] : 0,
                 'net_amount' => $request['net_amount'],
                 'qstatus' => $request['qstatus'],
                 'vat_in_value' => $request['vat_in_value'],
