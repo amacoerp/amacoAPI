@@ -321,6 +321,11 @@ Route::get('stateCard', [StackController::class, 'stateCard']);
 Route::get('dashboard', [StackController::class, 'dashboard']);
 Route::get('vendorStatementNew/{id}', [AccountStatementController::class, 'vendorStatementNew']);
 
+Route::delete('rfqdelete/{id}', [RFQController::class, 'rfqdelete']);
+Route::put('rfqRecover/{id}', [RFQController::class, 'rfqRecover']);
+Route::put('pInvRec/{id}', [PurchaseInvoiceController::class, 'pInvRec']);
+Route::delete('deletePurInv/{id}', [PurchaseInvoiceController::class, 'deletePurInv']);
+
 
 Route::get('getPONo/{date}', [PurchaseReturnController::class, 'getPurchaseReturnEditData']);
 

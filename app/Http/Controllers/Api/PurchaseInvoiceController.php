@@ -284,13 +284,37 @@ class PurchaseInvoiceController extends Controller
         return ["You are not authorized to access this API."];
         
         // $purchaseInvoice->delete();
-        $data=PurchaseInvoice::where('id',$id)->delete();
-        PurchaseInvoiceDetail::where('purchase_invoice_id',$id)->delete();
+        $data=PurchaseInvoice::where('id',$id)->update([
+            'delete_status' => 1
+        ]);
+        // PurchaseInvoiceDetail::where('purchase_invoice_id',$id)->delete();
         return ($id);
         // return ($purchaseInvoice->delete());
     }
 
+    public function pInvRec($id){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
+
+        $data=PurchaseInvoice::where('id',$id)->update([
+            'delete_status' => 0
+        ]);
+        return ($id);
+    }
+    public function deletePurInv($id){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
+        $data=PurchaseInvoice::where('id',$id)->delete();
+        PurchaseInvoiceDetail::where('purchase_invoice_id',$id)->delete();
+        return ($id);
+    }
+
     public function deleteInv($id){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
                 PurchaseInvoiceDetail::where('id',$id)->delete();
         return ($id);
 
