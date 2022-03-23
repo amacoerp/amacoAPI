@@ -326,8 +326,10 @@ Route::put('rfqRecover/{id}', [RFQController::class, 'rfqRecover']);
 Route::put('pInvRec/{id}', [PurchaseInvoiceController::class, 'pInvRec']);
 Route::delete('deletePurInv/{id}', [PurchaseInvoiceController::class, 'deletePurInv']);
 Route::delete('deletePr/{id}', [PurchaseReturnController::class, 'deletePr']);
-Route::delete('deletePr/{id}', [PurchaseReturnController::class, 'deletePr']);
 Route::put('restorePr/{id}', [PurchaseReturnController::class, 'restorePr']);
+
+Route::delete('deleteSinv/{id}', [InvoiceController::class, 'deleteSinv']);
+Route::put('restoreSInv/{id}', [InvoiceController::class, 'restoreSInv']);
 
 
 Route::get('getPONo/{date}', [PurchaseReturnController::class, 'getPurchaseReturnEditData']);
