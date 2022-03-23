@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Controllers\Api\InvoiceController;
 use App\Http\Controllers\Api\QuotationController;
+use App\Http\Controllers\Api\ReceiptController;
 use App\Http\Controllers\Api\RestrictAPIController;
 
 
@@ -21,9 +22,11 @@ class StackController extends Controller
         return ["You are not authorized to access this API."];
         
         $stackData = $this -> stateCard();
+        $receiptData=ReceiptController::index();
         return response()->json([
             'invoice' => InvoiceController::index(),
             'stackData' => $stackData -> original,
+            'receipt' => $receiptData -> original,
         ]);
 
     }

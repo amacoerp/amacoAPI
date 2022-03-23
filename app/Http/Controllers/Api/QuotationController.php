@@ -572,6 +572,7 @@ class QuotationController extends Controller
             "other" => $quotation->other,
             "div_id" => $quotation->div_id,
             "user_id" => $quotation->user_id,
+            "delete" => $quotation->delete,
 
             "quotation_details" => $quotation->quotationDetail->map(function ($quotation_detail) {
                 $filePath = $quotation_detail->file_img_url ? $quotation_detail->file_img_url : '';
@@ -629,12 +630,13 @@ class QuotationController extends Controller
         if(!auth()->check())
         return ["You are not authorized to access this API."];
         
-        $quotation = Quotation::where(['id','=', $id],['delete','=',0])->first();
+        $quotation = Quotation::where('id','=', $id)->first();
         $data = [
             "id" => $quotation->id,
             'quotation_no' => $quotation->quotation_no,
             "party_id" => $quotation->party_id,
             "file" => $quotation->file,
+            'delete'=>$quotation->delete,
             "rfq_id" => $quotation->rfq_id || null,
             "status" => $quotation->status,
             "total_value" => isset($quotation->total_value)?$quotation->total_value:0,
@@ -672,6 +674,7 @@ class QuotationController extends Controller
             "other" => $quotation->other,
             "div_id" => $quotation->div_id,
             "user_id" => $quotation->user_id,
+            "delete" => $quotation->delete,
 
             "quotation_details" => $quotation->quotationDetail->map(function ($quotation_detail) {
                 $filePath = $quotation_detail->file_img_url ? $quotation_detail->file_img_url : '';
@@ -1046,8 +1049,9 @@ class QuotationController extends Controller
         if(!auth()->check())
         return ["You are not authorized to access this API."];
         
+        $quotationStatus = Quotation::where('id', $id)->first();
         $quotation = Quotation::where('id', $id)->update([
-            'delete'=>1
+            'delete'=> !$quotationStatus->delete
         ]);
 
         // $res = $quotation->delete();
@@ -1167,6 +1171,7 @@ class QuotationController extends Controller
                         "transaction_type" => $quotation->transaction_type,
                         'discount_in_p' => $quotation['discount_in_p'],
                         'div_id' => $quotation->div_id,
+                        'is_revised' => $quotation->is_revised,
                         "subject" => isset($quotation->subject)?$quotation->subject:"",
                         'quotation_details' => $quotation->quotationDetail->map(function ($quotation_detail) {
                             $quotation_detail = QuotationDetail::where('id', '=', $quotation_detail->id)->first();

@@ -17,7 +17,7 @@ class ReceiptController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public static function index()
     {
         if(!auth()->check())
         return ["You are not authorized to access this API."];
