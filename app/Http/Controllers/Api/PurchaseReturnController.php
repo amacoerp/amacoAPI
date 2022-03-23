@@ -483,16 +483,41 @@ class PurchaseReturnController extends Controller
         if(!auth()->check())
         return ["You are not authorized to access this API."];
 
+        $purchaseR = PurchaseReturn::where('pr_id','=',$id)->update([
+            'delete_status' => 1
+        ]);
+        // $purchaseRD = PurchaseReturnDetail::where('pr_id','=',$id)->delete();
+         return response()->json([
+            'status' => 200,
+            'getReturnParty' => "Deleted"
+        ]);  
+    }
+    public function restorePr($id){
+
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+
+        $purchaseR = PurchaseReturn::where('pr_id','=',$id)->update([
+            'delete_status' => 0
+        ]);
+        // $purchaseRD = PurchaseReturnDetail::where('pr_id','=',$id)->delete();
+         return response()->json([
+            'status' => 200,
+            'getReturnParty' => "Deleted"
+        ]);  
+    }
+
+    public function deletePr($id){
+
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+
         $purchaseR = PurchaseReturn::where('pr_id','=',$id)->delete();
         $purchaseRD = PurchaseReturnDetail::where('pr_id','=',$id)->delete();
          return response()->json([
             'status' => 200,
             'getReturnParty' => "Deleted"
         ]);  
-
-
-
-
     }
 
     public function purchasereturnUpdate(Request $request){
