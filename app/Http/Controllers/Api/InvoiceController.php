@@ -475,7 +475,25 @@ class InvoiceController extends Controller
         if(!auth()->check())
         return ["You are not authorized to access this API."];
         
-        return ($invoice->delete());
+        return ($invoice->update([
+            'delete_status' => 1
+        ]));
+    }
+    public function restoreSInv($id)
+    {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
+        return (Invoice::where('id',$id)->update([
+            'delete_status' => 0
+        ]));
+    }
+    public function deleteSinv($id)
+    {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
+        return (Invoice::where('id',$id)->delete());
     }
 
     public function history()
