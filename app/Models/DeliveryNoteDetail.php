@@ -93,7 +93,7 @@ class DeliveryNoteDetail extends Model
             "delivering_quantity" => $delivery_notes_detail->delivered_quantity,
             "delivery_notes_detail" => $delivery_notes_detail,
             "product" => array($delivery_notes_detail->product),
-            "description"=>$quotationDetail->description?$quotationDetail->description:$quotationDetail->product_description
+            "description"=>$quotationDetail->description?$quotationDetail->description:$quotationDetail->product_description 
             // "quotation" => $s=="invoice"?$delivery_notes_detail->deliveryNote->invoice:$delivery_notes_detail->deliveryNote->quotation,
             // "delivery_note" => $delivery_notes_detail->deliveryNote,
             // "party" => $delivery_notes_detail->deliveryNote->quotation->party,
