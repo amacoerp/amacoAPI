@@ -92,6 +92,7 @@ class PartyController extends Controller
             'registration_no' => $request->registration_no,
          
             'vat_no' => $request->vat_no,
+            'payment_term' => isset($request->payment_term) ? $request->payment_term : null ,
            
             'post_box_no' => $request->post_box_no,
             'street' => $request->street?ucwords(trans($request->street)):null,
@@ -202,6 +203,7 @@ class PartyController extends Controller
                 'opening_balance' => $party->opening_balance,
                 'credit_days' => $party->credit_days,
                 'credit_limit' => $party->credit_limit,
+                'payment_term' => $party->payment_term,
                 'party_code' => $party->party_code,
                 'vendor_id' => $party->vendor_id,
                 "bank" => $party->bank->map(function ($bankDetail) {
@@ -319,6 +321,7 @@ class PartyController extends Controller
             'country' => $request->country == null ? null : ucwords(trans($request->country)),
             'zip_code' => $request->zip_code == null ? null : $request->zip_code,
             'party_type' => $request->party_type == null ? null : $request->party_type,
+            'payment_term' => $request->payment_term == null ? null : $request->payment_term,
             'contact' => $request->contact == null ? null : $request->contact,
             'website' => $request->website == null ? null : $request->website,
             'fax' => $request->fax == null ?null : $request->fax,
