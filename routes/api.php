@@ -160,6 +160,7 @@ Route::get('customer-list/{id}', [PartyController::class, 'customer'])->name('cu
 Route::get('sales-list', [QuotationController::class, 'salesList'])->name('sales.list');
 Route::get('all-list', [QuotationController::class, 'AllSalesList'])->name('AllSalesList');
 Route::get('purchase-invoice-list',[PurchaseInvoiceController::class, 'purchaseInvoiceList'])->name('purchase.invoice.list');
+Route::get('purchaseInvoiceHList',[PurchaseInvoiceController::class, 'purchaseInvoiceHList'])->name('purchase.invoice.list');
 Route::get('account-subcategories/{id}', [AccountCategoryController::class, 'subCategory'])->name('account.category.subcategory');
 Route::get('account-categories-search/{name}', [AccountCategoryController::class, 'search'])->name('account.category.search');
 Route::get('quotations-accepted-list', [QuotationController::class, 'acceptedList'])->name('quotaions.accepted.list');
