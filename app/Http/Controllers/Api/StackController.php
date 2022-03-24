@@ -8,8 +8,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Api\InvoiceController;
 use App\Http\Controllers\Api\QuotationController;
 use App\Http\Controllers\Api\ReceiptController;
-use App\Http\Controllers\Api\RestrictAPIController;
+use App\Models\Receipt;
 
+use App\Http\Controllers\Api\RestrictAPIController;
+use App\Models\Quotation;
 
 class StackController extends Controller
 {
@@ -45,6 +47,8 @@ class StackController extends Controller
             'invoice' => InvoiceController::index(),
             'salesList' => $d-> original,
             'acceptedList' => $q-> original,
+            'rec' => Receipt::get(),
+            'po' => Quotation::where('transaction_type','purchase')->get(),
             
         ]);
     }
