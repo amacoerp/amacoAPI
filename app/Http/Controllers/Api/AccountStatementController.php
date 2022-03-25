@@ -202,7 +202,7 @@ class AccountStatementController extends Controller
         
         $invoiceCollection = new Collection();
        
-        $invoiceCollection = Invoice::whereBetween('created_at', [$request->from_date . ' ' . '00:00:00', $request->to_date ? $request->to_date. ' ' . '23:59:59' : now()])->get();
+        $invoiceCollection = Invoice::where('exclude_from_vat','0')->whereBetween('created_at', [$request->from_date . ' ' . '00:00:00', $request->to_date ? $request->to_date. ' ' . '23:59:59' : now()])->get();
         $expense =Expense::whereBetween('created_at', [$request->from_date . ' ' . '00:00:00', $request->to_date ? $request->to_date. ' ' . '23:59:59' : now()])->get();
         $data = $invoiceCollection->concat($expense);
         // $data = $data->sortBy('created_at');
