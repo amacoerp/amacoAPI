@@ -164,6 +164,7 @@ class InvoiceController extends Controller
         // return $this->genInvoiceNo($request['ps_date']);
         // $data['invoice_no'] = $this->getInvoiceNo($request['ps_date']);
         $data['issue_date'] = $request['ps_date'];
+        $data['vatExclude'] = $request['vatExclude'];
         $data['status'] = "New";
         $data['quotation_id'] = $request['quotation_id'];
         $data['po_number'] = $request['po_number'];
@@ -172,6 +173,7 @@ class InvoiceController extends Controller
         $data['vat_in_value'] = $request['vat_in_value'];
         $data['grand_total'] = $request['grand_total'];
         $invoice = Invoice::create([
+            'exclude_from_vat' => $data['vatExclude'],
             'invoice_no' => $data['invoice_no'],
             'po_number' => isset($request->po_number)?$data['po_number']:null,
             'issue_date' => $data['issue_date'],
@@ -361,6 +363,7 @@ class InvoiceController extends Controller
             // 'status' => $request->status,
             // 'quotation_id' => $request->quotation_id,
             'total_value' => $request->total_value,
+            'exclude_from_vat' => $request->vatExclude,
             'discount_in_percentage' => $request->discount_in_p,
             'vat_in_value' => $request->vat_in_value,
             'grand_total' => $request->grand_total,
