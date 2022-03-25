@@ -36,7 +36,7 @@ class PartyController extends Controller
         if(!auth()->check())
         return ["You are not authorized to access this API."];
         
-        $parties = Party::get();
+        $parties = Party::where('delete',0)->get();
         return response()->json($parties, 200);
     }
 
@@ -48,6 +48,7 @@ class PartyController extends Controller
         $vendors = Party::join('party_divisions','party_divisions.party_id','parties.id')
         ->join('payment_accounts','payment_accounts.id','party_divisions.div_id')
         ->where('payment_accounts.div_id',$id)
+        ->where('parties.delete',0)
         ->orderBy('parties.firm_name','ASC')
         ->select('parties.id', 'parties.firm_name','parties.party_type','parties.contact','parties.vat_no','parties.opening_balance','parties.credit_days','payment_accounts.div_id')
         ->get();
@@ -180,7 +181,7 @@ class PartyController extends Controller
 
         // $json = json_decode(file_get_contents($path), true);
         $json =  \Config::get('example.key');
-        $contacts = Contact::orderBy('fname','ASC')->where('party_id', '=', $party->id)->get();
+        $contacts = Contact::orderBy('fname','ASC')->where('party_id', '=', $party->id)->where('delete', '=', 0)->get();
         $divisions=party_division::where('party_id',$party->id)->join('payment_accounts','payment_accounts.id','party_divisions.div_id')->get();
         $data =
             [
@@ -206,7 +207,7 @@ class PartyController extends Controller
                 'payment_term' => $party->payment_term,
                 'party_code' => $party->party_code,
                 'vendor_id' => $party->vendor_id,
-                "bank" => $party->bank->map(function ($bankDetail) {
+                "bank" => $party->bank->where('delete',0)->map(function ($bankDetail) {
                     return $bankDetail;
                 }),
                 'contacts' => $contacts->map(function ($contact) {
@@ -375,7 +376,8 @@ class PartyController extends Controller
         if(!auth()->check())
         return ["You are not authorized to access this API."];
         
-        $res = $party->delete();
+        $res = $party->update(['delete'=>1]);
+        // $res = $party->delete();
         if ($res) {
             return (['msg' => 'party' . ' ' . $party->id . ' is successfully deleted']);
         }
@@ -390,6 +392,7 @@ class PartyController extends Controller
         $vendors = Party::join('party_divisions','party_divisions.party_id','parties.id')
         ->join('payment_accounts','payment_accounts.id','party_divisions.div_id')
         ->where('payment_accounts.div_id',$id)
+        ->where('parties.delete',0)
         ->where('parties.party_type','!=','Customer')
         ->select('parties.id', 'parties.firm_name','parties.party_type','parties.contact','parties.opening_balance','parties.credit_days','payment_accounts.div_id')
         ->orderBy('parties.firm_name', 'ASC')
@@ -410,6 +413,7 @@ class PartyController extends Controller
         $vendors = Party::join('party_divisions','party_divisions.party_id','parties.id')
         ->join('payment_accounts','payment_accounts.id','party_divisions.div_id')
         ->where('payment_accounts.div_id',$id)
+        ->where('parties.delete',0)
         ->where('parties.party_type','!=','Vendor')
         ->select('parties.id', 'parties.firm_name','parties.party_type','parties.contact','parties.opening_balance','parties.credit_days','payment_accounts.div_id')->orderBy('parties.firm_name', 'ASC')
         ->get();

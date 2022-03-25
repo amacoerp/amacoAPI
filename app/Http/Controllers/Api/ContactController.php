@@ -69,7 +69,8 @@ class ContactController extends Controller
      */
     public function destroy(Contact $contact)
     {
-        $deleted = $contact->delete();
+        $deleted = $contact->update(['delete'=>1]);
+        // $deleted = $contact->delete();
         return ($deleted.' '.'has been successfully deleted.');
     }
 }

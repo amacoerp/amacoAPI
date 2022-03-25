@@ -72,7 +72,7 @@ class CategoryController extends Controller
 
     public function index()
     {
-        $categories = Category::where('parent_id', '=', null)->get();
+        $categories = Category::where('parent_id', '=', null)->where('delete', 0)->get();
         $categories -> map(function ($item){
             $item['totalProducts']  = $this -> getSubCat($item -> id);
             return $item;
@@ -186,7 +186,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        $res = $category->delete();
+        $res = $category->update(['delete'=>1]);
+        // $res = $category->delete();
         if ($res) {
             return (['msg' => 'category' . ' ' . $category->id . ' is successfully deleted']);
         }
@@ -249,6 +250,7 @@ class CategoryController extends Controller
                 ->leftJoin('divisions', 'divisions.id', '=', 'products.division_id')
                 ->select('products.*', 'categories.name as category_name', 'divisions.name as division_name')
                 ->where('products.id', '=', $product->id)
+                ->where('products.delete', 0)
                 ->first();
             return ($product_data);
         });
@@ -261,7 +263,7 @@ class CategoryController extends Controller
         if(!auth()->check())
         return ["You are not authorized to access this API."];
         
-        $sub_categories = Category::where('parent_id', '=', $id)->get();
+        $sub_categories = Category::where('parent_id', '=', $id)->where('delete', '=', 0)->get();
         $sub_categories->map(function($item){
             $item['product'] = $this -> getProductQty($item -> id);
         });

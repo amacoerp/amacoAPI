@@ -72,7 +72,8 @@ class PartyBankController extends Controller
      */
     public function destroy(PartyBank $partyBank)
     {
-        $partyBank->delete();
+        $partyBank->update(['delete'=>1]);
+        // $partyBank->delete();
 
         return response()->json(['msg'=>"Successfully Deleted"]);
     }
