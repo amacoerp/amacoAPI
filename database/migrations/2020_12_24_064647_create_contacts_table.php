@@ -21,6 +21,10 @@ class CreateContactsTable extends Migration
             $table->string('lname')->nullable();
             $table->string('designation')->nullable();
             $table->string('mobno')->nullable();
+            $table->string('lcode')->nullable();
+            $table->string('mcode')->nullable();
+            $table->string('lext')->nullable();
+            $table->string('mext')->nullable();
             $table->string('landline')->nullable();
             $table->string('email')->nullable();
             $table->string('address')->nullable();
