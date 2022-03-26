@@ -660,6 +660,7 @@ class QuotationController extends Controller
             "sales_order_number" => $quotation->sales_order_number,
             "contact" => $quotation->contact,
             "party" => $quotation->party,
+            "pBank" => $quotation->party->bank,
             "partyDivision" => $quotation->party && ($quotation->party->partyDivision->map(function($payment){
                 return $payment->partyDivision;
             })),

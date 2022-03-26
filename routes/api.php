@@ -59,7 +59,7 @@ use App\Http\Controllers\Api\PermissionDeniedController;
 use App\Http\Controllers\Api\StockController;
 use App\Http\Controllers\Api\LoginLogController;
 use App\Http\Controllers\Api\DesignationController;
-
+use App\Http\Controllers\API\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -320,6 +320,7 @@ Route::get('mjrPurchaseReturnEdit/{did}/{id}', [PurchaseReturnController::class,
 Route::get('mjrCategory', [CategoryController::class, 'mjrCategory']);
 Route::get('stateCard', [StackController::class, 'stateCard']);
 Route::get('dashboard', [StackController::class, 'dashboard']);
+Route::get('getNotifications', [StackController::class, 'getNotifications']);
 Route::get('vendorStatementNew/{id}', [AccountStatementController::class, 'vendorStatementNew']);
 
 Route::delete('rfqdelete/{id}', [RFQController::class, 'rfqdelete']);
@@ -334,6 +335,7 @@ Route::put('restoreSInv/{id}', [InvoiceController::class, 'restoreSInv']);
 
 
 Route::get('getPONo/{date}', [PurchaseReturnController::class, 'getPurchaseReturnEditData']);
+Route::post('resetNotification', [NotificationController::class, 'resetNotification']);
 
 
 
