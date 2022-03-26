@@ -36,13 +36,18 @@ class UserController extends Controller
         $users = User::all();
         // $div=$users->UserDivision;
         $user['division']=8;
+        $users->map(function ($item){
+            $d = Designation::where('user_id',$item['id'])->get();
+            $des = [];
+            foreach ($d as $key => $value) {
+                $des[] = $value['designation'];
+            }
+            
+            $item['designationsN'] = implode(',',$des); 
+        });
         $users->map(function($user){
             if ($user->role){
                 $user['role_name'] = $user->role->name;
-                
-               
-                
-                
             }else{
                 $user['role_name'] = null;
             }
@@ -52,6 +57,11 @@ class UserController extends Controller
            
             // $users->division
         );
+    }
+
+    public function des($id){
+        $des = Designation::where('user_id',$id)->get();
+        return $des;
     }
 
     /**

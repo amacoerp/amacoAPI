@@ -83,6 +83,7 @@ class PartyController extends Controller
         $countryar = json_decode(file_get_contents('https://translation.googleapis.com/language/translate/v2?key='.$apikey.'&q='.urlencode($request->country).'&target=ar'));
         $proviancear = json_decode(file_get_contents('https://translation.googleapis.com/language/translate/v2?key='.$apikey.'&q='.urlencode($request->proviance).'&target=ar'));
         $firm_name_in_ar = json_decode(file_get_contents('https://translation.googleapis.com/language/translate/v2?key='.$apikey.'&q='.urlencode($request->firm_name).'&target=ar'));
+        $building_no_arr = json_decode(file_get_contents('https://translation.googleapis.com/language/translate/v2?key='.$apikey.'&q='.urlencode($request->buildNumber).'&target=ar'));
         
         
        
@@ -96,6 +97,8 @@ class PartyController extends Controller
             'payment_term' => isset($request->payment_term) ? $request->payment_term : null ,
            
             'post_box_no' => $request->post_box_no,
+            'building_no' => $request->buildNumber,
+            'building_no_arr' =>  $request->buildNumber?ucwords(trans($request->buildNumber)):null,
             'street' => $request->street?ucwords(trans($request->street)):null,
             'street_ar' =>isset($request->street)? $streetar->data->translations[0]->translatedText:null,
             'city' => $request->city?ucwords(trans($request->city)):null,
@@ -221,6 +224,8 @@ class PartyController extends Controller
                 'party_type' => $party->party_type,
                 'contact' => $party->contact,
                 'website' => $party->website,
+                'building_no_arr' => $party->building_no_arr,
+                'building_no' => $party->building_no,
                 'fax' => $party->fax,
                 'opening_balance' => $party->opening_balance,
                 'credit_days' => $party->credit_days,
@@ -343,7 +348,9 @@ class PartyController extends Controller
             'city' => $request->city == null ? null : ucwords(trans($request->city)),
             'proviance' => $request->proviance == null ? null : ucwords(trans($request->proviance)),
             'country' => $request->country == null ? null : ucwords(trans($request->country)),
+            'building_no_arr' => $request->buildNumber == null ? null : ucwords(trans($request->buildNumber)),
             'zip_code' => $request->zip_code == null ? null : $request->zip_code,
+            'building_no' => $request->buildNumber == null ? null : $request->buildNumber,
             'party_type' => $request->party_type == null ? null : $request->party_type,
             'payment_term' => $request->payment_term == null ? null : $request->payment_term,
             'contact' => $request->contact == null ? null : $request->contact,
