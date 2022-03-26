@@ -118,6 +118,10 @@ class PartyController extends Controller
             'vat_no_in_ar' => $request->vat_no_in_ar,
             'div_id' => $request->div_id?$request->div_id:1,
             'user_id' => $request->user_id?$request->user_id:0,
+            'lext' => $request->lext?$request->lext:0,
+            'mext' => $request->mext?$request->mext:0,
+            'ext' => $request->ext?$request->ext:0,
+            'code' => $request->code?$request->code:0,
             
         ]);
         $request->account_no &&
@@ -143,7 +147,24 @@ class PartyController extends Controller
             'address'=>$request->address?ucwords(trans($request->address)):"",
             'div_id' => $request->div_id?$request->div_id:1,
             'user_id' => $request->user_id?$request->user_id:0,
+            'lext' => $request->lext?$request->lext:0,
+            'mext' => $request->mext?$request->mext:0,
+            'mcode' => $request->mcode?$request->mcode:0,
+            'lcode' => $request->lcode?$request->lcode:0,
         ]);
+     
+        if($request->party_type=="Both")
+        {
+            $type="CV";
+        }
+        else if($request->party_type=="Vendor")
+        {
+            $type="V";
+        }
+        else{
+            $type="C";
+        }
+
 
         if ($party->party_code == null) {
             $party->update(['party_code' => 'AMCT-PC-' . sprintf('%05d', $party->id)]);
@@ -156,7 +177,7 @@ class PartyController extends Controller
                 'party_id' => $party->id,
                 'div_id' => $div['id'],
                
-                'vendor_code' => $div['vendor_code'].'-'.sprintf('%05d', $party->id)
+                'vendor_code' => $div['vendor_code'].'-'.$type.sprintf('%05d', $party->id)
                 
     
             ]); 
@@ -206,6 +227,8 @@ class PartyController extends Controller
                 'credit_limit' => $party->credit_limit,
                 'payment_term' => $party->payment_term,
                 'party_code' => $party->party_code,
+                'code' => $party->code,
+                'ext' => $party->ext,
                 'vendor_id' => $party->vendor_id,
                 "bank" => $party->bank->where('delete',0)->map(function ($bankDetail) {
                     return $bankDetail;
@@ -324,6 +347,10 @@ class PartyController extends Controller
             'party_type' => $request->party_type == null ? null : $request->party_type,
             'payment_term' => $request->payment_term == null ? null : $request->payment_term,
             'contact' => $request->contact == null ? null : $request->contact,
+            // 'lext' => $request->lext == null ? null : $request->lext,
+            // 'mext' => $request->mext == null ? null : $request->mext,
+            'ext' => $request->ext == null ? null : $request->ext,
+            'code' => $request->code == null ? null : $request->code,
             'website' => $request->website == null ? null : $request->website,
             'fax' => $request->fax == null ?null : $request->fax,
             'credit_days' => $request->credit_days == null ? null : $request->credit_days,
@@ -345,21 +372,48 @@ class PartyController extends Controller
             'div_id' => $request->div_id?$request->div_id:1,
             'user_id' => $request->user_id?$request->user_id:0,
         ]);
-       
+        if($request->party_type=="Both")
+        {
+            $type="CV";
+        }
+        else if($request->party_type=="Vendor")
+        {
+            $type="V";
+        }
+        else{
+            $type="C";
+        }
         if($request->division)
         {
         $res=party_division::where('party_id',$party->id)->delete();
+       
+
         foreach ($request->division as $div) {
            
             $contact = party_division::create([
                 'party_id' => $party->id,
                 'div_id' => $div['id'],
                
-                'vendor_code' => $div['vendor_code'].'-'.sprintf('%05d', $party->id)
+                'vendor_code' => $div['vendor_code'].'-'.$type.sprintf('%05d', $party->id)
                 
     
             ]); 
             }
+        }
+        else
+        {
+            $party_Div=party_division::where('party_id',$party->id)->get();
+            foreach ($party_Div as $div) {
+                $code=explode("-",$div->vendor_code);
+                $div->update([
+                        'vendor_code' => $code[0].'-'.$code[1].'-'.$type.sprintf('%05d', $party->id)
+                    ]);
+                
+
+            }
+
+
+            
         }
 
         return response()->json($party, 200);
