@@ -11,10 +11,23 @@ use App\Http\Controllers\Api\ReceiptController;
 use App\Models\Receipt;
 
 use App\Http\Controllers\Api\RestrictAPIController;
+use App\Models\Notification;
 use App\Models\Quotation;
+use Illuminate\Support\Facades\Auth;
 
 class StackController extends Controller
 {
+
+
+    public function getNotifications(){
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
+        return response()->json([
+            'noti' =>  Notification::where('n_for',Auth::user()->role->name)->get(),
+            'count' => Auth::user()->n_count,
+        ]);
+    }
 
     public function dashboard(){
         // if(RestrictAPIController::checkAuth()){
