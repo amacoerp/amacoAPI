@@ -239,11 +239,11 @@ class QuotationController extends Controller
         }
     }
 
-    public function getSalesOrderNumber()
+    public function getSalesOrderNumber($date)
     {
         $latest_sales_order_number = $this->getLastSONo();
         $last_year = substr($latest_sales_order_number, 5, 2);
-        $current_year = $this->getCurrentYear();
+        $current_year = $this->getCurrentYear($date);
         // dd([$last_year, $current_year]);
         if ($current_year != $last_year) {
             return ('ASON-' . $current_year . '-' . sprintf("%04d", 1));
@@ -1475,7 +1475,7 @@ class QuotationController extends Controller
                 return response()->json(['msg' => 'P.O.Number is exsits']);
             }
 
-            $sales_order_number = $this->getSalesOrderNumber();
+            $sales_order_number = $this->getSalesOrderNumber($quotation->issue_date);
             $quotation->update([
                 'status' => $request->status,
                 'sales_order_number' => $sales_order_number,

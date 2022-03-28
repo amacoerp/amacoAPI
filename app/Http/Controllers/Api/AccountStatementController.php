@@ -444,7 +444,7 @@ class AccountStatementController extends Controller
                 $item['date'] = $item->created_at;
                 $item['code_no'] = $item->invoice_no;
                 $item['description'] = "Sale"."/".(isset($item->party)?$item->party->firm_name:" ");
-                $item['debit'] = floatval(str_replace(",","",$item->total_value));
+                $item['debit'] = floatval(str_replace(",","",$item->grand_total));
                 $item['po_number'] = $item->po_number;
                 $item['credit'] = 0;
                 $item['credit_days'] = floatval(isset($item->party)?($item->party->credit_days):0);
