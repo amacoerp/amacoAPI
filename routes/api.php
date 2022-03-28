@@ -69,7 +69,7 @@ use App\Http\Controllers\API\NotificationController;
 | Here is where you can register API routes for your application. These
 | routes are loaded by the RouteServiceProvider within a group which
 | is assigned the "api" middleware group. Enjoy building your API!
-    nnnnnn
+    nnnnnnnnnnnnnnnn
 |
 */
 
@@ -337,6 +337,7 @@ Route::put('restoreSInv/{id}', [InvoiceController::class, 'restoreSInv']);
 
 Route::get('getPONo/{date}', [PurchaseReturnController::class, 'getPurchaseReturnEditData']);
 Route::post('resetNotification', [NotificationController::class, 'resetNotification']);
+Route::post('noti', [NotificationController::class, 'noti']);
 
 
 
