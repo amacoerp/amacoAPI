@@ -31,6 +31,30 @@ class PartyController extends Controller
      * @return \Illuminate\Http\Response
      */
     
+
+     public function checkVerifyParty($id){
+
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
+        $parties = Party::where('id',$id)->get();
+        return response()->json($parties[0]->status, 200);
+
+     }
+
+     public function verifyParty($id){
+
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
+        $parties = Party::where('id',$id)->update([
+            'status' => 1
+        ]);
+        return response()->json('1', 200);
+
+     }
+
+
     public function index()
     {
         if(!auth()->check())
@@ -454,6 +478,7 @@ class PartyController extends Controller
         ->join('payment_accounts','payment_accounts.id','party_divisions.div_id')
         ->where('payment_accounts.div_id',$id)
         ->where('parties.delete',0)
+        ->where('parties.status',1)
         ->where('parties.party_type','!=','Customer')
         ->select('parties.id', 'parties.firm_name','parties.party_type','parties.contact','parties.opening_balance','parties.credit_days','payment_accounts.div_id')
         ->orderBy('parties.firm_name', 'ASC')
@@ -475,6 +500,7 @@ class PartyController extends Controller
         ->join('payment_accounts','payment_accounts.id','party_divisions.div_id')
         ->where('payment_accounts.div_id',$id)
         ->where('parties.delete',0)
+        ->where('parties.status',1)
         ->where('parties.party_type','!=','Vendor')
         ->select('parties.id', 'parties.firm_name','parties.party_type','parties.contact','parties.opening_balance','parties.credit_days','payment_accounts.div_id')->orderBy('parties.firm_name', 'ASC')
         ->get();

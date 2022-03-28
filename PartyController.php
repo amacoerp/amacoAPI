@@ -231,6 +231,7 @@ class PartyController extends Controller
     public function customer()
     {
         $vendors = Party::Where('party_type', '=', 'both')
+        ->where('status',1)
             ->select('id', 'firm_name', 'contact')
             ->get()
             ->toArray();
