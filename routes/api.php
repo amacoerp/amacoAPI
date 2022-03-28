@@ -336,6 +336,10 @@ Route::put('restoreSInv/{id}', [InvoiceController::class, 'restoreSInv']);
 
 
 Route::get('getPONo/{date}', [PurchaseReturnController::class, 'getPurchaseReturnEditData']);
+Route::get('checkVerifyParty/{id}', [PartyController::class, 'checkVerifyParty']);
+Route::put('verifyParty/{id}', [PartyController::class, 'verifyParty']);
+
+
 Route::post('resetNotification', [NotificationController::class, 'resetNotification']);
 Route::post('noti', [NotificationController::class, 'noti']);
 
