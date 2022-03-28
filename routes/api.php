@@ -337,6 +337,7 @@ Route::put('restoreSInv/{id}', [InvoiceController::class, 'restoreSInv']);
 
 Route::get('getPONo/{date}', [PurchaseReturnController::class, 'getPurchaseReturnEditData']);
 Route::post('resetNotification', [NotificationController::class, 'resetNotification']);
+Route::post('noti', [NotificationController::class, 'noti']);
 
 
 

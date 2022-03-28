@@ -1288,6 +1288,7 @@ class QuotationController extends Controller
                         'updated_at' => $quotation->updated_at,
                         'status' => $quotation->status,
                         'total_value' => $quotation->total_value,
+                        'po_number' => $quotation->po_number,
                         'party_id' => $quotation->party_id,
                         "contact_id" => $quotation->contact_id,
                         "contact" => $quotation->contact,
