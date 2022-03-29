@@ -344,6 +344,7 @@ Route::post('resetNotification', [NotificationController::class, 'resetNotificat
 Route::get('notification', [NotificationController::class, 'sendNotification']);
 Route::delete('clearNotification/{d}', [NotificationController::class, 'clearNotification']);
 Route::get('dummy', [NotificationController::class, 'dummy']);
+Route::get('validationParty', [PartyController::class, 'validationParty']);
 
 
 // Route::get('/notification', 'PusherNotificationController@sendNotification');

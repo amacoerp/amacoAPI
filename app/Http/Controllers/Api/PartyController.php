@@ -29,6 +29,14 @@ use Illuminate\Validation\Rules\Exists;
 class PartyController extends Controller
 {
     
+
+    public function validationParty(){
+
+        $party = Party::get();
+
+        return response()->json($party);
+
+    }
     /**
      * Display a listing of the resource.
      *
