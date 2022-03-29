@@ -11,7 +11,7 @@ use App\Http\Controllers\Api\ReceiptController;
 use App\Models\Receipt;
 
 use App\Http\Controllers\Api\RestrictAPIController;
-use App\Models\Notification;
+use App\Models\Notifications;
 use App\Models\Quotation;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,7 +24,7 @@ class StackController extends Controller
         return ["You are not authorized to access this API."];
         
         return response()->json([
-            'noti' =>  Notification::where('n_for',Auth::user()->role->name)->get(),
+            'noti' =>  Notifications::where('n_for',Auth::user()->role->name)->orderBy('id','DESC')->get(),
             'count' => Auth::user()->n_count,
         ]);
     }

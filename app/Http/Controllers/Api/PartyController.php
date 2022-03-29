@@ -229,8 +229,19 @@ class PartyController extends Controller
             ]); 
             }
         }
+
+        if(Auth::user()->role->name == 'SA'){
+
+        }else{
+            $path = '/pages/view-customer/'.$party->id;
+            $noti = 'Please Verify Party that created by '.Auth::user()->name;
+            NotificationController::sendNotification('Party','alert','Party Has Been Added',$noti,'SA',$path);    
+        }
+
+
+
         // $res=json_decode($cityar->data->translations);
-        return response()->json([$cityar->data->translations[0]->translatedText], 200);
+        return response()->json([$party->id], 200);
     }
 
     /**
@@ -265,6 +276,7 @@ class PartyController extends Controller
                 'street' => $party->street,
                 'city' => $party->city,
                 'proviance' => $party->proviance,
+                'status' => $party->status,
                 'country' => $party->country,
                 'zip_code' => $party->zip_code,
                 'party_type' => $party->party_type,
@@ -295,7 +307,7 @@ class PartyController extends Controller
                 $json,
             ];
 
-                return response()->json(array($data));
+        return response()->json(array($data));
            
         
     }  

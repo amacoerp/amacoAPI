@@ -59,7 +59,7 @@ use App\Http\Controllers\Api\PermissionDeniedController;
 use App\Http\Controllers\Api\StockController;
 use App\Http\Controllers\Api\LoginLogController;
 use App\Http\Controllers\Api\DesignationController;
-use App\Http\Controllers\API\NotificationController;
+use App\Http\Controllers\Api\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -341,9 +341,12 @@ Route::put('verifyParty/{id}', [PartyController::class, 'verifyParty']);
 
 
 Route::post('resetNotification', [NotificationController::class, 'resetNotification']);
-Route::post('noti', [NotificationController::class, 'noti']);
+Route::get('notification', [NotificationController::class, 'sendNotification']);
+Route::delete('clearNotification/{d}', [NotificationController::class, 'clearNotification']);
+Route::get('dummy', [NotificationController::class, 'dummy']);
 
 
+// Route::get('/notification', 'PusherNotificationController@sendNotification');
 
 
 
