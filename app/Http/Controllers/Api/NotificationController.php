@@ -32,7 +32,7 @@ class NotificationController extends Controller
     }
 
 
-    public function sendNotification($heading,$type,$title,$notification,$nfor,$path){
+    public static function sendNotification($heading,$type,$title,$notification,$nfor,$path){
         $options = array(
             'cluster' => 'ap2',
             'encrypted' => true
