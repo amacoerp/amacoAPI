@@ -19,6 +19,21 @@ class DeliveryNoteController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+     public function deleveryPrep($uid,$t,$id){
+      if($t == 'p'){
+        DeliveryNote::where('id',$id)->update([
+            'prepared_by' => $uid
+        ]);
+      }else{
+        DeliveryNote::where('id',$id)->update([
+            'delevered_by' => $uid
+        ]);
+      }
+
+     }
+
+
+
     public function getCurrentDeliveryYear()
     {
         return substr(date('Y'), 2);
