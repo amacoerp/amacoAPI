@@ -8,6 +8,8 @@ use App\Models\Product;
 use App\Models\party_division;
 use App\Models\Contact;
 use App\Models\PartyBank;
+use Illuminate\Support\Facades\Auth;
+
 use App\Models\Division;
 use App\Models\ProductPrice;
 use App\Models\PaymentAccount;
@@ -20,11 +22,21 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use DB;
 use Config;
+use Illuminate\Validation\Rules\Exists;
+
 // use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class PartyController extends Controller
 {
     
+
+    public function validationParty(){
+
+        $party = Party::get();
+
+        return response()->json($party);
+
+    }
     /**
      * Display a listing of the resource.
      *
@@ -97,6 +109,20 @@ class PartyController extends Controller
     {
         if(!auth()->check())
         return ["You are not authorized to access this API."];
+
+
+        // if(isset($request->vat_no) || isset($request->registration_no)){
+        //     $data = Party::where('vat_no', $request->vat_no)->where('registration_no',$request->registration_no)->exists();
+        //     if($data){
+        //         return response()->json([$data, 200]);
+        //     }
+            
+        // }
+
+      
+       
+
+
         
         // return $request;
         // $path = storage_path() . "/json/jsondata.json";
@@ -116,7 +142,8 @@ class PartyController extends Controller
             'firm_name' => $request->firm_name?ucwords(trans($request->firm_name)):'',
             'firm_name_in_ar' => $firm_name_in_ar->data->translations[0]->translatedText,
             'registration_no' => $request->registration_no,
-         
+            'status' => Auth::user()->role->name == 'SA' ? 1 : 0,
+
             'vat_no' => $request->vat_no,
             'payment_term' => isset($request->payment_term) ? $request->payment_term : null ,
            
@@ -210,8 +237,19 @@ class PartyController extends Controller
             ]); 
             }
         }
+
+        if(Auth::user()->role->name == 'SA'){
+
+        }else{
+            $path = '/pages/view-customer/'.$party->id;
+            $noti = 'Please Verify Party that created by '.Auth::user()->name;
+            NotificationController::sendNotification('Party','alert','Party Has Been Added',$noti,'SA',$path);    
+        }
+
+
+
         // $res=json_decode($cityar->data->translations);
-        return response()->json([$cityar->data->translations[0]->translatedText], 200);
+        return response()->json([$party->id], 200);
     }
 
     /**
@@ -225,8 +263,11 @@ class PartyController extends Controller
         if(!auth()->check())
         return ["You are not authorized to access this API."];
         
-        // $path = storage_path() . "/json/jsondata.json"; // ie: /var/www/laravel/app/storage/json/filename.json
 
+
+
+        // $path = storage_path() . "/json/jsondata.json"; // ie: /var/www/laravel/app/storage/json/filename.json
+        
         // $json = json_decode(file_get_contents($path), true);
         $json =  \Config::get('example.key');
         $contacts = Contact::orderBy('fname','ASC')->where('party_id', '=', $party->id)->where('delete', '=', 0)->get();
@@ -243,6 +284,7 @@ class PartyController extends Controller
                 'street' => $party->street,
                 'city' => $party->city,
                 'proviance' => $party->proviance,
+                'status' => $party->status,
                 'country' => $party->country,
                 'zip_code' => $party->zip_code,
                 'party_type' => $party->party_type,
@@ -272,7 +314,10 @@ class PartyController extends Controller
                 }),
                 $json,
             ];
+
         return response()->json(array($data));
+           
+        
     }  
     
     public function getPartyDet($id)
