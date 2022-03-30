@@ -19,6 +19,13 @@ class DeliveryNoteController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+     public function dDetails(){
+        return response()->json([
+            'prepBy' => UserController::index(),
+            'delBy' => DeliveryNote::where('delevered_by','!=',null)->groupBy('delevered_by')->select('delevered_by')->get()
+        ]);
+     }
+
      public function deleveryPrep($uid,$t,$id){
       if($t == 'p'){
         DeliveryNote::where('id',$id)->update([

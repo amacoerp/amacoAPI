@@ -346,6 +346,7 @@ Route::delete('clearNotification/{d}', [NotificationController::class, 'clearNot
 Route::get('dummy', [NotificationController::class, 'dummy']);
 Route::get('validationParty', [PartyController::class, 'validationParty']);
 Route::post('deleveryPrep/{d}/{t}/{id}', [DeliveryNoteController::class, 'deleveryPrep']);
+Route::get('dDetails', [DeliveryNoteController::class, 'dDetails']);
 
 
 // Route::get('/notification', 'PusherNotificationController@sendNotification');
