@@ -741,7 +741,7 @@ class QuotationController extends Controller
      */
     public function update(Request $request)
     {
-        return $request['status'];
+      
         if(!auth()->check())
         return ["You are not authorized to access this API."];
         
