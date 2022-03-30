@@ -778,7 +778,7 @@ class QuotationController extends Controller
             'inco_terms' => $request['inco_terms'],
             'transport' => $request['transport'],
             'other' => $request['other'],
-            'status' => $request['status'],
+            'status' => $request['status']=="accept"?"accept":$request['status'],
             // 'sales_order_number' => $data['sales_order_number'],
         ]);
         $index = 0;
