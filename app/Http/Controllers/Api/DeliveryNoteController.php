@@ -359,7 +359,7 @@ class DeliveryNoteController extends Controller
     public function deleveryUpdate(Request $request)
     {
         $p=DeliveryNote::orderBy('id',$request->id)->first();
-        $res=DeliveryNoteDetails::where('delivery_note_id',$p->id)->update([
+        $res=DeliveryNoteDetail::where('delivery_note_id',$p->id)->update([
            'delivered_quantity'=>$request->delivered_quantity
         ]);
         $index=0;
@@ -377,7 +377,7 @@ class DeliveryNoteController extends Controller
             
                 $dNote['type']='quote';
             }else{
-                $dNote=DeliveryNote::join('invoices','invoices.id','delivery_notes.invoice_id')->join('parties','parties.id','invoices.party_id')->where('delivery_notes.id',$id)->select('invoices.invoice_no','delivery_notes.*')->get();
+                $dNote=DeliveryNote::join('invoices','invoices.id','delivery_notes.invoice_id')->join('parties','parties.id','invoices.party_id')->where('delivery_notes.id',$id)->select('invoices.invoice_no','delivery_notes.*','parties.firm_name')->get();
                 $dNote['type']='invoice';
             }
     
@@ -386,6 +386,7 @@ class DeliveryNoteController extends Controller
         $dnoteDetails -> map(function ($item){
             $item['quantity'] = $item['total_qty'];
             $item['delivering_quantity'] = $item['delivered_quantity'];
+            $item['balance'] = (int)$item['total_qty'] - (int)$item['delivered_quantity'];
         });
         return response()->json([
             'note'=>$dNote,
