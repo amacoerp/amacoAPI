@@ -377,7 +377,7 @@ class DeliveryNoteController extends Controller
             
                 $dNote['type']='quote';
             }else{
-                $dNote=DeliveryNote::join('invoices','invoices.id','delivery_notes.invoice_id')->join('parties','parties.id','quotations.party_id')->where('delivery_notes.id',$id)->select('invoices.invoice_no','delivery_notes.*')->get();
+                $dNote=DeliveryNote::join('invoices','invoices.id','delivery_notes.invoice_id')->join('parties','parties.id','invoices.party_id')->where('delivery_notes.id',$id)->select('invoices.invoice_no','delivery_notes.*')->get();
                 $dNote['type']='invoice';
             }
     
@@ -463,7 +463,7 @@ class DeliveryNoteController extends Controller
 
 else
 {
-    if($type=='q')
+    if($type=='i')
     {
     $p=DeliveryNote::orderBy('id','DESC')->first();
     $lastDPNum=DeliveryNote::where('quotation_id',$id)->orderBy('id','DESC')->first();
