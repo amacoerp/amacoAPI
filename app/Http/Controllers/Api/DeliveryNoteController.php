@@ -382,6 +382,9 @@ class DeliveryNoteController extends Controller
             }
     
         $dnoteDetails=DeliveryNoteDetail::where('delivery_note_id',$id)->get();
+        
+       
+        
         return response()->json([
             'note'=>$dNote,
             'noteDetails'=>$dnoteDetails
