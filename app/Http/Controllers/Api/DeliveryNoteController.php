@@ -383,7 +383,10 @@ class DeliveryNoteController extends Controller
     
         $dnoteDetails=DeliveryNoteDetail::where('delivery_note_id',$id)->get();
        
-        
+        $dnoteDetails -> map(function ($item){
+            $item['quantity'] = $item['total_qty'];
+            $item['delivering_quantity'] = $item['delivered_quantity'];
+        });
         return response()->json([
             'note'=>$dNote,
             'noteDetails'=>$dnoteDetails
