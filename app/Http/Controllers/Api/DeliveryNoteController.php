@@ -233,17 +233,19 @@ class DeliveryNoteController extends Controller
 
         $deliveryNo = null;
         if($request->is_partial){
-            if($lastDeliveryNote){
-                $deliveryNo = $this->getDeliveryNo($lastDeliveryNote->delivery_number);
-            }else{
-                $deliveryNo = $this->getDeliveryNo($this->getDeliveryNo());
-            }
+            // if($lastDeliveryNote){
+            //     $deliveryNo = $this->getDeliveryNo($lastDeliveryNote->delivery_number);
+            // }else{
+            //     $deliveryNo = $this->getDeliveryNo($this->getDeliveryNo());
+            // }
+            $deliveryNo=$this->getDeliveryNumber($request->quotation_id,$request->is_partial,'i');
         }else{
-            if (!$lastDeliveryNote) {
-                $deliveryNo = $this->getDeliveryNo();
-            }else{
-                $deliveryNo = $this->getDeliveryNo($lastDeliveryNote->delivery_number, !$request->is_partial);
-            }
+            // if (!$lastDeliveryNote) {
+            //     $deliveryNo = $this->getDeliveryNo();
+            // }else{
+            //     $deliveryNo = $this->getDeliveryNo($lastDeliveryNote->delivery_number, !$request->is_partial);
+            // }
+            $deliveryNo=$this->getDeliveryNumber($request->quotation_id,$request->is_partial,'i');
 
         }
 
@@ -371,11 +373,11 @@ class DeliveryNoteController extends Controller
       
             if(isset($Note->quotation_id)){
                 
-                $dNote=DeliveryNote::join('quotations','quotations.id','delivery_notes.quotation_id')->where('delivery_notes.id',$id)->get();
-
+                $dNote=DeliveryNote::join('quotations','quotations.id','delivery_notes.quotation_id')->join('parties','parties.id','quotations.party_id')->where('delivery_notes.id',$id)->get();
+            
                 $dNote['type']='quote';
             }else{
-                $dNote=DeliveryNote::join('invoices','invoices.id','delivery_notes.invoice_id')->where('delivery_notes.id',$id)->get();
+                $dNote=DeliveryNote::join('invoices','invoices.id','delivery_notes.invoice_id')->join('parties','parties.id','quotations.party_id')->where('delivery_notes.id',$id)->get();
                 $dNote['type']='invoice';
             }
     
@@ -386,7 +388,8 @@ class DeliveryNoteController extends Controller
         ]);
     }
     public function getDeliveryNumber($id,$partial,$type){
-        
+        if($type=='q')
+        {
         $p=DeliveryNote::orderBy('id','DESC')->first();
         $lastDPNum=DeliveryNote::where('quotation_id',$id)->orderBy('id','DESC')->first();
         if(isset($p->delivery_number))
@@ -455,5 +458,80 @@ class DeliveryNoteController extends Controller
         }
        
     }
+
+else
+{
+    if($type=='q')
+    {
+    $p=DeliveryNote::orderBy('id','DESC')->first();
+    $lastDPNum=DeliveryNote::where('quotation_id',$id)->orderBy('id','DESC')->first();
+    if(isset($p->delivery_number))
+    {
+      
+
+        $count=DeliveryNote::where('quotation_id',$id)->orderBy('id','DESC')->count();
+
+
+        if($partial){
+           
+            if(isset($lastDPNum->delivery_number)){
+               
+                if($count >= 1){
+                   
+                    return 'AMC-DN-'.date('y').'-'.date('m').sprintf("%02d",substr(explode('-',$lastDPNum->delivery_number)[3],2)).'-PD-'.sprintf("%02d",explode('-',$lastDPNum->delivery_number)[5]+1 ) ;
+                }else{
+                   
+                    return 'AMC-DN-'.date('y').'-'.date('m').sprintf("%02d",substr(explode('-',$lastDPNum->delivery_number)[3],2) + 1 ).'-PD-'.sprintf("%02d",explode('-',$lastDPNum->delivery_number)[5]+1 ) ;
+                }
+            }
+            else{
+                if(strpos($p->delivery_number,'PD'))
+                {
+                    if($count >= 1){
+                   
+                        return 'AMC-DN-'.date('y').'-'.date('m').sprintf("%02d",substr(explode('-',$p->delivery_number)[3],2)).'-PD-'.sprintf("%02d",explode('-',$p->delivery_number)[5]+1 ) ;
+                    }else{
+                       
+                        return 'AMC-DN-'.date('y').'-'.date('m').sprintf("%02d",substr(explode('-',$p->delivery_number)[3],2)+1).'-PD-01';
+                    }
+
+                 
+                }
+                else{
+
+                    return 'AMC-DN-'.date('y').'-'.date('m').sprintf("%02d",substr(explode('-',$p->delivery_number)[3],2)+1).'-PD-01';
+                }
+                
+            }
+
+        }else{
+           if(isset($lastDPNum->delivery_number))
+           {
+            if(strpos($lastDPNum->delivery_number,'PD'))
+            {
+                return 'AMC-DN-'.date('y').'-'.date('m').sprintf("%02d",substr(explode('-',$lastDPNum->delivery_number)[3],2));
+            }
+            else
+            {
+            return 'AMC-DN-'.date('y').'-'.date('m').sprintf("%02d",substr(explode('-',$lastDPNum->delivery_number)[3],2)+1);
+            }
+        }
+        else{
+            $latestMaxDnum=DeliveryNote::orderBy('delivery_number','DESC')->first();
+            return 'AMC-DN-'.date('y').'-'.date('m').sprintf("%02d",substr(explode('-',$latestMaxDnum->delivery_number)[3],2)+1); 
+        }
+    }
+    //    return  $p->delivery_number;
+    }
+    else{
+        if(!$partial)
+        return 'AMC-DN-'.date('y').'-'.date('m').'01';
+        else
+        return 'AMC-DN-'.date('y').'-'.date('m').'01'.'-PD-01';
+    }
+   
+}
+}
+}
 }
 
