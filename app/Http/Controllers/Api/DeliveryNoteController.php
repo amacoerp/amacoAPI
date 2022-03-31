@@ -353,6 +353,38 @@ class DeliveryNoteController extends Controller
 
         return response()->json(['msg' => "Delivery Note with id: " . $deliveryNote->id . " has successfully Deleted"]);
     }
+
+    public function deleveryUpdate(Request $request)
+    {
+        $p=DeliveryNote::orderBy('id',$request->id)->first();
+        $res=DeliveryNoteDetails::where('delivery_note_id',$p->id)->update([
+           'delivered_quantity'=>$request->delivered_quantity
+        ]);
+        $index=0;
+        while ($request['quotation_detail' . $index] != null) {
+
+        }
+
+    }
+    public function getDeliveryNoteEdit($id){
+        $Note=DeliveryNote::where('id',$id)->first();
+      
+            if(isset($Note->quotation_id)){
+                
+                $dNote=DeliveryNote::join('quotations','quotations.id','delivery_notes.quotation_id')->where('delivery_notes.id',$id)->get();
+
+                $dNote['type']='quote';
+            }else{
+                $dNote=DeliveryNote::join('invoices','invoices.id','delivery_notes.invoice_id')->where('delivery_notes.id',$id)->get();
+                $dNote['type']='invoice';
+            }
+    
+        $dnoteDetails=DeliveryNoteDetail::where('delivery_note_id',$id)->get();
+        return response()->json([
+            'note'=>$dNote,
+            'noteDetails'=>$dnoteDetails
+        ]);
+    }
     public function getDeliveryNumber($id,$partial,$type){
         
         $p=DeliveryNote::orderBy('id','DESC')->first();
@@ -424,3 +456,4 @@ class DeliveryNoteController extends Controller
        
     }
 }
+

@@ -346,6 +346,8 @@ Route::delete('clearNotification/{d}', [NotificationController::class, 'clearNot
 Route::get('dummy/{a}/{b}/{c}', [DeliveryNoteController::class, 'getDeliveryNumber']);
 Route::get('validationParty', [PartyController::class, 'validationParty']);
 Route::post('deleveryPrep/{d}/{t}/{id}', [DeliveryNoteController::class, 'deleveryPrep']);
+Route::post('deleveryUpdate', [DeliveryNoteController::class, 'deleveryUpdate']);
+Route::get('getDeliveryNoteEdit/{id}', [DeliveryNoteController::class, 'getDeliveryNoteEdit']);
 Route::get('dDetails', [DeliveryNoteController::class, 'dDetails']);
 
 
