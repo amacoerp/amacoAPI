@@ -373,16 +373,15 @@ class DeliveryNoteController extends Controller
       
             if(isset($Note->quotation_id)){
                 
-                $dNote=DeliveryNote::join('quotations','quotations.id','delivery_notes.quotation_id')->join('parties','parties.id','quotations.party_id')->where('delivery_notes.id',$id)->get();
+                $dNote=DeliveryNote::join('quotations','quotations.id','delivery_notes.quotation_id')->join('parties','parties.id','quotations.party_id')->where('delivery_notes.id',$id)->select('quotations.quotation_no','delivery_notes.*')->get();
             
                 $dNote['type']='quote';
             }else{
-                $dNote=DeliveryNote::join('invoices','invoices.id','delivery_notes.invoice_id')->join('parties','parties.id','quotations.party_id')->where('delivery_notes.id',$id)->get();
+                $dNote=DeliveryNote::join('invoices','invoices.id','delivery_notes.invoice_id')->join('parties','parties.id','quotations.party_id')->where('delivery_notes.id',$id)->select('invoices.invoice_no','delivery_notes.*')->get();
                 $dNote['type']='invoice';
             }
     
         $dnoteDetails=DeliveryNoteDetail::where('delivery_note_id',$id)->get();
-        
        
         
         return response()->json([
