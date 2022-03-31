@@ -343,12 +343,13 @@ Route::put('verifyParty/{id}', [PartyController::class, 'verifyParty']);
 Route::post('resetNotification', [NotificationController::class, 'resetNotification']);
 Route::get('notification', [NotificationController::class, 'sendNotification']);
 Route::delete('clearNotification/{d}', [NotificationController::class, 'clearNotification']);
-Route::get('dummy/{a}/{b}/{c}', [DeliveryNoteController::class, 'getDeliveryNumber']);
+Route::get('dummy', [DeliveryNoteController::class, 'updateDeliveryNo']);
 Route::get('validationParty', [PartyController::class, 'validationParty']);
 Route::post('deleveryPrep/{d}/{t}/{id}', [DeliveryNoteController::class, 'deleveryPrep']);
 Route::post('deleveryUpdate', [DeliveryNoteController::class, 'deleveryUpdate']);
 Route::get('getDeliveryNoteEdit/{id}', [DeliveryNoteController::class, 'getDeliveryNoteEdit']);
 Route::get('dDetails', [DeliveryNoteController::class, 'dDetails']);
+
 
 
 // Route::get('/notification', 'PusherNotificationController@sendNotification');

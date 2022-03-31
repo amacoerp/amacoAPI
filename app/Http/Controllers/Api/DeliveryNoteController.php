@@ -538,5 +538,26 @@ else
 }
 }
 }
+
+public function updateDeliveryNo()
+{
+    $dno='AMC-DN-22-0306-PD-03';
+    $type=true;
+    if($type)
+    {
+        if(strpos($dno,'PD'))
+        {
+            return sprintf("%02d",substr(explode('-',$dno)[5],2));
+            return 'AMC-DN-'.date('y').'-'.date('m').sprintf("%02d",substr(explode('-',$dno)[5],2)+1);
+        }
+        else
+        {
+            return $dno;
+        }
+    }
+    else{
+        return $dno;
+    }
+}
 }
 
