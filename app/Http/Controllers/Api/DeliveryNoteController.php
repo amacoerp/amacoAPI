@@ -358,12 +358,20 @@ class DeliveryNoteController extends Controller
 
     public function deleveryUpdate(Request $request)
     {
-        $p=DeliveryNote::orderBy('id',$request->id)->first();
-        $res=DeliveryNoteDetail::where('delivery_note_id',$p->id)->update([
-           'delivered_quantity'=>$request->delivered_quantity
-        ]);
-        $index=0;
-        while ($request['quotation_detail' . $index] != null) {
+        // return $request -> quotation_id;
+        // $p=DeliveryNote::orderBy('id',$request->id)->first();
+        // $res=DeliveryNoteDetail::where('delivery_note_id',$p->id)->update([
+        //    'delivered_quantity'=>$request->delivered_quantity
+        // ]);
+        // $index=0;
+        // while ($request['quotation_detail' . $index] != null) {
+            foreach ($request->quotation_detail as $deliveryNoteDetail) {
+                // return $deliveryNoteDetail['delivered_quantity'];
+                $res=DeliveryNoteDetail::where('delivery_note_id',$request -> quotation_id)->update([
+                    'delivered_quantity'=>$request['delivered_quantity'],
+                    'delivered_quantity' => $deliveryNoteDetail['delivering_quantity'],
+                    'total_qty' => $deliveryNoteDetail['quantity'],
+                ]);
 
         }
 
@@ -384,6 +392,13 @@ class DeliveryNoteController extends Controller
         $dnoteDetails=DeliveryNoteDetail::where('delivery_note_id',$id)->get();
        
         $dnoteDetails -> map(function ($item){
+            if(isset($item['invoice_detail_id'])){
+                $inv = InvoiceDetail::where('id',$item['invoice_detail_id'])->first();
+                $item['descriptionss'] = $inv -> description;
+            }else{
+                $inv = QuotationDetail::where('id',$item['quote_detail_id'])->first();
+                $item['descriptionss'] = $inv -> description;
+            }
             $item['quantity'] = $item['total_qty'];
             $item['delivering_quantity'] = $item['delivered_quantity'];
             $item['balance'] = (int)$item['total_qty'] - (int)$item['delivered_quantity'];
