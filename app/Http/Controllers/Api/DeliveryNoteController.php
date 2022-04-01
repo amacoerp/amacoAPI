@@ -358,31 +358,26 @@ class DeliveryNoteController extends Controller
 
     public function deleveryUpdate(Request $request)
     {
-        // return $request -> quotation_id;
-        // $p=DeliveryNote::orderBy('id',$request->id)->first();
-        // $res=DeliveryNoteDetail::where('delivery_note_id',$p->id)->update([
-        //    'delivered_quantity'=>$request->delivered_quantity
-        // ]);
-        // $index=0;
-        // while ($request['quotation_detail' . $index] != null) {
-            foreach ($request->quotation_detail as $deliveryNoteDetail) {
-                // return $deliveryNoteDetail['delivered_quantity'];
-                $res=DeliveryNoteDetail::where('delivery_note_id',$request -> quotation_id)->update([
-                    'delivered_quantity'=>$request['delivered_quantity'],
-                    'delivered_quantity' => $deliveryNoteDetail['delivering_quantity'],
-                    'total_qty' => $deliveryNoteDetail['quantity'],
-                ]);
-
+        if($request -> is_partial){
+            return $request -> is_partial;
         }
+        //     foreach ($request->quotation_detail as $deliveryNoteDetail) {
+
+        //         // return $deliveryNoteDetail['delivered_quantity'];
+        //         $res=DeliveryNoteDetail::where('id',$deliveryNoteDetail['id'])->update([
+        //             // 'delivered_quantity'=>$request['delivered_quantity'],
+        //             'delivered_quantity' => $deliveryNoteDetail['delivering_quantity'],
+        //             // 'total_qty' => $deliveryNoteDetail['quantity'],
+        //         ]);
+
+        // }
+        // return $request -> is_partial;
 
     }
     public function getDeliveryNoteEdit($id){
         $Note=DeliveryNote::where('id',$id)->first();
-      
             if(isset($Note->quotation_id)){
-                
                 $dNote=DeliveryNote::join('quotations','quotations.id','delivery_notes.quotation_id')->join('parties','parties.id','quotations.party_id')->where('delivery_notes.id',$id)->select('quotations.quotation_no','delivery_notes.*')->get();
-            
                 $dNote['type']='quote';
             }else{
                 $dNote=DeliveryNote::join('invoices','invoices.id','delivery_notes.invoice_id')->join('parties','parties.id','invoices.party_id')->where('delivery_notes.id',$id)->select('invoices.invoice_no','delivery_notes.*','parties.firm_name')->get();
