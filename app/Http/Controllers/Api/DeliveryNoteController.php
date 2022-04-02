@@ -235,14 +235,14 @@ class DeliveryNoteController extends Controller
             // }else{
             //     $deliveryNo = $this->getDeliveryNo($this->getDeliveryNo());
             // }
-            $deliveryNo = $this->getDeliveryNumber($request->quotation_id, $request->is_partial, 'i');
+            $deliveryNo = $this->getDeliveryNumber($request->invoice_id, $request->is_partial, 'i');
         } else {
             // if (!$lastDeliveryNote) {
             //     $deliveryNo = $this->getDeliveryNo();
             // }else{
             //     $deliveryNo = $this->getDeliveryNo($lastDeliveryNote->delivery_number, !$request->is_partial);
             // }
-            $deliveryNo = $this->getDeliveryNumber($request->quotation_id, $request->is_partial, 'i');
+            $deliveryNo = $this->getDeliveryNumber($request->invoice_id, $request->is_partial, 'i');
         }
 
         $data = [
@@ -354,29 +354,47 @@ class DeliveryNoteController extends Controller
 
     public function deleveryUpdate(Request $request)
     {
-        if ($request -> is_partial) {
-            $curDno =  DeliveryNote::where('id', $request->quotation_id)->first();
-            if (!strpos($curDno->delivery_number, 'PD')) {
-               $dno =  $curDno->delivery_number.'-PD-01';
-               DeliveryNote::where('id', $request->quotation_id)->update([
-                   'delivery_number' => $dno,
-               ]);
+
+
+        // $patern='AMC-QT-'.$current_year.'-'.$current_month;
+
+
+        if ($request->is_partial) {
+
+            $curDn =  DeliveryNote::where('id', $request->quotation_id)->first();
+            if (strpos($curDn->delivery_number, 'PD')) {
+            } else {
+                try {
+                    $curDn = explode('-', $curDn->delivery_number);
+                    $curDn =  $curDn[0] . '-' . $curDn[1] . '-' . $curDn[2] . '-' . $curDn[3];
+
+                    $aDno = DeliveryNote::where('delivery_number', 'like', $curDn . '%')->orderBy('delivery_number', 'desc')->first();
+                    $dno =  'AMC-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $aDno->delivery_number)[3], 2)) . '-PD-' . sprintf("%02d", explode('-', $aDno->delivery_number)[5] + 1);
+                    DeliveryNote::where('id', $request->quotation_id)->update([
+                        'delivery_number' => $dno,
+                    ]);
+                } catch (\Throwable $th) {
+                    $dno =  'AMC-DN-' . date('y') . '-' . date('m') . '01' . '-PD-01';
+                    DeliveryNote::where('id', $request->quotation_id)->update([
+                        'delivery_number' => $dno,
+                    ]);
+                }
             }
-        }else{
+        } else {
             $curDno =  DeliveryNote::where('id', $request->quotation_id)->first();
-            $curDno = explode('-',$curDno->delivery_number);
-             $dno = $curDno[0] .'-'. $curDno[1].'-' . $curDno[2].'-' . $curDno[3];
-               DeliveryNote::where('id', $request->quotation_id)->update([
-                   'delivery_number' => $dno,
-               ]);
+            $curDno = explode('-', $curDno->delivery_number);
+            $dno = $curDno[0] . '-' . $curDno[1] . '-' . $curDno[2] . '-' . $curDno[3];
+            DeliveryNote::where('id', $request->quotation_id)->update([
+                'delivery_number' => $dno,
+            ]);
         }
-            foreach ($request->quotation_detail as $deliveryNoteDetail) {
-                // return $deliveryNoteDetail['delivered_quantity'];
-                $res=DeliveryNoteDetail::where('id',$deliveryNoteDetail['id'])->update([
-                    // 'delivered_quantity'=>$request['delivered_quantity'],
-                    'delivered_quantity' => $deliveryNoteDetail['delivering_quantity'],
-                    // 'total_qty' => $deliveryNoteDetail['quantity'],
-                ]);
+        foreach ($request->quotation_detail as $deliveryNoteDetail) {
+            // return $deliveryNoteDetail['delivered_quantity'];
+            $res = DeliveryNoteDetail::where('id', $deliveryNoteDetail['id'])->update([
+                // 'delivered_quantity'=>$request['delivered_quantity'],
+                'delivered_quantity' => $deliveryNoteDetail['delivering_quantity'],
+                // 'total_qty' => $deliveryNoteDetail['quantity'],
+            ]);
         }
         return true;
     }
@@ -467,12 +485,12 @@ class DeliveryNoteController extends Controller
             }
         } else {
             if ($type == 'i') {
+
                 $p = DeliveryNote::orderBy('id', 'DESC')->first();
-                $lastDPNum = DeliveryNote::where('quotation_id', $id)->orderBy('id', 'DESC')->first();
+                $lastDPNum = DeliveryNote::where('invoice_id', $id)->orderBy('id', 'DESC')->first();
                 if (isset($p->delivery_number)) {
 
-
-                    $count = DeliveryNote::where('quotation_id', $id)->orderBy('id', 'DESC')->count();
+                    $count = DeliveryNote::where('invoice_id', $id)->orderBy('id', 'DESC')->count();
 
 
                     if ($partial) {

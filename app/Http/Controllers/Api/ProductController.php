@@ -21,11 +21,11 @@ class ProductController extends Controller
         if(!auth()->check())
         return ["You are not authorized to access this API."];
         
-        // $products = Product::all();
+    //    return $products = Product::get();
         // return ($products);
         $products = DB::table('products')
             ->leftJoin('categories','categories.id','=','products.category_id')
-            ->leftJoin('divisions','divisions.id','=','products.division_id')
+            ->leftJoin('divisions','divisions.id','=','products.div_id')
             ->select('products.*','categories.name as category_name', 'divisions.name as division_name')->where('products.delete',0)
             ->orderBy('products.name')
             ->get();

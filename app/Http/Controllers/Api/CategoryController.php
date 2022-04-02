@@ -247,7 +247,7 @@ class CategoryController extends Controller
 
             $product_data = DB::table('products')
                 ->leftJoin('categories', 'categories.id', '=', 'products.category_id')
-                ->leftJoin('divisions', 'divisions.id', '=', 'products.division_id')
+                ->leftJoin('divisions', 'divisions.id', '=', 'products.div_id')
                 ->select('products.*', 'categories.name as category_name', 'divisions.name as division_name')
                 ->where('products.id', '=', $product->id)
                 ->where('products.delete', 0)

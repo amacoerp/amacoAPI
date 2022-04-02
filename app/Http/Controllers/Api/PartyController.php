@@ -238,13 +238,13 @@ class PartyController extends Controller
             }
         }
 
-        if(Auth::user()->role->name == 'SA'){
+        // if(Auth::user()->role->name == 'SA'){
 
-        }else{
-            $path = '/pages/view-customer/'.$party->id;
-            $noti = 'Please Verify Party that created by '.Auth::user()->name;
-            NotificationController::sendNotification('Party','alert','Party Has Been Added',$noti,'SA',$path);    
-        }
+        // }else{
+        //     $path = '/pages/view-customer/'.$party->id;
+        //     $noti = 'Please Verify Party that created by '.Auth::user()->name;
+        //     NotificationController::sendNotification('Party','alert','Party Has Been Added',$noti,'SA',$path);    
+        // }
 
 
 
