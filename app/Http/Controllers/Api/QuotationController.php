@@ -72,7 +72,7 @@ class QuotationController extends Controller
         
         return response()->json([           
             'products' => ProductController::index(),
-            'sales' => $this -> shows($id),
+            'sales' => $this -> showsSale($id),
         ]);
     }
 
@@ -255,7 +255,7 @@ class QuotationController extends Controller
     public function index() // Purchase List
     {
         if(!auth()->check())
-        return ["You are not authorized to access this API."];
+        return ["THIS API IS NOT ACCESSIBLE"];
         
         $quotations = Quotation::where(['status' => 'New', 'transaction_type' => 'purchase'])
             ->whereNotExists(function ($query) {
@@ -351,6 +351,7 @@ class QuotationController extends Controller
                 'discount_in_p' => $request['discount_in_p'],
                 'validity' => $request['validity'],
                 'payment_terms' => $request['payment_terms'],
+                'exclude_from_vat' => $request['exclude_from_vat'] ? $request['exclude_from_vat'] : 0,
                 'warranty' => $request['warranty'],
                 'currency_type' => $request['currency_type'],
                 'freight_type' => $request['freight'],
@@ -535,6 +536,7 @@ class QuotationController extends Controller
             "id" => $quotation->id,
             'quotation_no' => $quotation->quotation_no,
             "party_id" => $quotation->party_id,
+            "exclude_from_vat" => $quotation->exclude_from_vat,
             "file" => $quotation->file,
             "rfq_id" => $quotation->rfq_id || null,
             "status" => $quotation->status,
@@ -602,6 +604,107 @@ class QuotationController extends Controller
                     // "product_price_list" => $quotation_detail->product->productPrice,
                     "purchase_price" => isset($quotation_detail->purchase_price)?$quotation_detail->purchase_price:0,
                     "description" => $quotation_detail->description,
+                    "quantity" => isset($quotation_detail->quantity)?$quotation_detail->quantity:0,
+                    "discount" => $quotation_detail->discount,
+                    "margin_val"=>$quotation_detail->purchase_price ? ((((float)$quotation_detail->purchase_price)*(float)$quotation_detail->margin)/100)*(float)($quotation_detail->quantity):((float)($quotation_detail->quantity)*(float)($quotation_detail->sell_price))+$quotation_detail->discount_val,
+                    "discount_val"=>$quotation_detail->purchase_price?(((float)((float)($quotation_detail->discount) * ((float)(((float)$quotation_detail->margin * (float)($quotation_detail->purchase_price) / 100) + (float)($quotation_detail->purchase_price))) / 100)) * (float)($quotation_detail->quantity)):(float)$quotation_detail->discount_val,
+                    "cost_qty"  => (float)$quotation_detail->purchase_price*(int)$quotation_detail->quantity,
+                    'unit_of_measure' => $quotation_detail->unit_of_measure,
+                    // "delivered_quantity"=> $quotation_detail->quantity,
+                    "delivered_quantity" => $quotation_detail->getDeliveredQuantity($quotation_detail),
+                    "balance" => (int)$quotation_detail->quantity - (int)$quotation_detail->getDeliveredQuantity($quotation_detail),
+                    "margin" => $quotation_detail->margin? $quotation_detail->margin:'',
+                    "sell_price" => $quotation_detail->sell_price,
+                    "remark" => $quotation_detail->remark,
+                    "file" => $urlPath,
+                    "created_at" => $quotation_detail->created_at,
+                    "updated_at" => $quotation_detail->updated_at,
+                    "delete" => false,
+                   
+                  
+                ];
+            })
+        ];
+
+        return $data;
+    }
+    public  function showsSale($id)
+    {
+        
+        $quotation = Quotation::where('id', $id)->first();
+        $data = [
+            "id" => $quotation->id,
+            'quotation_no' => $quotation->quotation_no,
+            "party_id" => $quotation->party_id,
+            "exclude_from_vat" => $quotation->exclude_from_vat,
+            "file" => $quotation->file,
+            "rfq_id" => $quotation->rfq_id || null,
+            "status" => $quotation->status,
+            "total_value" => isset($quotation->total_value)?$quotation->total_value:0,
+            "discount_in_p" => isset($quotation->discount_in_p)?$quotation->discount_in_p:0,
+            "vat_in_value" => isset($quotation->vat_in_value)? $quotation->vat_in_value:0,
+            "freight_charges" => isset($quotation->freight_charges)? $quotation->freight_charges:0,
+            "net_amount" => isset($quotation->net_amount)?$quotation->net_amount:0,
+            "created_at" => $quotation->created_at,
+            "updated_at" => $quotation->updated_at,
+            "validity" => $quotation->validity,
+            "payment_terms" => $quotation->payment_terms,
+            "warranty" => $quotation->warranty,
+            "delivery_time" => $quotation->delivery_time,
+            "inco_terms" => $quotation->inco_terms,
+            "po_number" => $quotation->po_number,
+            "transaction_type" => $quotation->transaction_type,
+            "ps_date" => $quotation->ps_date,
+            "qstatus" => $quotation->qstatus,
+            "sales_order_number" => $quotation->sales_order_number,
+            "contact" => $quotation->contact,
+            "party" => $quotation->party,
+            "partyDivision" => $quotation->party && ($quotation->party->partyDivision->map(function($payment){
+                return $payment->partyDivision;
+            })),
+            "rfq" => $quotation->rfq,
+            "is_revised" => $quotation->is_revised,
+            // "sign" => $quotation->signature,
+            "sign" => Designation::select('users.email','users.contact','designations.*')->join('users','users.id','designations.user_id')->where('designations.id',$quotation->sign)->get(),
+            "notes" => $quotation->notes,
+            "bank" => $quotation->bank,
+            "currency_type" => $quotation->currency_type,
+            "freight_type" => $quotation->freight_type,
+            "subject" => $quotation->subject,
+            "rfq_no" => $quotation->rfq_no,
+            "transport" => $quotation->transport,
+            "other" => $quotation->other,
+            "div_id" => $quotation->div_id,
+            "user_id" => $quotation->user_id,
+            "delete" => $quotation->delete,
+
+            "quotation_details" => $quotation->quotationDetail->map(function ($quotation_detail) {
+                $filePath = $quotation_detail->file_img_url ? $quotation_detail->file_img_url : '';
+                $urlPath = $filePath ? url($filePath) : null;
+                return [
+                    "id" => $quotation_detail->id,
+                    "index1" => $quotation_detail->index1,
+                    "total_amount" => $quotation_detail->total_amount,
+                    "analyse_id" => $quotation_detail->analyse_id,
+                    "product_id" => $quotation_detail->product_id,
+                    "descriptions" => $quotation_detail->description,
+                    "descriptionss" => $quotation_detail->product_description,
+                    "description" => $quotation_detail->product_description,
+                    "amaco_description" => $quotation_detail->amaco_description,
+                    "product" => $quotation_detail->product,
+                    "name" => isset($quotation_detail->product->name)? $quotation_detail->product->name:'',
+                    "product_name" => " ",
+                    // "partyDivision" => $quotation_detail->partyDivision,
+                    "product_price_list" => $quotation_detail->product? $quotation_detail->product->productPrice->map(function ($productP) {
+                        return [
+                            'price' => $productP->price?$productP->price:"",
+                            'firm_name' =>$productP->party->firm_name
+                        ];
+                    }):null,
+                    
+                    // "product_price_list" => $quotation_detail->product->productPrice,
+                    "purchase_price" => isset($quotation_detail->purchase_price)?$quotation_detail->purchase_price:0,
+                    // "description" => $quotation_detail->description,
                     "quantity" => isset($quotation_detail->quantity)?$quotation_detail->quantity:0,
                     "discount" => $quotation_detail->discount,
                     "margin_val"=>$quotation_detail->purchase_price ? ((((float)$quotation_detail->purchase_price)*(float)$quotation_detail->margin)/100)*(float)($quotation_detail->quantity):((float)($quotation_detail->quantity)*(float)($quotation_detail->sell_price))+$quotation_detail->discount_val,
