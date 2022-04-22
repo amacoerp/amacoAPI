@@ -1244,6 +1244,7 @@ class QuotationController extends Controller
     }
     public static function allSalesList()
     {
+        
         $quotations = Quotation::where(['quotations.transaction_type' => 'sale'])
             ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
