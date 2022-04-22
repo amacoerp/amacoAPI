@@ -1244,6 +1244,9 @@ class QuotationController extends Controller
     }
     public static function allSalesList()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         
         $quotations = Quotation::where(['quotations.transaction_type' => 'sale'])
             ->whereNotExists(function ($query) {
