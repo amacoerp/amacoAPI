@@ -18,6 +18,9 @@ class CompanyController extends Controller
      */
     public function index()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+
         $company = Company::all();
         $company->map(function($val){
             $val['image1']=$val->Img1();
@@ -36,6 +39,9 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+
         $data = $request->all();
         if ($request->file('img1')) {
             $img1_name = $request->img1->getClientOriginalName();
@@ -85,6 +91,8 @@ class CompanyController extends Controller
      */
     public function show(Company $company)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
         $company->img1 && $company['img1'] = url($company->img1);
         $company->img2 && $company['img2'] = url($company->img2);
         $company->img3 && $company['img3'] = url($company->img3);
@@ -101,7 +109,8 @@ class CompanyController extends Controller
     public function update(Request $request, Company $company)
     {
 
-
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
 
 
         $data = $request->all();
@@ -153,7 +162,8 @@ class CompanyController extends Controller
     public function company_edit(Request $request, Company $company)
     {
 
-
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
 
 
         $data = $request->all();
@@ -231,6 +241,9 @@ class CompanyController extends Controller
      */
     public function destroy(Company $company)
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
         $company->delete();
 
         return response()->json(['msg' => "Successfully Delelted"]);
