@@ -286,7 +286,9 @@ class InvoiceController extends Controller
                     $invoice_detail->quotationDetail,
                     $invoice_detail->product
                 ];
+
             }),
+            $invoice->party->bank
             // $invoice->invoiceDetail->map(function ($invoice_detail){
             //     return [
             //         $invoice_detail->quotationDetail,

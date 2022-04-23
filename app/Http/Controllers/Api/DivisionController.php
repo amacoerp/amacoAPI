@@ -110,6 +110,8 @@ class DivisionController extends Controller
     public function singleDivision($id)
     {
        
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
         
         $division = Division::where('id',$id)->get();
         $divs = Division::get();

@@ -424,7 +424,12 @@ class UserController extends Controller
 
     public function getAllEmails(){
         $data = User::select('email')->get();
-        
+        $data -> map(function ($item){
+            return [
+                $item -> email = Crypt::encrypt($item -> email)
+            ];
+            
+        });
         // $encrypted = Crypt::encrypt(json_encode($data));
         return response()->json($data);
     }

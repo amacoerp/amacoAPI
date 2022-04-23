@@ -220,7 +220,10 @@ class PurchaseInvoiceController extends Controller
                     $purchaseInvoice_detail->product,
                 ];
             }),
+            $purchaseInvoice->party->bank,
+
         ];
+
     }
 
     /**

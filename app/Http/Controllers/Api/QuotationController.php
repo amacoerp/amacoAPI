@@ -1244,6 +1244,10 @@ class QuotationController extends Controller
     }
     public static function allSalesList()
     {
+        if(!auth()->check())
+        return ["You are not authorized to access this API."];
+        
+        
         $quotations = Quotation::where(['quotations.transaction_type' => 'sale'])
             ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
@@ -1266,6 +1270,7 @@ class QuotationController extends Controller
                     return [
                         'id' => $quotation->id,
                         'quotation_no' => $quotation->quotation_no,
+                        'ps_date' => $quotation->ps_date,
                         'created_at' => $quotation->created_at,
                         'updated_at' => $quotation->updated_at,
                         'status' => (isset($quotation->invoice_no))?'history':$quotation->status,
@@ -1451,6 +1456,7 @@ class QuotationController extends Controller
                         'id' => $quotation->id,
                         'div_id' => $quotation->div_id,
                         'user_id' => $quotation->id,
+                        'ps_date' => $quotation->ps_date,
                         'quotation_no' => $quotation->quotation_no,
                         'created_at' => $quotation->created_at,
                         'updated_at' => $quotation->updated_at,
@@ -1890,6 +1896,7 @@ public function show_quotation($id)
             function ($quotation) {
                 return [
                     'id' => $quotation->id,
+                    'ps_date' => $quotation->ps_date,
                     'quotation_no' => $quotation->quotation_no,
                     'created_at' => $quotation->created_at,
                     'updated_at' => $quotation->updated_at,
