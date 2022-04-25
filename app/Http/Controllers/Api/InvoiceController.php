@@ -355,9 +355,20 @@ class InvoiceController extends Controller
         
         $apikey=  \Config::get('example.key');
         $invoice = Invoice::where('id',$request->id)->first();
-        
-        
-       
+
+        $timestamp = strtotime($request -> ps_date);
+        $psMonth = date('M', $timestamp);
+
+        $timestamp = strtotime($invoice -> issue_date);
+        $dbMonth = date('M', $timestamp);
+
+
+        if($psMonth !== $dbMonth){
+            $invoice -> update([
+                'invoice_no' => $this->genInvoiceNo($request->ps_date)
+            ]);
+        }
+
         $invoice->update([
             // 'invoice_no' => $request->invoice_no,
             'po_number' => isset($request->po_number)? $request->po_number : null,
