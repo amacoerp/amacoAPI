@@ -115,7 +115,7 @@ class InvoiceController extends Controller
         return ["You are not authorized to access this API."];
         
         $invoices = Invoice::where('status','!=','Delivered')
-        ->orderBy('created_at','DESC')->get();
+        ->orderBy('invoice_no','DESC')->get();
         // $result=$invoices->party;
         $invoices->map(function ($invoice) {
                
