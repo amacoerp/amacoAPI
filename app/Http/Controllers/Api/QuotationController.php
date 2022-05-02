@@ -1514,6 +1514,8 @@ class QuotationController extends Controller
         return response()->json(['msg' => "There is no file in quotation detail"]);
     }
 
+    
+
     public function saleReport(Request $request)
     {
         if(!auth()->check())
