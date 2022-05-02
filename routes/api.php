@@ -186,6 +186,7 @@ Route::get('all-categories',[CategoryController::class, 'categories']);
 Route::delete('quotation_details/{id}',[QuotationController::class, 'destroy_details']);
 Route::delete('rfq_details/{id}',[RFQController::class, 'destroy_details']);
 Route::post('sale-report',[QuotationController::class, 'saleReport']);
+Route::post('invoice-filter',[InvoiceController::class, 'invoiceFilter']);
 Route::get('purchase-quote',[PurchaseInvoiceController::class, 'PurchaseInvoice'])->name('purchase.get');
 Route::post('expenseUpdate',[ExpenseController::class, 'expenseUpdate']);
 Route::get('singleExpenses/{id}', [ExpenseController::class, 'singleExpense']);
@@ -206,6 +207,8 @@ Route::post('partyDelete_all', [PartyController::class, 'partyDelete_all']);
 Route::get('expense_chart', [ExpenseController::class, 'expense_chart']);
 Route::get('accountCategory', [AccountCategoryController::class, 'accountCategory']);
 Route::get('salesTax', [InvoiceController::class, 'salesTax']);
+Route::post('invoice-vat-file/{id}/{vat}', [InvoiceController::class, 'invoiceVatFile']);
+Route::post('invoice-Status/{id}/{status}', [InvoiceController::class, 'invoiceStatus']);
 Route::get('purchaseTax', [ExpenseController::class,'purchaseTax']);
 Route::get('salesExpenseReport', [AccountCategoryController::class, 'salesExpenseReport']);
 Route::get('profitLoss', [AccountStatementController::class, 'profitLoss']);
@@ -332,7 +335,7 @@ Route::delete('deletePr/{id}', [PurchaseReturnController::class, 'deletePr']);
 Route::put('restorePr/{id}', [PurchaseReturnController::class, 'restorePr']);
 
 Route::delete('deleteSinv/{id}', [InvoiceController::class, 'deleteSinv']);
-Route::put('restoreSInv/{id}', [InvoiceController::class, 'restoreSInv']);
+Route::put('restoreSInv/{id}/{div}', [InvoiceController::class, 'restoreSInv']);
 
 
 Route::get('getPONo/{date}', [PurchaseReturnController::class, 'getPurchaseReturnEditData']);
@@ -349,6 +352,11 @@ Route::post('deleveryPrep/{d}/{t}/{id}', [DeliveryNoteController::class, 'deleve
 Route::post('deleveryUpdate', [DeliveryNoteController::class, 'deleveryUpdate']);
 Route::get('getDeliveryNoteEdit/{id}', [DeliveryNoteController::class, 'getDeliveryNoteEdit']);
 Route::get('dDetails', [DeliveryNoteController::class, 'dDetails']);
+
+
+
+
+Route::get('test/{date}/{div}', [InvoiceController::class, 'genInvoiceNo']);
 
 
 // Route::get('/notification', 'PusherNotificationController@sendNotification');
