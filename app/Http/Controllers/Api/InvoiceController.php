@@ -160,6 +160,21 @@ class InvoiceController extends Controller
         // }
         // }
     }
+
+    public function partyInvoices($id)
+    {
+        if (!auth()->check())
+            return ["You are not authorized to access this API."];
+
+        $invoices = Invoice::where('party_id',$id)
+            ->orderBy('created_at', 'DESC')->get();
+        // $result=$invoices->party;
+        $invoices->map(function ($invoice) {
+            // $invoice->payment_account;
+            return $invoice->party;
+        });
+        return $invoices;
+    }
     public static function index()
     {
         if (!auth()->check())
@@ -193,9 +208,9 @@ class InvoiceController extends Controller
             return $deletedDatas[0]->invoice_no;
         } else {
 
-            $res = Invoice::where('invoice_no', 'like', '%' . $patern . '%')->orderBy('issue_date','desc')->first();
+            $res = Invoice::where('invoice_no', 'like', '%' . $patern . '%')->orderBy('issue_date', 'desc')->first();
             if ($res) {
-                 $subval = explode("-", $res->invoice_no,)[3];
+                $subval = explode("-", $res->invoice_no,)[3];
 
                 return ('AMC' . $div . '-INV-' . $current_year . '-' . $current_month .  sprintf("%02d", ((int)(substr($subval, 2)) + 1)));
             } else {
@@ -544,25 +559,34 @@ class InvoiceController extends Controller
             'delete_status' => 1
         ]));
     }
-    public function restoreSInv($id,$div)
+    public function destroyNew($id,$comment)
+    {
+        if (!auth()->check())
+            return ["You are not authorized to access this API."];
+        return (Invoice::where('id',$id)->update([
+            'delete_status' => 1 ,
+            'comment' => $comment
+        ]));
+    }
+    public function restoreSInv($id, $div)
     {
         if (!auth()->check())
             return ["You are not authorized to access this API."];
 
 
         $div = $div == '1' ? 'T' : 'P';
-       $data = Invoice::where('id',$id)->first();
-       Invoice::where('id', $id)->update([
+        $data = Invoice::where('id', $id)->first();
+        Invoice::where('id', $id)->update([
             'delete_status' => 0
         ]);
-    //    return $this->genInvoiceNo($data -> issue_date, $div);
+        //    return $this->genInvoiceNo($data -> issue_date, $div);
         // $data['invoice_no'] = 
         Invoice::where('id', $id)->update([
             'delete_status' => 0
         ]);
 
         return (Invoice::where('id', $id)->update([
-            'invoice_no' => $this->genInvoiceNo($data -> issue_date, $div),
+            'invoice_no' => $this->genInvoiceNo($data->issue_date, $div),
         ]));
     }
     public function deleteSinv($id)

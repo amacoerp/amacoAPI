@@ -1665,6 +1665,7 @@ class QuotationController extends Controller
                  'inco_terms' => $request->inco_terms,
                  'net_amount' => $request->net_amount,
                  'transaction_type' => $request->transaction_type,
+                 'exclude_from_vat' => $request->exclude_from_vat,
                  'discount_in_p' => $request->discount_in_p,
                  'ps_date'=>$request->ps_date,
                  // 'div_id' => $request->div_id?$request->div_id:0,  // ? $request['ps_date'] : Carbon::now()
