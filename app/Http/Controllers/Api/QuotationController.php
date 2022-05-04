@@ -1521,7 +1521,7 @@ class QuotationController extends Controller
         if(!auth()->check())
         return ["You are not authorized to access this API."];
         
-        $reports = Quotation::where('transaction_type','sale')
+        $reports = Quotation::where('transaction_type','sale')->where('delete',0)
         ->whereBetween('created_at', [$request->from_date . ' ' . '00:00:00', $request->to_date ? $request->to_date . ' ' . '23:59:59' : now()])->get();
 
         if($reports){
