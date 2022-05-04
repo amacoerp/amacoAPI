@@ -426,7 +426,7 @@ class AccountStatementController extends Controller
         // if($request->from_date){
         //     $invoiceCollection = Invoice::join('parties','invoices.party_id','parties.id')->select('parties.credit_days','invoices.*')->whereBetween('invoices.created_at', [$request->from_date . ' ' . '00:00:00', $request->to_date ? $request->to_date . ' ' . '23:59:59' : now()])->get();
         // }else{
-            $invoiceCollection = Invoice::all();
+            $invoiceCollection = Invoice::where('delete_status','0') -> get();
         // }
 
         $receiptCollection = new Collection();
@@ -441,7 +441,7 @@ class AccountStatementController extends Controller
 
         $data && ($datas['data'] = $data->map(function ($item) {
             if ($item->total_value) {
-                $item['date'] = $item->created_at;
+                $item['date'] = $item->issue_date;
                 $item['code_no'] = $item->invoice_no;
                 $item['description'] = "Sale"."/".(isset($item->party)?$item->party->firm_name:" ");
                 $item['debit'] = floatval(str_replace(",","",$item->grand_total));
@@ -452,7 +452,7 @@ class AccountStatementController extends Controller
             }
 
             if ($item->paid_amount) {
-                $item['date'] = $item->created_at;
+                $item['date'] = $item->issue_date;
                 $item['code_no'] = $item->receipt_no;
                 $item['description'] = "Receipt"."/".$item->party->firm_name;
                 $item['credit'] = floatval(str_replace(",","",$item->paid_amount));
