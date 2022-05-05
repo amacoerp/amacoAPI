@@ -130,7 +130,7 @@ class QuotationController extends Controller
         // return date('m');
     }
 
-    public function getLastQuotationNo($date)
+    public function getLastQuotationNo($date,$d)
     {
         // $quotation = Quotation::where('transaction_type', 'sale')
         // ->where('quotation_no','not like', '%REV%')->latest('created_at')->first();
@@ -139,7 +139,7 @@ class QuotationController extends Controller
         $current_year = $this->getCurrentYear($date);
         $current_month = $this->getCurrentMonth($date);
 
-        $patern='AMC-QT-'.$current_year.'-'.$current_month;
+        $patern='AMC'.$d.'-QT-'.$current_year.'-'.$current_month;
         $quotation = Quotation::where('transaction_type', 'sale')
         ->where('quotation_no','not like', '%REV%')->where('quotation_no', 'like', '%'.$patern.'%')->latest('created_at')->first();
 
@@ -148,18 +148,18 @@ class QuotationController extends Controller
             $latest_quotation_no = $quotation->quotation_no ? $quotation->quotation_no : 0;
             return ($latest_quotation_no);
         } else {
-            return ('AMC-QT-' . $this->getCurrentYear($date) . '-' . $this->getCurrentMonth($date) . sprintf("%02d", 0));
+            return ('AMC'.$d.'-QT-' . $this->getCurrentYear($date) . '-' . $this->getCurrentMonth($date) . sprintf("%02d", 0));
         }
     }
 
-    public function getLastPONo($date)
+    public function getLastPONo($date,$d)
     {
 
 
         $current_year = $this->getCurrentYear($date);
         $current_month = $this->getCurrentMonth($date);
        
-        $patern='AMC-PO-'.$current_year.'-'.$current_month;
+        $patern='AMC'.$d.'-PO-'.$current_year.'-'.$current_month;
         // $res=Invoice::where('invoice_no', 'like', '%'.$patern.'%')->latest('created_at')->first();
 
         $quotation = Quotation::where('transaction_type', 'purchase')->where('po_number', 'like', '%'.$patern.'%')->latest('created_at')->first();
@@ -167,7 +167,7 @@ class QuotationController extends Controller
             $latest_po_number = $quotation->po_number ? $quotation->po_number : 0;
             return ($latest_po_number);
         } else {
-            return ('AMC-PO-' . $this->getCurrentYear($date) . '-' . $this->getCurrentMonth($date) . sprintf("%02d", 0));
+            return ('AMC'.$d.'-PO-' . $this->getCurrentYear($date) . '-' . $this->getCurrentMonth($date) . sprintf("%02d", 0));
         }
     }
 
@@ -183,23 +183,23 @@ class QuotationController extends Controller
         }
     }
 
-    public function getQuotationNo($date)
+    public function getQuotationNo($date,$d)
     {
-        $latest_quotation_no = $this->getLastQuotationNo($date);
-        $last_year = substr($latest_quotation_no, 7, 2);
-        $last_month = substr($latest_quotation_no, 10, 2);
+        $latest_quotation_no = $this->getLastQuotationNo($date,$d);
+        $last_year = substr($latest_quotation_no, 8, 2);
+        $last_month = substr($latest_quotation_no, 11, 2);
         $current_year = $this->getCurrentYear($date);
         $current_month = $this->getCurrentMonth($date);
         if ($current_year != $last_year) {
-            return ('AMC-QT-' . $current_year . '-' . $current_month  . sprintf("%02d", 1));
+            return ('AMC'.$d.'-QT-' . $current_year . '-' . $current_month  . sprintf("%02d", 1));
         } else {
             if ($current_month != $last_month) {
-                return ('AMC-QT-' . $current_year . '-' . $current_month  . sprintf("%02d", 1));
+                return ('AMC'.$d.'-QT-' . $current_year . '-' . $current_month  . sprintf("%02d", 1));
             } else {
-                if (((int)substr($this->getLastQuotationNo($date), 12) < 99)) {
-                    return ('AMC-QT-' . $current_year . '-' . $current_month . sprintf("%02d", ((int)substr($this->getLastQuotationNo($date), 12)) + 1));
+                if (((int)substr($this->getLastQuotationNo($date,$d), 13) < 99)) {
+                    return ('AMC'.$d.'-QT-' . $current_year . '-' . $current_month . sprintf("%02d", ((int)substr($this->getLastQuotationNo($date,$d), 13)) + 1));
                 } else {
-                    return ('AMC-QT-' . $current_year . '-' . $current_month . sprintf("%03d", ((int)substr($this->getLastQuotationNo($date), 12)) + 1));
+                    return ('AMC'.$d.'-QT-' . $current_year . '-' . $current_month . sprintf("%03d", ((int)substr($this->getLastQuotationNo($date,$d), 13)) + 1));
                 }
             }
         }
@@ -207,8 +207,8 @@ class QuotationController extends Controller
 
     public function revisedQuotationNo($quotationNo,$date)
     {
-        if(strlen($quotationNo) > 14){
-            $revisedQuotation =  substr($quotationNo, 0,14)."-REV-".sprintf("%02d",((int)substr($quotationNo, 19))+1);
+        if(strlen($quotationNo) > 15){
+            $revisedQuotation =  substr($quotationNo, 0,15)."-REV-".sprintf("%02d",((int)substr($quotationNo, 20))+1);
             return $revisedQuotation;
         }else{
             $revisedQuotation =  $quotationNo. "-REV-" . sprintf("%02d", 1);
@@ -217,23 +217,23 @@ class QuotationController extends Controller
     }
 
 
-    public function getPONo($date)
+    public function getPONo($date,$d)
     {
-        $latest_po_number = $this->getLastPONo($date);
-        $last_year = substr($latest_po_number, 7, 2);
-        $last_month = substr($latest_po_number, 10, 2);
+        $latest_po_number = $this->getLastPONo($date,$d);
+       $last_year = substr($latest_po_number, 8, 2);
+        $last_month = substr($latest_po_number, 11, 2);
         $current_year = $this->getCurrentYear($date);
         $current_month = $this->getCurrentMonth($date);
         if ($current_year != $last_year) {
-            return ('AMC-PO-' . $current_year . '-' . $current_month  . sprintf("%02d", 1));
+            return ('AMC'.$d.'-PO-' . $current_year . '-' . $current_month  . sprintf("%02d", 1));
         } else {
             if ($current_month != $last_month) {
-                return ('AMC-PO-' . $current_year . '-' . $current_month  . sprintf("%02d", 1));
+                return ('AMC'.$d.'-PO-' . $current_year . '-' . $current_month  . sprintf("%02d", 1));
             } else {
-                if (((int)substr($this->getLastPONo($date), 12) < 99)) {
-                    return ('AMC-PO-' . $current_year . '-' . $current_month . sprintf("%02d", ((int)substr($this->getLastPONo($date), 12)) + 1));
+                if (((int)substr($this->getLastPONo($date,$d), 13) < 99)) {
+                    return ('AMC'.$d.'-PO-' . $current_year . '-' . $current_month . sprintf("%02d", ((int)substr($this->getLastPONo($date,$d), 13)) + 1));
                 } else {
-                    return ('AMC-PO-' . $current_year . '-' . $current_month . sprintf("%03d", ((int)substr($this->getLastPONo($date), 12)) + 1));
+                    return ('AMC'.$d.'-PO-' . $current_year . '-' . $current_month . sprintf("%03d", ((int)substr($this->getLastPONo($date,$d), 13)) + 1));
                 }
             }
         }
@@ -370,15 +370,16 @@ class QuotationController extends Controller
                 'user_id' => $request['user_id']?$request['user_id']:0,
             ];
 
+            $divi = $request['div_id'] == 1 ? "T" : "P";
             if ($request->transaction_type === 'sale') {
                 if ($request['parent_id']) {
-                    $datas['quotation_no'] = $this->revisedQuotationNo($request['quotation_no'],$request['ps_date']);
+                    $datas['quotation_no'] = $this->revisedQuotationNo($request['quotation_no'],$request['ps_date'],$divi);
                 
                 }else{
-                    $datas['quotation_no'] = $this->getQuotationNo($request['ps_date']);
+                    $datas['quotation_no'] = $this->getQuotationNo($request['ps_date'],$divi);
                 }
             } elseif ($request->transaction_type === 'purchase') {
-                $datas['po_number'] = $this->getPONo($request['ps_date']);
+                $datas['po_number'] = $this->getPONo($request['ps_date'],$request['divi']);
             } else {
                 $datas['quotation_no'] = null;
                 $datas['po_number'] = null;
