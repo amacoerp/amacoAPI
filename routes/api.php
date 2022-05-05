@@ -358,7 +358,7 @@ Route::get('dDetails', [DeliveryNoteController::class, 'dDetails']);
 
 
 
-Route::get('test/{date}/{div}', [InvoiceController::class, 'genInvoiceNo']);
+Route::get('test/{date}/{div}', [QuotationController::class, 'getPONo']);
 
 
 // Route::get('/notification', 'PusherNotificationController@sendNotification');
