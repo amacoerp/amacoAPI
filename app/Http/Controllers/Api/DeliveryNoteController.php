@@ -170,16 +170,18 @@ class DeliveryNoteController extends Controller
                 'invoice_id' => $request->invoice_id,
             ])->latest('created_at')->first();
         }
+
+        $divi = $request->div_id == '1' ? 'T' : 'P';
         $deliveryNo = null;
         if ($request->is_partial) {
-            $deliveryNo = $this->getDeliveryNumber($request->quotation_id, $request->is_partial, 'q');
+            $deliveryNo = $this->getDeliveryNumber($request->quotation_id, $request->is_partial, 'q',$divi);
             // if($lastDeliveryNote){
             //     $deliveryNo = $this->getDeliveryNo($lastDeliveryNote->delivery_number);
             // }else{
             //     $deliveryNo = $this->getDeliveryNo($this->getDeliveryNo());
             // }
         } else {
-            $deliveryNo = $this->getDeliveryNumber($request->quotation_id, $request->is_partial, 'q');
+            $deliveryNo = $this->getDeliveryNumber($request->quotation_id, $request->is_partial, 'q',$divi);
             // if (!$lastDeliveryNote) {
             //     $deliveryNo = $this->getDeliveryNo();
             // }else{
@@ -228,6 +230,7 @@ class DeliveryNoteController extends Controller
             'invoice_id' => $request->invoice_id,
         ])->latest('created_at')->first();
 
+        $divi = $request->div_id == '1' ? 'T' : 'P';
         $deliveryNo = null;
         if ($request->is_partial) {
             // if($lastDeliveryNote){
@@ -235,14 +238,14 @@ class DeliveryNoteController extends Controller
             // }else{
             //     $deliveryNo = $this->getDeliveryNo($this->getDeliveryNo());
             // }
-            $deliveryNo = $this->getDeliveryNumber($request->invoice_id, $request->is_partial, 'i');
+            $deliveryNo = $this->getDeliveryNumber($request->invoice_id, $request->is_partial, 'i',$divi);
         } else {
             // if (!$lastDeliveryNote) {
             //     $deliveryNo = $this->getDeliveryNo();
             // }else{
             //     $deliveryNo = $this->getDeliveryNo($lastDeliveryNote->delivery_number, !$request->is_partial);
             // }
-            $deliveryNo = $this->getDeliveryNumber($request->invoice_id, $request->is_partial, 'i');
+            $deliveryNo = $this->getDeliveryNumber($request->invoice_id, $request->is_partial, 'i',$divi);
         }
 
         $data = [
@@ -428,7 +431,7 @@ class DeliveryNoteController extends Controller
             'noteDetails' => $dnoteDetails
         ]);
     }
-    public function getDeliveryNumber($id, $partial, $type)
+    public function getDeliveryNumber($id, $partial, $type,$d)
     {
         if ($type == 'q') {
             $p = DeliveryNote::orderBy('id', 'DESC')->first();
@@ -445,43 +448,43 @@ class DeliveryNoteController extends Controller
 
                         if ($count >= 1) {
 
-                            return 'AMC-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $lastDPNum->delivery_number)[3], 2)) . '-PD-' . sprintf("%02d", explode('-', $lastDPNum->delivery_number)[5] + 1);
+                            return 'AMC'.$d.'-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $lastDPNum->delivery_number)[3], 2)) . '-PD-' . sprintf("%02d", explode('-', $lastDPNum->delivery_number)[5] + 1);
                         } else {
 
-                            return 'AMC-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $lastDPNum->delivery_number)[3], 2) + 1) . '-PD-' . sprintf("%02d", explode('-', $lastDPNum->delivery_number)[5] + 1);
+                            return 'AMC'.$d.'-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $lastDPNum->delivery_number)[3], 2) + 1) . '-PD-' . sprintf("%02d", explode('-', $lastDPNum->delivery_number)[5] + 1);
                         }
                     } else {
                         if (strpos($p->delivery_number, 'PD')) {
                             if ($count >= 1) {
 
-                                return 'AMC-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $p->delivery_number)[3], 2)) . '-PD-' . sprintf("%02d", explode('-', $p->delivery_number)[5] + 1);
+                                return 'AMC'.$d.'-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $p->delivery_number)[3], 2)) . '-PD-' . sprintf("%02d", explode('-', $p->delivery_number)[5] + 1);
                             } else {
 
-                                return 'AMC-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $p->delivery_number)[3], 2) + 1) . '-PD-01';
+                                return 'AMC'.$d.'-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $p->delivery_number)[3], 2) + 1) . '-PD-01';
                             }
                         } else {
 
-                            return 'AMC-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $p->delivery_number)[3], 2) + 1) . '-PD-01';
+                            return 'AMC'.$d.'-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $p->delivery_number)[3], 2) + 1) . '-PD-01';
                         }
                     }
                 } else {
                     if (isset($lastDPNum->delivery_number)) {
                         if (strpos($lastDPNum->delivery_number, 'PD')) {
-                            return 'AMC-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $lastDPNum->delivery_number)[3], 2));
+                            return 'AMC'.$d.'-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $lastDPNum->delivery_number)[3], 2));
                         } else {
-                            return 'AMC-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $lastDPNum->delivery_number)[3], 2) + 1);
+                            return 'AMC'.$d.'-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $lastDPNum->delivery_number)[3], 2) + 1);
                         }
                     } else {
                         $latestMaxDnum = DeliveryNote::orderBy('delivery_number', 'DESC')->first();
-                        return 'AMC-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $latestMaxDnum->delivery_number)[3], 2) + 1);
+                        return 'AMC'.$d.'-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $latestMaxDnum->delivery_number)[3], 2) + 1);
                     }
                 }
                 //    return  $p->delivery_number;
             } else {
                 if (!$partial)
-                    return 'AMC-DN-' . date('y') . '-' . date('m') . '01';
+                    return 'AMC'.$d.'-DN-' . date('y') . '-' . date('m') . '01';
                 else
-                    return 'AMC-DN-' . date('y') . '-' . date('m') . '01' . '-PD-01';
+                    return 'AMC'.$d.'-DN-' . date('y') . '-' . date('m') . '01' . '-PD-01';
             }
         } else {
             if ($type == 'i') {
@@ -499,43 +502,43 @@ class DeliveryNoteController extends Controller
 
                             if ($count >= 1) {
 
-                                return 'AMC-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $lastDPNum->delivery_number)[3], 2)) . '-PD-' . sprintf("%02d", explode('-', $lastDPNum->delivery_number)[5] + 1);
+                                return 'AMC'.$d.'-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $lastDPNum->delivery_number)[3], 2)) . '-PD-' . sprintf("%02d", explode('-', $lastDPNum->delivery_number)[5] + 1);
                             } else {
 
-                                return 'AMC-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $lastDPNum->delivery_number)[3], 2) + 1) . '-PD-' . sprintf("%02d", explode('-', $lastDPNum->delivery_number)[5] + 1);
+                                return 'AMC'.$d.'-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $lastDPNum->delivery_number)[3], 2) + 1) . '-PD-' . sprintf("%02d", explode('-', $lastDPNum->delivery_number)[5] + 1);
                             }
                         } else {
                             if (strpos($p->delivery_number, 'PD')) {
                                 if ($count >= 1) {
 
-                                    return 'AMC-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $p->delivery_number)[3], 2)) . '-PD-' . sprintf("%02d", explode('-', $p->delivery_number)[5] + 1);
+                                    return 'AMC'.$d.'-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $p->delivery_number)[3], 2)) . '-PD-' . sprintf("%02d", explode('-', $p->delivery_number)[5] + 1);
                                 } else {
 
-                                    return 'AMC-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $p->delivery_number)[3], 2) + 1) . '-PD-01';
+                                    return 'AMC'.$d.'-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $p->delivery_number)[3], 2) + 1) . '-PD-01';
                                 }
                             } else {
 
-                                return 'AMC-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $p->delivery_number)[3], 2) + 1) . '-PD-01';
+                                return 'AMC'.$d.'-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $p->delivery_number)[3], 2) + 1) . '-PD-01';
                             }
                         }
                     } else {
                         if (isset($lastDPNum->delivery_number)) {
                             if (strpos($lastDPNum->delivery_number, 'PD')) {
-                                return 'AMC-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $lastDPNum->delivery_number)[3], 2));
+                                return 'AMC'.$d.'-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $lastDPNum->delivery_number)[3], 2));
                             } else {
-                                return 'AMC-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $lastDPNum->delivery_number)[3], 2) + 1);
+                                return 'AMC'.$d.'-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $lastDPNum->delivery_number)[3], 2) + 1);
                             }
                         } else {
                             $latestMaxDnum = DeliveryNote::orderBy('delivery_number', 'DESC')->first();
-                            return 'AMC-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $latestMaxDnum->delivery_number)[3], 2) + 1);
+                            return 'AMC'.$d.'-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $latestMaxDnum->delivery_number)[3], 2) + 1);
                         }
                     }
                     //    return  $p->delivery_number;
                 } else {
                     if (!$partial)
-                        return 'AMC-DN-' . date('y') . '-' . date('m') . '01';
+                        return 'AMC'.$d.'-DN-' . date('y') . '-' . date('m') . '01';
                     else
-                        return 'AMC-DN-' . date('y') . '-' . date('m') . '01' . '-PD-01';
+                        return 'AMC'.$d.'-DN-' . date('y') . '-' . date('m') . '01' . '-PD-01';
                 }
             }
         }
