@@ -379,7 +379,7 @@ class QuotationController extends Controller
                     $datas['quotation_no'] = $this->getQuotationNo($request['ps_date'],$divi);
                 }
             } elseif ($request->transaction_type === 'purchase') {
-                $datas['po_number'] = $this->getPONo($request['ps_date'],$request['divi']);
+                $datas['po_number'] = $this->getPONo($request['ps_date'],$divi);
             } else {
                 $datas['quotation_no'] = null;
                 $datas['po_number'] = null;

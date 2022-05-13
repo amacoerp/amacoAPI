@@ -9,6 +9,7 @@ use App\Models\Division;
 use App\Models\Role;
 use App\Models\PermissionDenied;
 use App\Models\Investment;
+use App\Models\Signatures;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\File;
@@ -17,8 +18,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use DB;
 use Illuminate\Support\Facades\Crypt;
-
-
+use Lcobucci\JWT\Signature;
 
 class UserController extends Controller
 {
@@ -28,6 +28,61 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+     
+
+     public function signatureApp(Request $request){
+         if(Signatures::where('user_id',auth()->user()->id)->exists()){
+            $filePath = null;
+            if ($request->hasFile('file')) {
+                $filePath = $request->file('file')->move('signature/' . auth()->user()->id);
+            }
+            Signatures::where('user_id',auth()->user()->id)->update([
+                'approval_by' => $filePath,
+                'user_id' => auth()->user()->id
+             ]);
+         }else{
+            $filePath = null;
+            if ($request->hasFile('file')) {
+                $filePath = $request->file('file')->move('signature/' . auth()->user()->id);
+            }
+            Signatures::create([
+                'approval_by' => $filePath,
+                'user_id' => auth()->user()->id
+             ]);
+         }
+
+         return Signatures::where('user_id',auth()->user()->id)->get();
+       
+     }
+
+     public function signature(){
+        return Signatures::where('user_id',auth()->user()->id)->get();
+     }
+     public function signaturePrep(Request $request){
+         if(Signatures::where('user_id',auth()->user()->id)->exists()){
+            $filePath = null;
+            if ($request->hasFile('file')) {
+                $filePath = $request->file('file')->move('signature/' . auth()->user()->id);
+            }
+            Signatures::where('user_id',auth()->user()->id)->update([
+                'prepared_by' => $filePath,
+                'user_id' => auth()->user()->id
+             ]);
+         }else{
+            $filePath = null;
+            if ($request->hasFile('file')) {
+                $filePath = $request->file('file')->move('signature/' . auth()->user()->id);
+            }
+            Signatures::create([
+                'prepared_by' => $filePath,
+                'user_id' => auth()->user()->id
+             ]);
+         }
+         return Signatures::where('user_id',auth()->user()->id)->get();
+
+     }
+
     public static function index()
     {
         if(!auth()->check())
