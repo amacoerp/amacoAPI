@@ -631,7 +631,7 @@ return response()->json($expenses);
         ->where('payment_accounts.div_id',$id)
         ->where('parties.delete',0)
         ->where('parties.status',1)
-        ->whereNot('parties.party_type','Vendor')
+        ->where('parties.party_type','!=','Vendor')
         ->select('parties.id', 'parties.firm_name','parties.party_type','parties.contact','parties.opening_balance','parties.credit_days','payment_accounts.div_id')
         ->orderBy('parties.firm_name', 'ASC')
         ->get();
