@@ -72,6 +72,25 @@ class InvoiceController extends Controller
         });
         return $invoices;
     }
+
+    public function changeStatus($id,$status,$type){
+        if($type == 'generate'){
+            Invoice::where('id', $id)->update([
+                'genarate_status' => $status
+            ]);
+        }else if($type == 'submit'){
+            Invoice::where('id', $id)->update([
+                'submit_status' => $status
+            ]);
+        }else if($type == 'ack'){
+            Invoice::where('id', $id)->update([
+                'acknowledge_status' => $status
+            ]);
+        }
+       return 200;
+
+    }
+
     public function invoiceStatus($id, $status)
     {
         Invoice::where('id', $id)->update([

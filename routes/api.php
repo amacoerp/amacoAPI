@@ -211,6 +211,7 @@ Route::get('salesTax', [InvoiceController::class, 'salesTax']);
 Route::get('invoice-party/{id}', [InvoiceController::class, 'partyInvoices']);
 Route::post('invoice-vat-file/{id}/{vat}', [InvoiceController::class, 'invoiceVatFile']);
 Route::post('invoice-Status/{id}/{status}', [InvoiceController::class, 'invoiceStatus']);
+Route::post('change-invoice-status/{id}/{status}/{type}', [InvoiceController::class, 'changeStatus']);
 Route::get('purchaseTax', [ExpenseController::class,'purchaseTax']);
 Route::get('salesExpenseReport', [AccountCategoryController::class, 'salesExpenseReport']);
 Route::get('profitLoss', [AccountStatementController::class, 'profitLoss']);
@@ -288,6 +289,9 @@ Route::post('logoutLog/{id}', [LoginLogController::class, 'logoutLog']);
 
 Route::post('sendOtp', [PHPMailerController::class, 'sendOtp']);
 Route::post('change-password', [UserController::class, 'changePasswordF']);
+Route::post('signature-app', [UserController::class, 'signatureApp']);
+Route::post('signature-prep', [UserController::class, 'signaturePrep']);
+Route::get('signature', [UserController::class, 'signature']);
 
 // index wise quote view
 

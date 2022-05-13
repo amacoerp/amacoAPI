@@ -18,10 +18,13 @@ use App\Http\Controllers\Api\DivisionController;
 use App\Models\AccountCategory;
 
 use App\Models\AdvancePayment;
+use App\Models\Invoice;
+use App\Models\Quotation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -181,6 +184,7 @@ return response()->json($expenses);
                 'paid_date' => $request->paid_date,
                 'paid_to' => $request->paid_to?$request->paid_to:'',
                 'amount' => $request->amount,
+                'q_i_number' => $request->q_i_number,
                 'payment_type' => $request->payment_type,
                 'check_no' => $request->cheque_no,
                 'transaction_id' => $request->transaction_id,
@@ -619,14 +623,49 @@ return response()->json($expenses);
             'referrenceImgUrl' => $expense->referrenceImg(),
         ]);
     }
+
+
+    public static function parties($id){
+        $vendors = Party::join('party_divisions','party_divisions.party_id','parties.id')
+        ->join('payment_accounts','payment_accounts.id','party_divisions.div_id')
+        ->where('payment_accounts.div_id',$id)
+        ->where('parties.delete',0)
+        ->where('parties.status',1)
+        ->where('parties.party_type','!=','vendor')
+        ->select('parties.id', 'parties.firm_name','parties.party_type','parties.contact','parties.opening_balance','parties.credit_days','payment_accounts.div_id')
+        ->orderBy('parties.firm_name', 'ASC')
+        ->get();
+            // ->toArray();
+           
+            return  $vendors;
+    }
     public static function mjrExpense($did)
     {
+        $parties = ExpenseController::parties($did);
+
+         $parties -> map(function ($item){
+            $item -> quotation = Quotation::where('party_id',$item -> id)->where(['status' => 'accept', 'transaction_type' => 'sale'])
+            ->whereNotExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('invoices')
+                    ->whereRaw('invoices.quotation_id = quotations.id');
+            })->orderBy('id', 'DESC')
+            ->get();
+            $item -> invoice = Invoice::where('acknowledge_status','Invoice Acknowledge')->where('status', '!=', 'Delivered')
+            ->orderBy('created_at', 'DESC')->get();
+            return $item;
+        });
+
         if(!auth()->check())
         return ["You are not authorized to access this API."];
+
+
+
         
         $account_categories=AccountCategoryController::index();
         return response()->json([
             'vendor' => PartyController::vendor($did),
+            'parties' => $parties,
             'payment_account' =>PaymentAccount::all(),
             'employee' =>EmployeesController::getEmp()->original,
             'account_categories'=>$account_categories->original,
