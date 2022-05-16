@@ -22,6 +22,21 @@ use App\Http\Controllers\Api\UOMController;
 class InvoiceController extends Controller
 {
 
+    public function updateStatus(Request $request, $id)
+    {
+        if (!auth()->check())
+            return ["You are not authorized to access this API."];
+        if ($request -> data == '0') {
+            return (Invoice::where('id', $id)->update([
+                'delete_status' => 1
+            ]));
+        } else {
+            return (Invoice::where('id', $id)->update([
+                'approve' => 1
+            ]));
+        }
+    }
+
 
 
     public function mjrInvInc($did)
@@ -73,22 +88,22 @@ class InvoiceController extends Controller
         return $invoices;
     }
 
-    public function changeStatus($id,$status,$type){
-        if($type == 'generate'){
+    public function changeStatus($id, $status, $type)
+    {
+        if ($type == 'generate') {
             Invoice::where('id', $id)->update([
                 'genarate_status' => $status
             ]);
-        }else if($type == 'submit'){
+        } else if ($type == 'submit') {
             Invoice::where('id', $id)->update([
                 'submit_status' => $status
             ]);
-        }else if($type == 'ack'){
+        } else if ($type == 'ack') {
             Invoice::where('id', $id)->update([
                 'acknowledge_status' => $status
             ]);
         }
-       return 200;
-
+        return 200;
     }
 
     public function invoiceStatus($id, $status)
@@ -185,7 +200,7 @@ class InvoiceController extends Controller
         if (!auth()->check())
             return ["You are not authorized to access this API."];
 
-        $invoices = Invoice::where('party_id',$id)
+        $invoices = Invoice::where('party_id', $id)
             ->orderBy('created_at', 'DESC')->get();
         // $result=$invoices->party;
         $invoices->map(function ($invoice) {
@@ -270,6 +285,7 @@ class InvoiceController extends Controller
         $data['grand_total'] = $request['grand_total'];
         $invoice = Invoice::create([
             'exclude_from_vat' => $data['vatExclude'],
+            'approve' => auth()->user()->role->name == 'SA' ? 1 : 0,
             'invoice_no' => $data['invoice_no'],
             'po_number' => isset($request->po_number) ? $data['po_number'] : null,
             'issue_date' => $data['issue_date'],
@@ -316,6 +332,14 @@ class InvoiceController extends Controller
                 // 'product_name' => $invoice_detail['product']?$invoice_detail['product']:null,
                 // 'unit_of_measure' => $invoice_detail['unit_of_measure']?$invoice_detail['unit_of_measure']:null,
             ]);
+        }
+
+        if (auth()->user()->role->name == 'SA') {
+      
+        } else {
+            $path = "/newinvoice/" . $_invoice_id;
+            $noti = 'An Invoice has been Created by ' . auth()->user()->name . ' Please Verify Invoice and Approve';
+            NotificationController::sendNotification('Invoice', 'alert', 'An Invoice Has Been Created', $noti, 'SA', $path);
         }
         // return 'success';
         return response()->json($invoice_details);
@@ -578,12 +602,20 @@ class InvoiceController extends Controller
             'delete_status' => 1
         ]));
     }
-    public function destroyNew($id,$comment)
+    public function destroyNew($id, $comment)
     {
+
         if (!auth()->check())
             return ["You are not authorized to access this API."];
-        return (Invoice::where('id',$id)->update([
-            'delete_status' => 1 ,
+
+        if (auth()->user()->role->name == 'SA') {
+        } else {
+            $path = "/newinvoice/" . $id;
+            $noti = 'An Invoice has been deleted by ' . auth()->user()->name;
+            NotificationController::sendNotification('Invoice', 'alert', 'An Invoice Has Been Deleted', $noti, 'SA', $path);
+        }
+        return (Invoice::where('id', $id)->update([
+            'delete_status' => 1,
             'comment' => $comment
         ]));
     }

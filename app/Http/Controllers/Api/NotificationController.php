@@ -7,7 +7,7 @@ use App\Models\Notifications;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-// use Pusher\Pusher;
+use Pusher\Pusher;
 
 
 
@@ -33,15 +33,15 @@ class NotificationController extends Controller
 
 
     public static function sendNotification($heading,$type,$title,$notification,$nfor,$path){
-        // $options = array(
-        //     'cluster' => 'ap2',
-        //     'encrypted' => true
-        // );
-        // $pusher = new Pusher(
-        //     '76b5d8513b2ab0b9930c',
-        //     '5214ac21cb51712950ec',
-        //     '1368733', $options
-        // );
+        $options = array(
+            'cluster' => 'ap2',
+            'encrypted' => true
+        );
+        $pusher = new Pusher(
+            '76b5d8513b2ab0b9930c',
+            '5214ac21cb51712950ec',
+            '1368733', $options
+        );
 
         Notifications::create([
             'heading' => $heading,
@@ -65,8 +65,8 @@ class NotificationController extends Controller
         }
 
        
-        // $message= $notification;
-        // $pusher->trigger('notification', 'notification-event', $message);
+        $message= $title;
+        $pusher->trigger('notification', 'notification-event', $message);
     }
 
 
