@@ -40,6 +40,32 @@ class ExpenseController extends Controller
     //     $this->middleware('auth:api');
 
     // }
+
+
+    public function expenseInvoiceReport(){
+        $allExpense =  Expense::join('account_categories','account_categories.id','expenses.account_category_id')->where('account_categories.name','Material Purchase')->select('expenses.*')->orderBy('expenses.id','desc')->get();
+        $allExpense = $allExpense -> values();
+        $allExpense -> map(function ($item){
+            if(strpos($item -> q_i_number,'QT')){
+                $item -> type = 'Q';
+                $qt = Quotation::where('quotation_no',$item -> q_i_number)->get();
+                $item -> profit = isset($qt[0]) ? $qt[0] ? $qt[0]->net_amount -  $item -> amount : '' : '';;
+                $item -> quotation = isset($qt[0]) ? $qt[0] ? $qt[0] : '' : '';
+                $item -> tot_amount = isset($qt[0]) ? $qt[0] ? $qt[0] -> net_amount : '' : '';
+            }else{
+                $inv = Invoice::where('invoice_no',$item -> q_i_number)->get();
+                $item -> type = 'I';
+                $item -> profit = isset($inv[0]) ? $inv[0] ?  $inv[0]->grand_total - $item -> amount : '' : '';;
+                $item -> invoice = isset($inv[0]) ? $inv[0] ? $inv[0] : '' : '';
+                $item -> tot_amount = isset($inv[0]) ? $inv[0] ? $inv[0] -> grand_total : '' : '';
+            }
+           
+            return $item;
+        });
+        return $allExpense;
+    }
+
+
     public function index()
     {
         if(!auth()->check())
@@ -631,7 +657,7 @@ return response()->json($expenses);
         ->where('payment_accounts.div_id',$id)
         ->where('parties.delete',0)
         ->where('parties.status',1)
-        ->where('parties.party_type','!=','vendor')
+        ->where('parties.party_type','!=','Vendor')
         ->select('parties.id', 'parties.firm_name','parties.party_type','parties.contact','parties.opening_balance','parties.credit_days','payment_accounts.div_id')
         ->orderBy('parties.firm_name', 'ASC')
         ->get();

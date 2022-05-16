@@ -292,6 +292,7 @@ Route::post('change-password', [UserController::class, 'changePasswordF']);
 Route::post('signature-app', [UserController::class, 'signatureApp']);
 Route::post('signature-prep', [UserController::class, 'signaturePrep']);
 Route::get('signature', [UserController::class, 'signature']);
+Route::get('expense-invoice-report', [ExpenseController::class, 'expenseInvoiceReport']);
 
 // index wise quote view
 
@@ -341,6 +342,7 @@ Route::delete('deletePr/{id}', [PurchaseReturnController::class, 'deletePr']);
 Route::put('restorePr/{id}', [PurchaseReturnController::class, 'restorePr']);
 
 Route::delete('deleteSinv/{id}', [InvoiceController::class, 'deleteSinv']);
+Route::post('updateApproveRejectStatus/{id}', [InvoiceController::class, 'updateStatus']);
 Route::put('restoreSInv/{id}/{div}', [InvoiceController::class, 'restoreSInv']);
 
 
