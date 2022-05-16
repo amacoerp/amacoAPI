@@ -335,9 +335,7 @@ class InvoiceController extends Controller
         }
 
         if (auth()->user()->role->name == 'SA') {
-            $path = "/newinvoice/" . $_invoice_id;
-            $noti = 'An Invoice has been Created by ' . auth()->user()->name . ' Please Verify Invoice and Approve';
-            NotificationController::sendNotification('Invoice', 'alert', 'An Invoice Has Been Created', $noti, 'SA', $path);
+      
         } else {
             $path = "/newinvoice/" . $_invoice_id;
             $noti = 'An Invoice has been Created by ' . auth()->user()->name . ' Please Verify Invoice and Approve';
