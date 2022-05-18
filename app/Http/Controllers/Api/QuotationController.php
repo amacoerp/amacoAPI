@@ -1255,7 +1255,9 @@ class QuotationController extends Controller
                 $query->select(DB::raw(1))
                     ->from('invoices')
                     ->whereRaw('invoices.quotation_id = quotations.id');
-            })->orderBy('quotations.created_at', 'DESC')
+            })
+            ->select('quotations.*')
+            ->orderBy('quotations.created_at', 'DESC')
             ->get();
             
         $invoices = Quotation::join('invoices','invoices.quotation_id' , 'quotations.id')->where(['quotations.transaction_type' => 'sale'])
@@ -1263,7 +1265,9 @@ class QuotationController extends Controller
             $query->select(DB::raw(1))
                 ->from('invoices')
                 ->whereRaw('invoices.quotation_id = quotations.id');
-        })->orderBy('quotations.created_at', 'DESC')
+        })
+        ->select('quotations.*')
+        ->orderBy('quotations.created_at', 'DESC')
         ->get();
         $res=$quotations->concat($invoices);
         $quotations_data = [
