@@ -555,6 +555,7 @@ class QuotationController extends Controller
             "inco_terms" => $quotation->inco_terms,
             "po_number" => $quotation->po_number,
             "transaction_type" => $quotation->transaction_type,
+            "contact_id" => $quotation->contact_id,
             "ps_date" => $quotation->ps_date,
             "qstatus" => $quotation->qstatus,
             "sales_order_number" => $quotation->sales_order_number,
@@ -738,7 +739,7 @@ class QuotationController extends Controller
         
         $quotation = Quotation::where('id','=', $id)->first();
         $data = [
-            "id" => $quotation->id,
+            "id" => $id,
             'quotation_no' => $quotation->quotation_no,
             "party_id" => $quotation->party_id,
             "file" => $quotation->file,
