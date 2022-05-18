@@ -1256,7 +1256,7 @@ class QuotationController extends Controller
                     ->from('invoices')
                     ->whereRaw('invoices.quotation_id = quotations.id');
             })
-            ->select('quotations.*','invoices.invoice_no')
+            ->select('quotations.*','invoices.*','quotations.id as qid')
             ->orderBy('quotations.created_at', 'DESC')
             ->get();
             
@@ -1266,7 +1266,7 @@ class QuotationController extends Controller
                 ->from('invoices')
                 ->whereRaw('invoices.quotation_id = quotations.id');
         })
-        ->select('quotations.*','invoices.invoice_no')
+        ->select('quotations.*','invoices.*','quotations.id as qid')
         ->orderBy('quotations.created_at', 'DESC')
         ->get();
         $res=$quotations->concat($invoices);
@@ -1274,7 +1274,7 @@ class QuotationController extends Controller
             $res->map(
                 function ($quotation) {
                     return [
-                        'id' => $quotation->id,
+                        'id' => $quotation->qid,
                         'quotation_no' => $quotation->quotation_no,
                         'ps_date' => $quotation->ps_date,
                         'created_at' => $quotation->created_at,
