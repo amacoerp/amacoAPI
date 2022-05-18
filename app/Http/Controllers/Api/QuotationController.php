@@ -1256,7 +1256,7 @@ class QuotationController extends Controller
                     ->from('invoices')
                     ->whereRaw('invoices.quotation_id = quotations.id');
             })
-            ->select('quotations.*')
+            ->select('quotations.*','invoices.invoice_no')
             ->orderBy('quotations.created_at', 'DESC')
             ->get();
             
@@ -1266,7 +1266,7 @@ class QuotationController extends Controller
                 ->from('invoices')
                 ->whereRaw('invoices.quotation_id = quotations.id');
         })
-        ->select('quotations.*')
+        ->select('quotations.*','invoices.invoice_no')
         ->orderBy('quotations.created_at', 'DESC')
         ->get();
         $res=$quotations->concat($invoices);
