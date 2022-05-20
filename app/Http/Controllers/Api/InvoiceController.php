@@ -227,7 +227,6 @@ class InvoiceController extends Controller
     public function genInvoiceNo($date, $div)
     {
 
-
         $current_year = $this->getCurrentYear($date);
         $current_month = $this->getCurrentMonth($date);
 
@@ -242,7 +241,7 @@ class InvoiceController extends Controller
             return $deletedDatas[0]->invoice_no;
         } else {
 
-            $res = Invoice::where('invoice_no', 'like', '%' . $patern . '%')->orderBy('issue_date', 'desc')->first();
+            $res = Invoice::where('invoice_no', 'like', '%' . $patern . '%')->orderBy('invoice_no', 'desc')->first();
             if ($res) {
                 $subval = explode("-", $res->invoice_no,)[3];
 
@@ -261,6 +260,10 @@ class InvoiceController extends Controller
 
     public function store(Request $request)
     {
+
+        // $div = $request['div_id'] == '1' ? 'T' : 'P';
+
+        // return $this->genInvoiceNo($request['ps_date'], $div);
 
         if (!auth()->check())
             return ["You are not authorized to access this API."];
@@ -662,7 +665,7 @@ class InvoiceController extends Controller
         if (!auth()->check())
             return ["You are not authorized to access this API."];
 
-        $invoices = Invoice::get();
+        $invoices = Invoice::where('approve',1)->get();
         $invoices->map(function ($val) {
 
             return $val->party;
@@ -675,7 +678,7 @@ class InvoiceController extends Controller
         if (!auth()->check())
             return ["You are not authorized to access this API."];
 
-        $invoices = Invoice::get();
+        $invoices = Invoice::where('approve',1)->get();
         $invoices->map(function ($val) {
 
             return $val->party;
