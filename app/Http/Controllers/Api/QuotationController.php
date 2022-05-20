@@ -555,6 +555,7 @@ class QuotationController extends Controller
             "inco_terms" => $quotation->inco_terms,
             "po_number" => $quotation->po_number,
             "transaction_type" => $quotation->transaction_type,
+            "contact_id" => $quotation->contact_id,
             "ps_date" => $quotation->ps_date,
             "qstatus" => $quotation->qstatus,
             "sales_order_number" => $quotation->sales_order_number,
@@ -738,7 +739,7 @@ class QuotationController extends Controller
         
         $quotation = Quotation::where('id','=', $id)->first();
         $data = [
-            "id" => $quotation->id,
+            "id" => $id,
             'quotation_no' => $quotation->quotation_no,
             "party_id" => $quotation->party_id,
             "file" => $quotation->file,
@@ -1254,7 +1255,9 @@ class QuotationController extends Controller
                 $query->select(DB::raw(1))
                     ->from('invoices')
                     ->whereRaw('invoices.quotation_id = quotations.id');
-            })->orderBy('quotations.created_at', 'DESC')
+            })
+            ->select('quotations.*','quotations.id as qid')
+            ->orderBy('quotations.created_at', 'DESC')
             ->get();
             
         $invoices = Quotation::join('invoices','invoices.quotation_id' , 'quotations.id')->where(['quotations.transaction_type' => 'sale'])
@@ -1262,14 +1265,16 @@ class QuotationController extends Controller
             $query->select(DB::raw(1))
                 ->from('invoices')
                 ->whereRaw('invoices.quotation_id = quotations.id');
-        })->orderBy('quotations.created_at', 'DESC')
+        })
+        ->select('quotations.*','invoices.*','quotations.id as qid')
+        ->orderBy('quotations.created_at', 'DESC')
         ->get();
         $res=$quotations->concat($invoices);
         $quotations_data = [
             $res->map(
                 function ($quotation) {
                     return [
-                        'id' => $quotation->id,
+                        'id' => $quotation->qid,
                         'quotation_no' => $quotation->quotation_no,
                         'ps_date' => $quotation->ps_date,
                         'created_at' => $quotation->created_at,
