@@ -665,7 +665,7 @@ class InvoiceController extends Controller
         if (!auth()->check())
             return ["You are not authorized to access this API."];
 
-        $invoices = Invoice::get();
+        $invoices = Invoice::where('approve',1)->get();
         $invoices->map(function ($val) {
 
             return $val->party;
@@ -678,7 +678,7 @@ class InvoiceController extends Controller
         if (!auth()->check())
             return ["You are not authorized to access this API."];
 
-        $invoices = Invoice::get();
+        $invoices = Invoice::where('approve',1)->get();
         $invoices->map(function ($val) {
 
             return $val->party;

@@ -304,8 +304,9 @@ class PartyController extends Controller
                 "bank" => $party->bank->where('delete',0)->map(function ($bankDetail) {
                     return $bankDetail;
                 }),
-                'contacts' => $contacts->map(function ($contact) {
-                    return $contact;
+                'contacts' => $contacts->map(function ($item) {
+                    $item -> fname = $item -> fname .' '.$item -> lname;
+                    return $item;
                 }),
                 'partyDivision'=>$party->partyDivision->map(function($item){
                     $a = PaymentAccount::where('id',$item['div_id'])->get(['div_id']);
