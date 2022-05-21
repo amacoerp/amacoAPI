@@ -60,6 +60,7 @@ use App\Http\Controllers\Api\StockController;
 use App\Http\Controllers\Api\LoginLogController;
 use App\Http\Controllers\Api\DesignationController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\TestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -365,6 +366,8 @@ Route::get('dDetails', [DeliveryNoteController::class, 'dDetails']);
 
 
 Route::get('test/{date}/{div}', [QuotationController::class, 'getPONo']);
+
+Route::post('test', [TestController::class, 'scanFile']);
 
 
 // Route::get('/notification', 'PusherNotificationController@sendNotification');

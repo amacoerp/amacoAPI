@@ -305,7 +305,7 @@ class PartyController extends Controller
                     return $bankDetail;
                 }),
                 'contacts' => $contacts->map(function ($item) {
-                    $item -> fname = $item -> fname .' '.$item -> lname;
+                    $item -> fname = strtoupper($item -> fname) .' '.strtoupper($item -> lname);
                     return $item;
                 }),
                 'partyDivision'=>$party->partyDivision->map(function($item){
