@@ -300,6 +300,7 @@ Route::get('expense-invoice-report', [ExpenseController::class, 'expenseInvoiceR
 Route::get('show_quotation/{id}', [QuotationController::class, 'show_quotation']);
 Route::get('quoteHistory', [QuotationController::class, 'quoteHistory']);
 Route::get('invoice_delivery_note/{id}/{s}', [DeliveryNoteController::class, 'show']);
+Route::post('change-delivery-status/{id}/{s}/{ty}', [DeliveryNoteController::class, 'deliveryStatus']);
 Route::get('enc', [EncController::class, 'index']);
 
 // Multi Response

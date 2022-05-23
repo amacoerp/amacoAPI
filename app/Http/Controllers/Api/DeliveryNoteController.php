@@ -19,6 +19,25 @@ class DeliveryNoteController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+
+     public function deliveryStatus($id, $status, $type){
+        if ($type == 'generate') {
+            DeliveryNote::where('id', $id)->update([
+                'created_status' => $status
+            ]);
+        } else if ($type == 'print') {
+            DeliveryNote::where('id', $id)->update([
+                'printed_status' => $status
+            ]);
+        } else if ($type == 'ack') {
+            DeliveryNote::where('id', $id)->update([
+                'acknowledge_status' => $status
+            ]);
+        }
+        return 200;
+     }
+
+
     public function dDetails()
     {
         return response()->json([
@@ -314,7 +333,7 @@ class DeliveryNoteController extends Controller
             $s == "invoice" ? $deliveryNote[0]->invoice->party : $deliveryNote[0]->quotation->party,
             $s == "invoice" ? $deliveryNote[0]->invoice : $deliveryNote[0]->quotation->quotationDetail,
             $deliveryNote[0]->quotation ? $deliveryNote[0]->quotation->quotationDetail : $deliveryNote[0]->invoice->invoiceDetail,
-
+            $s == "invoice" ? $deliveryNote[0]->invoice-> contact : '',
 
         ];
 
