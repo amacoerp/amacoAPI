@@ -311,18 +311,17 @@ class DeliveryNoteController extends Controller
 
 
         $deliveryNote = DeliveryNote::where('id', $id)->orderBy('created_at', 'DESC')->get();
-        $deliveryNoteD = DeliveryNoteDetail::where('delivery_note_id', $id)->orderBy('created_at', 'DESC')->get();
 
-        // $delivery = $deliveryNote->map(function ($deliveryNote) {
-        //     return [
-        //         $deliveryNote,
-        //         $deliveryNote->deliveryNoteDetail,
+        $delivery = $deliveryNote->map(function ($deliveryNote) {
+            return [
+                $deliveryNote,
+                $deliveryNote->deliveryNoteDetail,
 
-        //     ];
-        // });
+            ];
+        });
 
         $data = [
-            $deliveryNoteD->map(function ($deliveryNoteDetailItem) use ($s) {
+            $deliveryNote[0]->deliveryNoteDetail->map(function ($deliveryNoteDetailItem) use ($s) {
                 return $deliveryNoteDetailItem->showDeliveredNoteDetail($deliveryNoteDetailItem['id'], $deliveryNoteDetailItem['product_id'], $s);
             }),
             $deliveryNote[0],
