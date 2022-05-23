@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+
 
 class DeliveryNoteDetail extends Model
 {
@@ -43,6 +45,26 @@ class DeliveryNoteDetail extends Model
     //     return ($totalQuantity - $totalDeliveredQuantity);
     // }
 
+    public function getDeliveredQuantity1(InvoiceDetail $quotation_detail)
+    {
+        // return $quotation_detail->id;
+        $deliveryNoteDetails = DB::table('delivery_notes')
+        ->leftJoin('delivery_note_details', 'delivery_note_details.delivery_note_id','=', 'delivery_notes.id')
+        ->where('delivery_notes.invoice_id',$quotation_detail->invoice_id)
+        // ->where('delivery_note_details.product_i', $quotation_detail->product_id)
+        ->where('delivery_note_details.invoice_detail_id', $quotation_detail->id)
+        ->get();
+
+        if($deliveryNoteDetails) {
+            $totalDeliveryNoteDetail = 0;
+            foreach ($deliveryNoteDetails as $item) {
+                $totalDeliveryNoteDetail += intval($item->delivered_quantity);
+            }
+            return $totalDeliveryNoteDetail;
+        }
+        return 0;
+    }
+
     public function showDeliveredNoteDetail($id,$pid,$s)
     {
        
@@ -55,12 +77,12 @@ class DeliveryNoteDetail extends Model
 
        if($s=="invoice")
         {
-            $quotationDetail = InvoiceDetail::where([
+            $invoiceDetail = InvoiceDetail::where([
                 'invoice_id' => $delivery_notes_detail->deliveryNote->invoice_id,
                 'id' => $delivery_notes_detail->invoice_detail_id,
             ])->firstOrFail();
 
-            $totalDeliveredQuantity = $quotationDetail->getDeliveredQuantity($quotationDetail,$s);
+            $totalDeliveredQuantity = $this ->getDeliveredQuantity1($invoiceDetail,$s);
           
             // return  $totalDeliveredQuantity;
         }
