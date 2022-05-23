@@ -304,6 +304,65 @@ class DeliveryNoteController extends Controller
      * @param  \App\Models\DeliveryNote  $deliveryNote
      * @return \Illuminate\Http\Response
      */
+    public function showDeliveredNoteDetail($id,$pid,$s)
+    {
+       
+        $delivery_notes_detail = DeliveryNoteDetail::where('id',$id)->first();
+
+        $totalDeliveryNoteDetails = DeliveryNoteDetail::where([
+            'delivery_note_id' => $delivery_notes_detail->delivery_note_id,
+            'product_id' => $delivery_notes_detail->product_id,
+        ])->get();
+
+       if($s=="invoice")
+        {
+            $quotationDetail = InvoiceDetail::where([
+                'invoice_id' => $delivery_notes_detail->deliveryNote->invoice_id,
+                'id' => $delivery_notes_detail->invoice_detail_id,
+            ])->firstOrFail();
+
+            $totalDeliveredQuantity = $quotationDetail->getDeliveredQuantity($quotationDetail,$s);
+          
+            // return  $totalDeliveredQuantity;
+        }
+        else
+        {
+            
+        $quotationDetail = QuotationDetail::where([
+            'quotation_id' => $delivery_notes_detail->deliveryNote->quotation_id,
+            'id' => (int)$delivery_notes_detail->quote_detail_id,
+            // 'description' => $delivery_notes_detail->product_descriptions,
+        ])->firstOrFail();
+        
+
+        // $totalDeliveredQuantity = $this->getTotalDeliveredQuantity($totalDeliveryNoteDetails);
+        $totalDeliveredQuantity = $quotationDetail->getDeliveredQuantity($quotationDetail,$s);
+        }
+
+        // $totalDeliveredQuantity = $this->getTotalDeliveredQuantity($totalDeliveryNoteDetails);
+        // $totalDeliveredQuantity = $quotationDetail->getDeliveredQuantity($quotationDetail);
+        if(isset($totalDeliveredQuantity)){
+            $totalDeliveredQuantityExceptCurrentValue = $totalDeliveredQuantity - intval($delivery_notes_detail->delivered_quantity) ;
+        }else{
+            $totalDeliveredQuantityExceptCurrentValue = 0;
+        }
+
+        $data = [
+            "total_quantity" => $quotationDetail->quantity, //$totalQuantity =
+            // "total_delivered_quantity" => $totalDeliveredQuantity,
+            "total_delivered_quantity" => $totalDeliveredQuantityExceptCurrentValue,
+            "delivering_quantity" => $delivery_notes_detail->delivered_quantity,
+            "delivery_notes_detail" => $delivery_notes_detail,
+            "product" => array($delivery_notes_detail->product),
+            "description"=>$quotationDetail->description?$quotationDetail->description:$quotationDetail->product_description 
+            // "quotation" => $s=="invoice"?$delivery_notes_detail->deliveryNote->invoice:$delivery_notes_detail->deliveryNote->quotation,
+            // "delivery_note" => $delivery_notes_detail->deliveryNote,
+            // "party" => $delivery_notes_detail->deliveryNote->quotation->party,
+            // 'balance_quantity' => $this->getBalanceQuantity($totalQuantity, $totalDeliveredQuantity), //not required anymore
+        ];
+
+        return [$data];
+    }
     public function show($id, $s)
     {
         if (!auth()->check())
@@ -311,18 +370,19 @@ class DeliveryNoteController extends Controller
 
 
         $deliveryNote = DeliveryNote::where('id', $id)->orderBy('created_at', 'DESC')->get();
+        $deliveryNoteD = DeliveryNoteDetail::where('delivery_note_id', $id)->orderBy('created_at', 'DESC')->get();
 
-        $delivery = $deliveryNote->map(function ($deliveryNote) {
-            return [
-                $deliveryNote,
-                $deliveryNote->deliveryNoteDetail,
+        // $delivery = $deliveryNote->map(function ($deliveryNote) {
+        //     return [
+        //         $deliveryNote,
+        //         $deliveryNote->deliveryNoteDetail,
 
-            ];
-        });
+        //     ];
+        // });
 
         $data = [
-            $deliveryNote[0]->deliveryNoteDetail->map(function ($deliveryNoteDetailItem) use ($s) {
-                return $deliveryNoteDetailItem->showDeliveredNoteDetail($deliveryNoteDetailItem['id'], $deliveryNoteDetailItem['product_id'], $s);
+            $deliveryNoteD->map(function ($deliveryNoteDetailItem) use ($s) {
+                return $deliveryNoteDetailItem = $this ->  showDeliveredNoteDetail($deliveryNoteDetailItem['id'], $deliveryNoteDetailItem['product_id'], $s);
             }),
             $deliveryNote[0],
             $s == "invoice" ? $deliveryNote[0]->invoice : $deliveryNote[0]->quotation,
