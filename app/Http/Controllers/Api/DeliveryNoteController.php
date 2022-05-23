@@ -312,7 +312,7 @@ class DeliveryNoteController extends Controller
 
         $deliveryNote = DeliveryNote::where('id', $id)->orderBy('created_at', 'DESC')->get();
 
-
+        return $deliveryNote;
         $delivery = $deliveryNote->map(function ($deliveryNote) {
             return [
                 $deliveryNote,
