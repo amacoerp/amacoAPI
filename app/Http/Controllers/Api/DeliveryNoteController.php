@@ -316,7 +316,7 @@ class DeliveryNoteController extends Controller
         $delivery = $deliveryNote->map(function ($deliveryNote) {
             return [
                 $deliveryNote,
-                $deliveryNote->deliveryNoteDetail,
+                $deliveryNote[0]->deliveryNoteDetail,
 
             ];
         });
