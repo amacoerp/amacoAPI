@@ -1590,9 +1590,9 @@ class QuotationController extends Controller
         }
         if ($request->po_number) {
 
-            if (isset($unique_po_no)) {
-                return response()->json(['msg' => 'P.O.Number is exsits']);
-            }
+            // if (isset($unique_po_no)) {
+            //     return response()->json(['msg' => 'P.O.Number is exsits']);
+            // }
 
             $sales_order_number = $this->getSalesOrderNumber($quotation->issue_date);
             $quotation->update([
