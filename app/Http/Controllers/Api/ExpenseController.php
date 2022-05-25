@@ -46,6 +46,7 @@ class ExpenseController extends Controller
         $allExpense =  Expense::join('account_categories','account_categories.id','expenses.account_category_id')->where('account_categories.name','Material Purchase')->select('expenses.*')->orderBy('expenses.id','desc')->get();
         $allExpense = $allExpense -> values();
         $allExpense -> map(function ($item){
+            $item -> party = Party::where('id',$item -> vendor_id)->first();
             if(strpos($item -> q_i_number,'QT')){
                 $item -> type = 'Q';
                 $qt = Quotation::where('quotation_no',$item -> q_i_number)->get();
@@ -677,7 +678,7 @@ return response()->json($expenses);
                     ->whereRaw('invoices.quotation_id = quotations.id');
             })->orderBy('id', 'DESC')
             ->get();
-            $item -> invoice = Invoice::where('acknowledge_status','Invoice Acknowledge')->where('status', '!=', 'Delivered')
+            $item -> invoice = Invoice::where('genarate_status','Invoice Generated')->where('status', '!=', 'Delivered')
             ->orderBy('created_at', 'DESC')->get();
             return $item;
         });

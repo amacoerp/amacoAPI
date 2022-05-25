@@ -292,6 +292,7 @@ class InvoiceController extends Controller
             'invoice_no' => $data['invoice_no'],
             'po_number' => isset($request->po_number) ? $data['po_number'] : null,
             'issue_date' => $data['issue_date'],
+            'contact_id' => $request['contact_id'] ? $request['contact_id'] : null,
             'status' => $data['status'],
             'quotation_id' => $data['quotation_id'],
             'total_value' =>  $data['total_value'] == "NaN" ? 0 : (isset($data['total_value']) ? $data['total_value'] : 0),
@@ -379,6 +380,8 @@ class InvoiceController extends Controller
                     $invoice_detail->product
                 ];
             }),
+
+            $invoice->contact,
             // $invoice->invoiceDetail->map(function ($invoice_detail){
             //     return [
             //         $invoice_detail->quotationDetail,
@@ -495,6 +498,7 @@ class InvoiceController extends Controller
             // 'invoice_no' => $request->invoice_no,
             'po_number' => isset($request->po_number) ? $request->po_number : null,
             'issue_date' => $request->ps_date,
+            'contact_id' => isset($request->contact_id) ? ($request->contact_id ? $request->contact_id : 0) : 0,
             // 'status' => $request->status,
             // 'quotation_id' => $request->quotation_id,
             'total_value' => $request->total_value,

@@ -60,6 +60,7 @@ use App\Http\Controllers\Api\StockController;
 use App\Http\Controllers\Api\LoginLogController;
 use App\Http\Controllers\Api\DesignationController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\TestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -299,6 +300,7 @@ Route::get('expense-invoice-report', [ExpenseController::class, 'expenseInvoiceR
 Route::get('show_quotation/{id}', [QuotationController::class, 'show_quotation']);
 Route::get('quoteHistory', [QuotationController::class, 'quoteHistory']);
 Route::get('invoice_delivery_note/{id}/{s}', [DeliveryNoteController::class, 'show']);
+Route::post('change-delivery-status/{id}/{s}/{ty}', [DeliveryNoteController::class, 'deliveryStatus']);
 Route::get('enc', [EncController::class, 'index']);
 
 // Multi Response
@@ -365,6 +367,8 @@ Route::get('dDetails', [DeliveryNoteController::class, 'dDetails']);
 
 
 Route::get('test/{date}/{div}', [QuotationController::class, 'getPONo']);
+
+Route::post('test', [TestController::class, 'scanFile']);
 
 
 // Route::get('/notification', 'PusherNotificationController@sendNotification');
