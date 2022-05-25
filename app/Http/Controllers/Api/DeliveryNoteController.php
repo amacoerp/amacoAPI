@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Contact;
 use App\Models\DeliveryNote;
 use App\Models\DeliveryNoteDetail;
 use App\Models\Quotation;
@@ -214,6 +215,8 @@ class DeliveryNoteController extends Controller
             'invoice_id' => $request->invoice_id,
             'delivery_number' => $deliveryNo,
             'po_number' => $quotation->po_number,
+            'issue_date' => $request->issue_date,
+            'contact_id' => $request->contact_id,
             'delivery_date' => $request->delivery_date,
             'user_id' => $request->user_id ? $request->user_id : 0,
             'div_id' => $request->div_id ? $request->div_id : 0,
@@ -269,9 +272,11 @@ class DeliveryNoteController extends Controller
 
         $data = [
             'invoice_id' => $request->invoice_id,
+            'contact_id' => $request->contact_id,
             'delivery_number' => $deliveryNo,
             'po_number' => $quotation->po_number,
             'delivery_date' => $request->delivery_date,
+            'issue_date' => $request->issue_date,
             'user_id' => $request->user_id ? $request->user_id : 0,
             'div_id' => $request->div_id ? $request->div_id : 0,
         ];
@@ -334,6 +339,7 @@ class DeliveryNoteController extends Controller
             $s == "invoice" ? $deliveryNote[0]->invoice : $deliveryNote[0]->quotation->quotationDetail,
             $deliveryNote[0]->quotation ? $deliveryNote[0]->quotation->quotationDetail : $deliveryNote[0]->invoice->invoiceDetail,
             $s == "invoice" ? $deliveryNote[0]->invoice-> contact : '',
+            $deliveryNote[0]-> contact_id ? Contact::where('id',$deliveryNote[0]-> contact_id )->get(): '' 
 
         ];
 
@@ -394,11 +400,13 @@ class DeliveryNoteController extends Controller
                     $dno =  'AMC-DN-' . date('y') . '-' . date('m') . sprintf("%02d", substr(explode('-', $aDno->delivery_number)[3], 2)) . '-PD-' . sprintf("%02d", explode('-', $aDno->delivery_number)[5] + 1);
                     DeliveryNote::where('id', $request->quotation_id)->update([
                         'delivery_number' => $dno,
+                        'issue_date' => $request -> issue_date,
                     ]);
                 } catch (\Throwable $th) {
                     $dno =  'AMC-DN-' . date('y') . '-' . date('m') . '01' . '-PD-01';
                     DeliveryNote::where('id', $request->quotation_id)->update([
                         'delivery_number' => $dno,
+                        'issue_date' => $request -> issue_date,
                     ]);
                 }
             }
@@ -408,6 +416,8 @@ class DeliveryNoteController extends Controller
             $dno = $curDno[0] . '-' . $curDno[1] . '-' . $curDno[2] . '-' . $curDno[3];
             DeliveryNote::where('id', $request->quotation_id)->update([
                 'delivery_number' => $dno,
+                'issue_date' => $request -> issue_date,
+
             ]);
         }
         foreach ($request->quotation_detail as $deliveryNoteDetail) {
@@ -424,7 +434,7 @@ class DeliveryNoteController extends Controller
     {
         $Note = DeliveryNote::where('id', $id)->first();
         if (isset($Note->quotation_id)) {
-            $dNote = DeliveryNote::join('quotations', 'quotations.id', 'delivery_notes.quotation_id')->join('parties', 'parties.id', 'quotations.party_id')->where('delivery_notes.id', $id)->select('quotations.quotation_no', 'delivery_notes.*')->get();
+            $dNote = DeliveryNote::leftjoin('quotations', 'quotations.id', 'delivery_notes.quotation_id')->leftjoin('parties', 'parties.id', 'quotations.party_id')->where('delivery_notes.id', $id)->select('quotations.quotation_no', 'delivery_notes.*')->get();
             $dNote['type'] = 'quote';
         } else {
             $dNote = DeliveryNote::join('invoices', 'invoices.id', 'delivery_notes.invoice_id')->join('parties', 'parties.id', 'invoices.party_id')->where('delivery_notes.id', $id)->select('invoices.invoice_no', 'delivery_notes.*', 'parties.firm_name')->get();
