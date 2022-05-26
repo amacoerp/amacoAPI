@@ -78,7 +78,7 @@ class DeliveryNoteDetail extends Model
         
 
         // $totalDeliveredQuantity = $this->getTotalDeliveredQuantity($totalDeliveryNoteDetails);
-        $totalDeliveredQuantity = $quotationDetail->getDeliveredQuantity($quotationDetail,$s);
+        // $totalDeliveredQuantity = $quotationDetail->getDeliveredQuantity($quotationDetail,$s);
         }
 
         // $totalDeliveredQuantity = $this->getTotalDeliveredQuantity($totalDeliveryNoteDetails);
