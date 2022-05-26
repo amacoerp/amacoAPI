@@ -67,15 +67,15 @@ class DeliveryNoteDetail extends Model
         else
         {
             
-        $quotationDetail = QuotationDetail::where([
-            'quotation_id' => $delivery_notes_detail->deliveryNote->quotation_id,
-            'id' => (int)$delivery_notes_detail->quote_detail_id,
-            // 'description' => $delivery_notes_detail->product_descriptions,
-        ])->firstOrFail();
+        // $quotationDetail = QuotationDetail::where([
+        //     'quotation_id' => $delivery_notes_detail->deliveryNote->quotation_id,
+        //     'id' => (int)$delivery_notes_detail->quote_detail_id,
+        //     // 'description' => $delivery_notes_detail->product_descriptions,
+        // ])->firstOrFail();
         
 
         // $totalDeliveredQuantity = $this->getTotalDeliveredQuantity($totalDeliveryNoteDetails);
-        $totalDeliveredQuantity = $quotationDetail->getDeliveredQuantity($quotationDetail,$s);
+        // $totalDeliveredQuantity = $quotationDetail->getDeliveredQuantity($quotationDetail,$s);
         }
 
         // $totalDeliveredQuantity = $this->getTotalDeliveredQuantity($totalDeliveryNoteDetails);
