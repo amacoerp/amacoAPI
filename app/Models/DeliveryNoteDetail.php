@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
-
 
 class DeliveryNoteDetail extends Model
 {
@@ -45,26 +43,6 @@ class DeliveryNoteDetail extends Model
     //     return ($totalQuantity - $totalDeliveredQuantity);
     // }
 
-
-    public function getDeliveredQuantity1($id)
-    {
-        
-        $deliveryNoteDetails = DB::table('delivery_notes')
-        ->leftJoin('delivery_note_details', 'delivery_note_details.delivery_note_id','=', 'delivery_notes.id')
-        ->where('delivery_notes.quotation_id',$id)
-        ->where('delivery_note_details.quote_detail_id', $id)
-        ->get();
-
-        if($deliveryNoteDetails) {
-            $totalDeliveryNoteDetail = 0;
-            foreach ($deliveryNoteDetails as $item) {
-                $totalDeliveryNoteDetail += intval($item->delivered_quantity);
-            }
-            return $totalDeliveryNoteDetail;
-        }
-        return 0;
-    }
-
     public function showDeliveredNoteDetail($id,$pid,$s)
     {
        
@@ -89,18 +67,15 @@ class DeliveryNoteDetail extends Model
         else
         {
             
-        // $quotationDetail = QuotationDetail::where([
-        //     'quotation_id' => $delivery_notes_detail->deliveryNote->quotation_id,
-        //     'id' => (int)$delivery_notes_detail->quote_detail_id,
-        //     // 'description' => $delivery_notes_detail->product_descriptions,
-        // ])->firstOrFail();
-
-        $quotationDetail = QuotationDetail::where('id',(int)$delivery_notes_detail->quote_detail_id)->firstOrFail();
-
+        $quotationDetail = QuotationDetail::where([
+            'quotation_id' => $delivery_notes_detail->deliveryNote->quotation_id,
+            'id' => (int)$delivery_notes_detail->quote_detail_id,
+            // 'description' => $delivery_notes_detail->product_descriptions,
+        ])->firstOrFail();
         
 
         // $totalDeliveredQuantity = $this->getTotalDeliveredQuantity($totalDeliveryNoteDetails);
-        $totalDeliveredQuantity = $this->getDeliveredQuantity1($quotationDetail->id,$s);
+        $totalDeliveredQuantity = $quotationDetail->getDeliveredQuantity($quotationDetail,$s);
         }
 
         // $totalDeliveredQuantity = $this->getTotalDeliveredQuantity($totalDeliveryNoteDetails);
