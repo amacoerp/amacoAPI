@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+
 
 class DeliveryNoteDetail extends Model
 {
@@ -43,6 +45,26 @@ class DeliveryNoteDetail extends Model
     //     return ($totalQuantity - $totalDeliveredQuantity);
     // }
 
+
+    public function getDeliveredQuantity1($quotation_detail)
+    {
+        
+        $deliveryNoteDetails = DB::table('delivery_notes')
+        ->leftJoin('delivery_note_details', 'delivery_note_details.delivery_note_id','=', 'delivery_notes.id')
+        ->where('delivery_notes.quotation_id',$quotation_detail->quotation_id)
+        ->where('delivery_note_details.quote_detail_id', $quotation_detail->id)
+        ->get();
+
+        if($deliveryNoteDetails) {
+            $totalDeliveryNoteDetail = 0;
+            foreach ($deliveryNoteDetails as $item) {
+                $totalDeliveryNoteDetail += intval($item->delivered_quantity);
+            }
+            return $totalDeliveryNoteDetail;
+        }
+        return 0;
+    }
+
     public function showDeliveredNoteDetail($id,$pid,$s)
     {
        
@@ -78,7 +100,7 @@ class DeliveryNoteDetail extends Model
         
 
         // $totalDeliveredQuantity = $this->getTotalDeliveredQuantity($totalDeliveryNoteDetails);
-        // $totalDeliveredQuantity = $quotationDetail->getDeliveredQuantity($quotationDetail,$s);
+        $totalDeliveredQuantity = $this->getDeliveredQuantity1($quotationDetail,$s);
         }
 
         // $totalDeliveredQuantity = $this->getTotalDeliveredQuantity($totalDeliveryNoteDetails);
