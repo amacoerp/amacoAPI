@@ -329,9 +329,9 @@ class DeliveryNoteController extends Controller
         $po = $deliveryNote[0]->quotation;
 
         $data = [
-            $deliveryNote[0]->deliveryNoteDetail->map(function ($deliveryNoteDetailItem) use ($s) {
-                return $deliveryNoteDetailItem->showDeliveredNoteDetail($deliveryNoteDetailItem['id'], $deliveryNoteDetailItem['product_id'], $s);
-            }),
+            // $deliveryNote[0]->deliveryNoteDetail->map(function ($deliveryNoteDetailItem) use ($s) {
+            //     return $deliveryNoteDetailItem->showDeliveredNoteDetail($deliveryNoteDetailItem['id'], $deliveryNoteDetailItem['product_id'], $s);
+            // }),
             $deliveryNote[0],
             $s == "invoice" ? $deliveryNote[0]->invoice : $deliveryNote[0]->quotation,
             $deliveryNote[0]->invoice ? $deliveryNote[0]->invoice : null,
