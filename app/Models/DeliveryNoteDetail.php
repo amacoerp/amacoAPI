@@ -46,13 +46,13 @@ class DeliveryNoteDetail extends Model
     // }
 
 
-    public function getDeliveredQuantity1($quotation_detail)
+    public function getDeliveredQuantity1($id)
     {
         
         $deliveryNoteDetails = DB::table('delivery_notes')
         ->leftJoin('delivery_note_details', 'delivery_note_details.delivery_note_id','=', 'delivery_notes.id')
-        ->where('delivery_notes.quotation_id',$quotation_detail->quotation_id)
-        ->where('delivery_note_details.quote_detail_id', $quotation_detail->id)
+        ->where('delivery_notes.quotation_id',$id)
+        ->where('delivery_note_details.quote_detail_id', $id)
         ->get();
 
         if($deliveryNoteDetails) {
@@ -100,7 +100,7 @@ class DeliveryNoteDetail extends Model
         
 
         // $totalDeliveredQuantity = $this->getTotalDeliveredQuantity($totalDeliveryNoteDetails);
-        $totalDeliveredQuantity = $this->getDeliveredQuantity1($quotationDetail,$s);
+        $totalDeliveredQuantity = $this->getDeliveredQuantity1($quotationDetail->id,$s);
         }
 
         // $totalDeliveredQuantity = $this->getTotalDeliveredQuantity($totalDeliveryNoteDetails);
