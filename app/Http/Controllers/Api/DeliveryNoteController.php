@@ -326,6 +326,8 @@ class DeliveryNoteController extends Controller
             ];
         });
 
+        $po = $deliveryNote[0]->quotation;
+
         $data = [
             $deliveryNote[0]->deliveryNoteDetail->map(function ($deliveryNoteDetailItem) use ($s) {
                 return $deliveryNoteDetailItem->showDeliveredNoteDetail($deliveryNoteDetailItem['id'], $deliveryNoteDetailItem['product_id'], $s);
@@ -339,7 +341,8 @@ class DeliveryNoteController extends Controller
             $s == "invoice" ? $deliveryNote[0]->invoice : $deliveryNote[0]->quotation->quotationDetail,
             $deliveryNote[0]->quotation ? $deliveryNote[0]->quotation->quotationDetail : $deliveryNote[0]->invoice->invoiceDetail,
             $s == "invoice" ? $deliveryNote[0]->invoice-> contact : '',
-            $deliveryNote[0]-> contact_id ? Contact::where('id',$deliveryNote[0]-> contact_id )->get(): '' 
+            $deliveryNote[0]-> contact_id ? Contact::where('id',$deliveryNote[0]-> contact_id )->get(): '' ,
+            Invoice::where('quotation_id',$po->id)->first(),
 
         ];
 
