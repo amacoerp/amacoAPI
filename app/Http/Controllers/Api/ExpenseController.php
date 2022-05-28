@@ -49,6 +49,7 @@ class ExpenseController extends Controller
             $item -> party = Party::where('id',$item -> vendor_id)->first();
             if(strpos($item -> q_i_number,'QT')){
                 $item -> type = 'Q';
+                $item -> allData = QuotationController::showReport($item -> q_i_number);
                 $qt = Quotation::where('quotation_no',$item -> q_i_number)->get();
                 $item -> profit = isset($qt[0]) ? $qt[0] ? $qt[0]->net_amount -  $item -> amount : '' : '';;
                 $item -> quotation = isset($qt[0]) ? $qt[0] ? $qt[0] : '' : '';
@@ -56,6 +57,7 @@ class ExpenseController extends Controller
             }else{
                 $inv = Invoice::where('invoice_no',$item -> q_i_number)->get();
                 $item -> type = 'I';
+                $item -> allData = InvoiceController::showsReport($item -> q_i_number);
                 $item -> profit = isset($inv[0]) ? $inv[0] ?  $inv[0]->grand_total - $item -> amount : '' : '';;
                 $item -> invoice = isset($inv[0]) ? $inv[0] ? $inv[0] : '' : '';
                 $item -> tot_amount = isset($inv[0]) ? $inv[0] ? $inv[0] -> grand_total : '' : '';
