@@ -355,6 +355,43 @@ class InvoiceController extends Controller
      * @param  \App\Models\Invoice  $invoice
      * @return \Illuminate\Http\Response
      */
+    public static function showsReport($inv)
+    {
+        if (!auth()->check())
+            return ["You are not authorized to access this API."];
+
+        $d = Invoice::where('invoice_no', $inv)->get();
+        // return $invoice = $d[0];
+        return [
+            $invoice = $d[0],
+            $invoice->party,
+            // $invoice->contact,
+            $invoice->quotation,
+            //$invoice->quotation->quotationDetail,
+            $invoice->invoiceDetail->map(function ($invoice_detail) {
+                return [
+
+
+                    $invoice_detail['margin'] = $invoice_detail->purchase_price ? (((((float)$invoice_detail->sell_price) - ((float)$invoice_detail->purchase_price)) / ((float)
+                    $invoice_detail->purchase_price)) * 100) : $invoice_detail->margin,
+                    $invoice_detail['delivered_quantity'] = $invoice_detail->getDelivered_invoice_Quantity($invoice_detail),
+                    $invoice_detail['balance'] = (int)$invoice_detail->quantity - (int)$invoice_detail->getDelivered_invoice_Quantity($invoice_detail),
+                    $invoice_detail->quotationDetail,
+                    $invoice_detail->product
+                ];
+            }),
+
+            $invoice->contact,
+            // $invoice->invoiceDetail->map(function ($invoice_detail){
+            //     return [
+            //         $invoice_detail->quotationDetail,
+            //     ];
+            // }),
+
+            // $product['name_ar'] = file_get_contents('https://api.mymemory.translated.net/get?q=helloworld!&langpair=en|ar');
+
+        ];
+    }
     public function shows($id)
     {
         if (!auth()->check())
