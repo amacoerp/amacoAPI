@@ -21,8 +21,23 @@ class ReceiptController extends Controller
         $party = Party::where('party_type', '!=', 'Vendor')->get();
         $party->map(function ($item) {
             $inv = Invoice::where('payment', 0)->where('party_id', $item->id)->get();
-            $item->invoice = $inv -> map(function ($k){
-                $k -> paid_amount = Receipt::where('invoice_id',$k -> id)->sum('paid_amount');
+            $item->invoice = $inv->map(function ($k) {
+                $k->paid_amount = Receipt::where('invoice_id', $k->id)->sum('paid_amount');
+                return $k;
+            });
+            return $item;
+        });
+        return $party;
+    }
+
+
+    public function findInvoices($pid)
+    {
+        $party = Party::where('id', $pid)->get();
+        $party->map(function ($item) {
+            $inv = Invoice::where('party_id', $item->id)->get();
+            $item->invoice = $inv->map(function ($k) {
+                $k->paid_amount = Receipt::where('invoice_id', $k->id)->sum('paid_amount');
                 return $k;
             });
             return $item;
@@ -113,7 +128,7 @@ class ReceiptController extends Controller
         $inv = Invoice::where('id', $request->invoice_id)->first();
 
         if ($rec >=  $inv->grand_total) {
-            Invoice::where('id',$request -> invoice_id)->update([
+            Invoice::where('id', $request->invoice_id)->update([
                 'payment' => 1
             ]);
         }
@@ -251,14 +266,16 @@ class ReceiptController extends Controller
                 // 'contact_id' => $request->contact_id,
             ]);
         }
+
+
         $receipt->update([
             'invoice_id' => $request->invoice_id,
             'party_id' => $request->party_id,
             "payment_mode" => $request->payment_mode,
-            "narration" => $request->narration,
+            "narration" => $request->narration == 'null' ? '' : ($request->narration ? $request->narration : ''),
             'paid_amount' => $request->paid_amount,
             'div_id' => $request->div_id,
-            'narration' => $request->narration,
+            // 'narration' => $request->narration,
             'check_no' => $request->check_no,
             'bank_id' => $request->bank_id,
             "sender" => $request->sender,
@@ -269,6 +286,19 @@ class ReceiptController extends Controller
 
             // 'contact_id' => $request->contact_id,
         ]);
+
+        $rec = Receipt::where('invoice_id', $request->invoice_id)->sum('paid_amount');
+        $inv = Invoice::where('id', $request->invoice_id)->first();
+
+        if ($rec >=  $inv->grand_total) {
+            Invoice::where('id', $request->invoice_id)->update([
+                'payment' => 1
+            ]);
+        } else {
+            Invoice::where('id', $request->invoice_id)->update([
+                'payment' => 0
+            ]);
+        }
         $findRef = AdvancePayment::where('ref_id', $receipt->id)->update([
             'payment_account_id' => $request->div_id,
             'received_by' => $request->receiver,
