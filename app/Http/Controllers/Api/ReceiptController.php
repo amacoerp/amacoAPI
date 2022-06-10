@@ -163,6 +163,7 @@ class ReceiptController extends Controller
         // }
         $receipt->update([
             'party_id' => $request->party_id,
+            'invoice_id' => $request->invoice_id,
             'paid_amount' => $request->paid_amount,
             'div_id' => $request->div_id,
             "user_id" => $request->user_id ? $request->user_id : 0,
