@@ -138,6 +138,9 @@ Route::apiResource('stock', StockController::class);
 Route::apiResource('designation', DesignationController::class);
 Route::apiResource('uom', UOMController::class);
 // restful api links
+Route::get('allReceiptData',[ReceiptController::class,'allReceiptData']);
+
+
 Route::get('getAllEmails',[UserController::class,'getAllEmails']);
 Route::delete('purchaseinvoiceitem/{id}',[PurchaseInvoiceController::class,'deleteInv']);
 Route::post('company_edit',[CompanyController::class,'company_edit']);

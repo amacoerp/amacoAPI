@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Api\ExpenseController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -11,6 +12,7 @@ use App\Http\Controllers\Api\ReceiptController;
 use App\Models\Receipt;
 
 use App\Http\Controllers\Api\RestrictAPIController;
+use App\Models\Expense;
 use App\Models\Notifications;
 use App\Models\Quotation;
 use Illuminate\Support\Facades\Auth;
@@ -38,10 +40,12 @@ class StackController extends Controller
         
         $stackData = $this -> stateCard();
         $receiptData=ReceiptController::index();
+        $expenseData=ExpenseController::index1();
         return response()->json([
             'invoice' => InvoiceController::index(),
             'stackData' => $stackData -> original,
             'receipt' => $receiptData -> original,
+            'expense' => $expenseData -> original,
         ]);
 
     }
@@ -61,6 +65,7 @@ class StackController extends Controller
             'salesList' => $d-> original,
             'acceptedList' => $q-> original,
             'rec' => Receipt::get(),
+            'expense' => Expense::get(),
             'po' => Quotation::where('transaction_type','purchase')->get(),
             
         ]);
