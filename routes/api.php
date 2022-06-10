@@ -312,10 +312,14 @@ Route::get('enc', [EncController::class, 'index']);
 //multi Json responce API's
 Route::get('mjrProductAdd/{did}/{cid}', [ProductController::class, 'mjrProductAdd']);
 Route::get('mjrProductUpdate/{pid}', [ProductController::class, 'mjrProductUpdate']);
+
+Route::get('findInvoices/{pid}', [ReceiptController::class, 'findInvoices']);
+
 Route::get('mjrPurchaseInvoice/{poid}',[QuotationController::class, 'mjrPurchaseInvoice']);
 Route::get('mjrBalanceSheet',[AccountStatementController::class, 'mjrBalanceSheet']);
 Route::get('mjrExpense/{did}',[ExpenseController::class, 'mjrExpense']);
 Route::get('mjrCustomerStatement/{did}',[AccountStatementController::class, 'mjrCustomerStatement']);
+Route::get('mjrCustomerStatement1/{did}',[AccountStatementController::class, 'mjrCustomerStatement1']);
 Route::get('mjrExpenseUpdate/{did}/{eid}/{cid}',[ExpenseController::class, 'mjrExpenseUpdate']);
 Route::get('mjrQuoteEdit/{did}/{id}', [QuotationController::class, 'mjrQuoteEdit']);
 Route::get('mjrQuoteDno/{did}/{id}', [QuotationController::class, 'mjrQuoteDno']);

@@ -437,23 +437,27 @@ class AccountStatementController extends Controller
 
         $data && ($datas['data'] = $data->map(function ($item) {
             if ($item->total_value) {
+                $paid_amount = Receipt::where('invoice_id',$item -> id)->sum('paid_amount');
+                $invStatus = floatval(str_replace(",", "", $item->grand_total)) - $paid_amount <= 0 ? true : false;
                 $item['date'] = $item->issue_date;
                 $item['code_no'] = $item->invoice_no;
                 $item['description'] = "Sale" . "/" . (isset($item->party) ? $item->party->firm_name : " ");
                 $item['debit'] = floatval(str_replace(",", "", $item->grand_total));
                 $item['po_number'] = $item->po_number;
                 $item['credit'] = 0;
+                $item['invStatus'] = $invStatus;
                 $item['credit_days'] = floatval(isset($item->party) ? ($item->party->credit_days) : 0);
                 return [$item];
             }
 
             if ($item->paid_amount) {
-                $item['date'] = $item->issue_date;
+                $item['date'] = $item->paid_date;
                 $item['code_no'] = $item->receipt_no;
                 $item['description'] = "Receipt" . "/" . $item->party->firm_name;
                 $item['credit'] = floatval(str_replace(",", "", $item->paid_amount));
                 $item['po_number'] = $item->po_number;
                 $item['debit'] = 0;
+                $item['invStatus'] = '';
                 $item['credit_days'] = floatval($item->party->credit_days);
                 return [$item];
             }
@@ -488,7 +492,8 @@ class AccountStatementController extends Controller
 
         $data && ($datas['data'] = $data->map(function ($item) {
             if ($item->total_value) {
-                $item['paid_amount'] = Receipt::where('invoice_id',$item->id)->sum('paid_amount');
+                $paidam = Receipt::where('invoice_id',$item->id)->sum('paid_amount');
+                $item['paid_amount'] = $item -> grand_total - $paidam;
                 $item['date'] = $item->issue_date;
                 $item['code_no'] = $item->invoice_no;
                 $item['description'] = "Sale" . "/" . (isset($item->party) ? $item->party->firm_name : " ");
@@ -527,6 +532,20 @@ class AccountStatementController extends Controller
         return response()->json([
             'vendor' => PartyController::customer($did),
             'customerStatement' => self::allCustomerStatement1($did)->original,
+
+
+
+        ]);
+    }
+    public static function mjrCustomerStatement1($did)
+    {
+        if (!auth()->check())
+            return ["You are not authorized to access this API."];
+
+
+        return response()->json([
+            'vendor' => PartyController::customer($did),
+            'customerStatement' => self::allCustomerStatement($did)->original,
 
 
 
