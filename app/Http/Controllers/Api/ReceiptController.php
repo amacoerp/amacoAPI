@@ -252,6 +252,7 @@ class ReceiptController extends Controller
             ]);
         }
         $receipt->update([
+            'invoice_id' => $request->invoice_id,
             'party_id' => $request->party_id,
             "payment_mode" => $request->payment_mode,
             "narration" => $request->narration,
