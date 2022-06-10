@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Party;
 use App\Models\Product;
 use App\Models\Contact;
+use App\Models\Invoice;
 use App\Models\PartyBank;
 use App\Models\ProductPrice;
 use Illuminate\Http\Request;
@@ -235,7 +236,10 @@ class PartyController extends Controller
             ->select('id', 'firm_name', 'contact')
             ->get()
             ->toArray();
-        return $vendors;
+            $vendor = $vendors -> map(function ($item){
+                $item -> invoices = Invoice::get();
+            });
+        return $vendor;
     }
 
     // public function allVendorExcept($product)
