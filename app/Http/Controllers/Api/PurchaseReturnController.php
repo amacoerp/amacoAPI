@@ -262,7 +262,7 @@ class PurchaseReturnController extends Controller
             ];
             if ($request['transaction_type'] == "sales") {
                 
-    //     $payment_account_id=PaymentAccount::where('div_id', $request['div_id'])->first();
+       //     $payment_account_id=PaymentAccount::where('div_id', $request['div_id'])->first();
     //     $receipt = Receipt::create(["party_id" => $request->party_id,
     //     "payment_mode" => "cash",
     //     "narration" => "Credit Note",
